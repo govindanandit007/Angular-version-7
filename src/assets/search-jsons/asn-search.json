@@ -1,0 +1,73 @@
+{
+    "type": "ASN",
+    "searchType": "asn",
+    "searchFor": "Search ASN",
+    "companyKey": "",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "asnNumber",
+            "label": "ASN Number",
+            "key": "asnNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "OuCode",
+            "label": "Operating Unit",
+            "key": "ouId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "poNumber",
+            "label": "Purchase Order #",
+            "key": "poNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "asnSupplierName",
+            "label": "Supplier",
+            "key": "supplier",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "itemCode",
+            "label": "Item",
+            "key": "itemName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

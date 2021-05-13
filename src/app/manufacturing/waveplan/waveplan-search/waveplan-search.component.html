@@ -1,0 +1,99 @@
+<div fxLayout="column" fxLayoutAlign="space-between stretch" fxFlex="100">
+    <div fxLayout="column">
+        <div class="search-header" fxLayout="row">
+            <div class="search-title" fxLayout="column" fxFlex="5 0 0">
+                {{ searchLabel }}
+            </div>
+            <div class="search-header-right" (click)="hideSearchContainer()">
+                <span class="searchBarIcon icon-close"></span>
+            </div>
+        </div>
+        <div *ngFor="let fieldsInfo of searchFieldData">
+            <div *ngIf="fieldsInfo.formType !== 'ONHAND'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+
+                 <!-- For IU Code -->
+                 <!-- <ng-container *ngIf="fieldsInfo.lovType === 'IuCode'">
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="IuValue" class='text-black-disabled' disabled>
+                            <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                [value]="listItem.value" autocomplete="off" (onSelectionChange)="iuchanged($event, listItem.value)">
+                                {{ listItem.label }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container> -->
+
+                <!-- For Wave Number -->
+                <ng-container *ngIf="fieldsInfo.lovType === 'waveNumber'">
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="waveNumberValue"
+                            autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+
+             <!-- For Work Order Number -->
+             <ng-container *ngIf="fieldsInfo.lovType === 'workOrderNumber' && screenName === 'MFG'">
+                <mat-form-field class="materailFieldSize" fxFlex="100">
+                    <mat-label>{{ fieldsInfo.label }}</mat-label>
+                    <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="workOrderNumberValue" autocomplete="off">
+                    <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="workOrderNumberValue">
+                        <mat-option ngDefaultControl *ngFor="let listItem of woNumberList" [value]="listItem.value"
+                            autocomplete="off">
+                            {{ listItem.label }}</mat-option>
+                    </mat-select> -->
+                </mat-form-field>
+            </ng-container>   
+              <!-- For Assembly Number -->
+             
+                <ng-container  *ngIf="fieldsInfo.lovType === 'assemblyItem'" >
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="assemblyNoValue" autocomplete="off">
+                        <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="assemblyNoValue">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                    [value]="listItem.value" autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                        </mat-select> -->
+                    </mat-form-field>
+                </ng-container>
+           
+            <!-- For Wave Status -->
+            <ng-container *ngIf="fieldsInfo.lovType === 'waveStatus'">
+                <mat-form-field class="materailFieldSize" fxFlex="100">
+                    <mat-label>{{ fieldsInfo.label }}</mat-label>
+                    <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="waveStatusValue">
+                        <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value"
+                            autocomplete="off">
+                            {{ listItem.label }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </ng-container>             
+                
+                <!-- For Policy -->
+                <ng-container *ngIf="fieldsInfo.lovType === 'wavePolicy'">
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="policyValue">
+                            <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value"
+                                autocomplete="off">
+                                {{ listItem.label }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
+            </div>
+        </div>
+
+
+
+    </div>
+    <div class="search-footer">
+        <button mat-flat-button [ngClass]="'formButton saveButton'" (click)="getSearhInfo()">
+            Search
+        </button>
+        <button mat-flat-button [ngClass]="'formButton cancelButton ml-15'" (click)="clearSearchFields()">
+            Clear
+        </button>
+    </div>
+</div>

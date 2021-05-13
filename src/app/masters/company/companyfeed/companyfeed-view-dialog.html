@@ -1,0 +1,201 @@
+<h1 class="viewDialogHeader" mat-dialog-title>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle"> Company</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+
+</h1>
+<div mat-dialog-content>
+    <div class="container" fxLayout="column">
+        <div fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex="60">
+                <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+                    <div fxLayout="column" fxFlex="33.33">
+                        <span [ngClass]="'viewDialogDataTitle'">Name</span>
+                        <span [ngClass]="'viwDialogData'">{{data.companyName}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="33.33">
+                        <span [ngClass]="'viewDialogDataTitle'">Code</span>
+                        <span [ngClass]="'viwDialogData'">{{data.companyCode}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="33.33">
+                        <span [ngClass]="'viewDialogDataTitle'">Phone Number</span>
+                        <span [ngClass]="'viwDialogData'">{{data.companyPhone}}</span>
+                    </div>
+                </div>
+                <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+                    <div fxLayout="column" fxFlex="33.33">
+                        <span [ngClass]="'viewDialogDataTitle'">Address 1</span>
+                        <span [ngClass]="'viwDialogData wordWrap'">{{data.companyAddr1}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="33.33">
+                        <span [ngClass]="'viewDialogDataTitle'">Address 2</span>
+                        <span [ngClass]="'viwDialogData wordWrap'">{{data.companyAddr2 ? data.companyAddr2 : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="33.33">
+                        <span [ngClass]="'viewDialogDataTitle'">Address 3</span>
+                        <span [ngClass]="'viwDialogData wordWrap'">{{data.companyAddr3 ? data.companyAddr3 : '-'}}</span>
+                    </div>
+                </div>
+            </div>
+            <div fxLayout="column" fxFlex="40">
+                <div fxLayout="row" fxLayoutGap="10px">
+                    <div fxLayout='column' fxFlex="55" class="LogosubItem">
+                        <span [ngClass]="'viewDialogDataTitle'">Company Logo</span>
+                        <div class="logoImg overflow-hidden"><img [src]="data.companyLogo"></div>
+                    </div>
+                    <div fxLayout='column' fxFlex="35" class="LogosubItem">
+                        <span [ngClass]="'viewDialogDataTitle'">Company Icon</span>
+                        <div class="iconImg"><img [src]="data.companyIcon"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+
+            <div fxFlex="100" fxLayoutGap="20px">
+
+                <div fxFlex="60" fxLayoutGap="20px">
+                    <div fxLayout="column" fxFlex="33.33">
+                        <span [ngClass]="'viewDialogDataTitle'">Country</span>
+                        <span [ngClass]="'viwDialogData'">{{data.companyCountry}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="33.33">
+                        <span [ngClass]="'viewDialogDataTitle'">State/County</span>
+                        <span [ngClass]="'viwDialogData'">{{data.companyStateCounty}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="33.33">
+                        <span [ngClass]="'viewDialogDataTitle'">City</span>
+                        <span [ngClass]="'viwDialogData'">{{data.companyCity}}</span>
+                    </div>
+                </div>
+                <div fxFlex="40" fxLayoutGap="20px">
+                    <div fxLayout="column" fxFlex="50">
+                        <span [ngClass]="'viewDialogDataTitle'">Postal Code</span>
+                        <span [ngClass]="'viwDialogData'">{{data.companyPincode}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="50">
+                        <span [ngClass]="'viewDialogDataTitle'">Licensed User</span>
+                        <span [ngClass]="'viwDialogData'">{{data.companyLicensedUsers}}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+
+            <div fxFlex="100" fxLayoutGap="20px">
+                <div fxFlex="100" fxLayoutGap="20px">
+                    <div fxLayout="row" fxFlex="100">
+                        <mat-checkbox class="materailFieldSize" fxFlex="20" [ngModel]="data.companyEnabledFlag"
+                        style="margin-top: 10px" disabled>
+                        Enabled Flag</mat-checkbox>
+                    
+                        <mat-checkbox class="materailFieldSize" fxFlex="20" [ngModel]="data.expressLabelFlag"
+                        style="margin-top: 10px" disabled>
+                        Express Flag</mat-checkbox>
+                   
+                        <mat-checkbox class="materailFieldSize" fxFlex="20" [ngModel]="data.activityBillingFlag"
+                        style="margin-top: 10px" disabled>
+                        3PL Flag</mat-checkbox>
+                    
+                        <mat-checkbox class="materailFieldSize" fxFlex="20" [ngModel]="data.mfgFlag"
+                        style="margin-top: 10px" disabled>
+                        MFG Flag</mat-checkbox>
+                    
+                        <mat-checkbox class="materailFieldSize" fxFlex="20" [ngModel]="data.ymsFlag"
+                        style="margin-top: 10px" disabled>
+                        YMS Flag</mat-checkbox>
+                    </div>
+
+                </div>
+              
+            </div>
+
+        </div>
+
+        <div fxLayout="row" fxLayoutGap="5px">
+            <div fxFlex="100" [ngClass]="'companyViewDialogLabelBar viewDialogLabelBar'">
+                <mat-label [ngClass]="'viewDialogLabel'">Company Contact :</mat-label>
+            </div>
+        </div>
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <div fxFlex="100" fxLayoutGap="20px">
+                <!-- <div fxFlex="60" fxLayoutGap="20px"> -->
+                <div fxLayout="column" fxFlex="18">
+                    <span [ngClass]="'viewDialogDataTitle'">Person Name</span>
+                    <span [ngClass]="'viwDialogData'">{{data.companyPersonName}}</span>
+                </div>
+                <div fxLayout="column" fxFlex="18">
+                    <span [ngClass]="'viewDialogDataTitle'">Phone Number</span>
+                    <span [ngClass]="'viwDialogData'">{{data.companyPersonPhoneNum}}</span>
+                </div>
+                <div fxLayout="column" fxFlex="33.33">
+                    <span [ngClass]="'viewDialogDataTitle'">Email Address</span>
+                    <span [ngClass]="'viwDialogData'">{{data.companyPersonEmail}}</span>
+                </div>
+                <!-- </div> -->
+                <!-- <div fxFlex="40" fxLayoutGap="20px">
+
+                </div> -->
+            </div>
+        </div>
+
+        <div fxLayout="row" fxLayoutGap="5px">
+            <div fxFlex="100" [ngClass]="'companyViewDialogLabelBar viewDialogLabelBar'">
+                <mat-label [ngClass]="'viewDialogLabel'">Admin User :</mat-label>
+            </div>
+        </div>
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <div fxFlex="100" fxLayoutGap="20px">
+                <div fxFlex="60" fxLayoutGap="20px">
+                    <div fxLayout="column" fxFlex="33.33">
+                        <span [ngClass]="'viewDialogDataTitle'">User Name</span>
+                        <span [ngClass]="'viwDialogData'">{{data.userName}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="33.33">
+                        <span [ngClass]="'viewDialogDataTitle'">Start Date</span>
+                        <span [ngClass]="'viwDialogData'">{{data.userStartDate | date}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="33.33">
+                        <span [ngClass]="'viewDialogDataTitle'">End Date</span>
+                        <span [ngClass]="'viwDialogData'">{{
+                                                    data.userEndDate ? (data.userEndDate | date) : '-'
+                        
+                                                }}</span>
+                    </div>
+                </div>
+                <div fxFlex="40" fxLayoutGap="20px">
+                    <div fxLayout="column" fxFlex="100">
+                        <span [ngClass]="'viewDialogDataTitle'">User Email</span>
+                        <span [ngClass]="'viwDialogData'">{{data.userEmail}}</span>
+                    </div>
+                    <!-- <div fxLayout="column" fxFlex="50">
+                        <span [ngClass]="'viewDialogDataTitle'">Password Validity Days</span>
+                        <span [ngClass]="'viwDialogData'">{{data.userPswdValidityDays}}</span>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex="18">
+                <span [ngClass]="'viewDialogDataTitle'">Password Validity Days</span>
+                <span [ngClass]="'viwDialogData'">{{data.userPswdValidityDays ? data.userPswdValidityDays : '-'}}</span>
+            </div>
+            <div fxFlex="100" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="33.33">
+                    <span [ngClass]="'viewDialogDataTitle'">Description</span>
+                    <span [ngClass]="'viwDialogData'">{{data.userDescription ? data.userDescription : '-'}}</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data.companyId"
+        cdkFocusInitial>Edit</button>
+</div>

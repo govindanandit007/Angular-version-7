@@ -1,0 +1,20 @@
+
+.navbar-fixed-top{
+    display: none !important;
+}
+
+::ng-deep .navbar-fixed-top{
+    display: none !important;
+}
+
+.frame .navbar-fixed-top{
+    display: none !important;
+}
+
+::ng-deep .navbar-fixed-top{
+    display: none !important;
+}
+
+::ng-deep .frame .navbar-fixed-top{
+    display: none !important;
+}

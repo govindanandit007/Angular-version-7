@@ -1,0 +1,151 @@
+.formHeader {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+
+.customTable {
+    overflow: auto;
+}
+
+.customWidthClass {
+    min-width: 135px;
+}
+.customWidth80 {
+    min-width: 95px;
+}
+.customWidth100 {
+    min-width: 100px;
+    max-width: 100px;
+}
+.width80 {
+    min-width: 80px;
+}
+.customWidth95 {
+    min-width: 105px;
+}
+.stickyColumn {
+    min-width: 105px;
+    max-width: 105px;
+}
+.stickyColumn2 {
+    min-width: 135px;
+    max-width: 135px;
+    left: 129px !important;
+}
+.stickyColumn3 {
+    min-width: 135px;
+    max-width: 135px;
+    left: 264px !important;
+}
+.stickyColumn4 {
+    min-width: 80px;
+    max-width: 80px;
+    right: 80px !important;
+}
+.customDescriptionField {
+    margin-right: 10px;
+    min-width: 250px;
+}
+
+.nonEditiableDesField {
+    display: inline-block;
+    width: 160px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+    padding-top: 7px;
+    color: #5b5b5b;
+}
+.scrollHide {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+.mat-header-cell, .customWidth150 {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.inputWidthClass {
+    margin-right: 10px;
+    max-width: 95px;
+}
+.locCodeField {
+    margin-right: 10px;
+    max-width: 120px;
+}
+
+.checkFieldWidthClass {
+    min-width: 80px;
+}
+
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+}
+
+.customTable {
+    overflow-x: auto;
+}
+
+
+::ng-deep .maxWidth .mat-form-field{
+    max-width: 90%;
+}
+
+::ng-deep .maxWidthSelect .mat-select{
+    max-width: 90%;
+}
+
+.setWidth{
+    min-width: 90%;
+    max-width: 90%;
+    width: 50px;
+}
+
+.icon-itemBox{
+    width: 15px;
+    height: 15px;
+}
+
+.content-wrapper1 {
+    padding: 0px;
+    /* width:  76.5% ; */
+}
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff;
+}
+
+.customWidth150 {
+    min-width: 150px;
+    max-width: 150px;
+}
+
+.customWidth100 {
+    min-width: 100px;
+    max-width: 100px;
+}
+.searchRight {
+    position: fixed;
+    right: 5px;
+}
+
+::ng-deep .mat-checkbox-layout .mat-checkbox-label {
+    width: 0px !important;
+}
+
+.mat-input-element:disabled{
+    color: rgba(0,0,0,.87);
+}

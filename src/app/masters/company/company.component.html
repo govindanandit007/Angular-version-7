@@ -1,0 +1,26 @@
+<div [ngClass]="searchEnable ? 'sideContent' : ''">
+    <div [ngClass]="searchEnable ? 'content-wrapper1' : 'content-wrapper'">
+        <!-- <app-breadcrumb></app-breadcrumb> -->
+        <mat-horizontal-stepper
+            (selectionChange)="selectionChanged($event)"
+            [linear]="isLinear"
+            #stepper
+        >
+            <ng-template matStepperIcon="edit" let-index="index">
+                {{ index + 1 }}
+            </ng-template>
+            <mat-step *ngFor="let step of steps; let i = index">
+                <ng-template matStepLabel>{{ step.title }}</ng-template>
+                <router-outlet *ngIf="i === selectedStep"></router-outlet>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </div>
+    <div [fxShow]="searchEnable" [ngClass]="searchEnable ? 'searchRight displayBlock' : 'displayNone'">
+        <mat-sidenav class="rightSideNav" opened mode="side" position="end" [disableClose]="true" >
+            <app-search-bar 
+                fxLayout="row"
+                (searchComponentToggle)="getSearchToggle($event,'fromSearchBar')"
+            ></app-search-bar>
+        </mat-sidenav>
+    </div>
+</div>

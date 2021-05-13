@@ -1,0 +1,69 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle >
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle"> Item Revision View</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+ 
+<div mat-dialog-content [ngClass]="'pb-24'">
+    <div class="container" fxLayout="row">
+        <div fxFlex="80" fxLayout="column">
+            <div fxLayout="row" fxLayoutGap="20px" [ngClass]="'mb10'">
+                <div fxLayout="column" fxFlex="40">
+                    <span [ngClass]="'viewDialogDataTitle'">Item Name</span>
+                    <span [ngClass]="'viwDialogData'">{{
+                        data[0].itemName
+                    }}</span>
+                </div>
+                <div fxLayout="column" fxFlex="40">
+                    <span [ngClass]="'viewDialogDataTitle'">Revision #</span>
+                    <span [ngClass]="'viwDialogData'">{{
+                        data[0].revsnNumber
+                    }}</span>
+                </div>
+                <div fxLayout="column" fxFlex="20">
+                    <span [ngClass]="'viwDialogData'">
+                        <mat-checkbox
+                            class="materailFieldSize"
+                            disabled="true"
+                            [(ngModel)]="data[0].revsnEnabledFlag"
+                        >
+                            Enabled Flag</mat-checkbox
+                        >
+                    </span>
+                </div>
+            </div>
+            <div fxLayout="row" fxLayoutGap="20px" [ngClass]="'mb10'">
+                <div fxLayout="column" fxFlex="40">
+                    <span [ngClass]="'viewDialogDataTitle'"
+                        >Revision Reason</span
+                    >
+                    <span [ngClass]="'viwDialogData'">{{data[0].revsnReason ? data[0].revsnReason : '-'}}</span>
+                </div>
+                <div fxLayout="column" fxFlex="40">
+                    <span [ngClass]="'viewDialogDataTitle'"
+                        >Effective Date</span
+                    >
+                    <span [ngClass]="'viwDialogData'">{{
+                        data[0].revsnEffectiveDate | date
+                    }}</span>
+                </div>
+                <div fxLayout="column" fxFlex="20"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions [ngClass]="'viewActionFooter'">
+    <button
+        mat-flat-button
+        [ngClass]="'formButton saveButton'"
+        color="primary"
+        [mat-dialog-close]="data[0]"
+        cdkFocusInitial
+    >
+        Edit
+    </button>
+</div>

@@ -1,0 +1,112 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle"> Trading Partner Site</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+
+</h1>
+<div mat-dialog-content>
+    <div class="container" fxLayout="column">
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Code</span>
+                <span [ngClass]="'viwDialogData'">{{data.tpSiteCode}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Name</span>
+                <span [ngClass]="'viwDialogData'">{{data.tpSiteName}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Trading Partner Code</span>
+                <span [ngClass]="'viwDialogData'">{{data.tpCode}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <mat-checkbox class="materailFieldSize" fxFlex="25" style="margin-top: 10px"
+                    [(ngModel)]="data.tpSiteEnabledFlag" disabled>
+                    Enabled Flag</mat-checkbox>
+            </div>
+        </div>
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="100">
+                    <span [ngClass]="'viewDialogDataTitle'">Description</span>
+                    <span [ngClass]="'viwDialogData'">{{data.tpSiteDescription}}</span>
+                </div>
+            </div>
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="100">
+                    <span [ngClass]="'viewDialogDataTitle'">Address 1</span>
+                    <span [ngClass]="'viwDialogData'">{{data.tpSiteAddress1}}</span>
+                </div>
+            </div>
+        </div>
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="50">
+                    <span [ngClass]="'viewDialogDataTitle'">Address 2</span>
+                    <span [ngClass]="'viwDialogData'">{{data.tpSiteAddress2 ? data.tpSiteAddress2 : '-'}}</span>
+                </div>
+                <div fxLayout="column" fxFlex="50">
+                    <span [ngClass]="'viewDialogDataTitle'">Address 3</span>
+                    <span [ngClass]="'viwDialogData'">{{data.tpSiteAddress3? data.tpSiteAddress3 : '-'}}</span>
+                </div>
+            </div>
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="100">
+                    <span [ngClass]="'viewDialogDataTitle'">Phone Number</span>
+                    <span [ngClass]="'viwDialogData'">{{data.tpSitePhone}}</span>
+                </div>
+            </div>
+
+        </div>
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Country</span>
+                <span [ngClass]="'viwDialogData'">{{data.tpSiteCountry}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">State/County</span>
+                <span [ngClass]="'viwDialogData'">{{data.tpSiteStateCounty}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">City</span>
+                <span [ngClass]="'viwDialogData'">{{data.tpSiteCity}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Postal Code</span>
+                <span [ngClass]="'viwDialogData'">{{data.tpSitePincode}}</span>
+            </div>
+
+        </div>
+        <div [ngClass]="'marginT15'" fxLayout="row" fxLayoutGap="5px">
+            <div fxFlex="100" [ngClass]="'viewDialogLabelBar'">
+                <mat-label [ngClass]="'viewDialogLabel'">Site Contact Person :</mat-label>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="50">
+                    <span [ngClass]="'viewDialogDataTitle'">Person Name</span>
+                    <span [ngClass]="'viwDialogData'">{{data.tpSitePersonName}}</span>
+                </div>
+                <div fxLayout="column" fxFlex="50">
+                    <span [ngClass]="'viewDialogDataTitle'">Phone Number</span>
+                    <span [ngClass]="'viwDialogData'">{{data.tpSitePersonPhoneNum}}</span>
+                </div>
+            </div>
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="50">
+                    <span [ngClass]="'viewDialogDataTitle'">Email Address</span>
+                    <span [ngClass]="'viwDialogData'">{{data.tpSitePersonEmail}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data.tpSiteId"
+        cdkFocusInitial>Edit</button>
+</div>

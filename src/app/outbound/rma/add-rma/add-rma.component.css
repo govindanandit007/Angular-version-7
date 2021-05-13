@@ -1,0 +1,9 @@
+.mat-form-field-type-mat-native-select.mat-form-field-disabled
+    .mat-form-field-infix::after,
+.mat-input-element:disabled,::ng-deep .mat-select-disabled .mat-select-value, .inputDisable {
+    color: #000000 !important;
+}
+
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff !important;
+}

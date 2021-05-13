@@ -1,0 +1,168 @@
+<div [ngClass]="searchEnable ? 'sideContent' : ''">
+    <div
+        class="contentBorder marginT15"
+        [ngClass]="searchEnable ? 'content-wrapper1' : ''"
+    >
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">Purchase Orders :</span>
+            </div>
+            <div fxLayoutAlign="end">
+                <button
+                    *ngIf="!searchEnable"
+                    mat-mini-fab
+                    class="btn-search-bg mr10"
+                    (click)="searchForPurchaseOrder()"
+                    matTooltip="Search"
+                >
+                    <span class="headerIcon icon-search"></span>
+                </button>
+                <button
+                    mat-stroke-button
+                    class="orangeButtonBorder colorOperatingUnit mr10"
+                    color="primary"
+                    (click)="goFor('add')"
+                >
+                    Add Purchase Order
+                </button>
+                <span class="down-arrow" [matMenuTriggerFor]="exportmenu">
+                    <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                        Export
+                    </button>
+                </span>
+                <mat-menu #exportmenu="matMenu">
+                    <button mat-menu-item (click)="exporter.exportTable('xls', {fileName:'Flexi WMS - Purchase Order List'})">XLS</button>
+                    <button mat-menu-item (click)="exporter.exportTable('xlsx', {fileName:'Flexi WMS - Purchase Order List'})">XLSX</button>
+                    <button mat-menu-item (click)="exporter.exportTable('csv', {fileName:'Flexi WMS - Purchase Order List'})">CSV</button>
+                </mat-menu>
+            </div>
+        </div>
+        <div [ngClass]="!parameterDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'" [ngStyle]="{'max-height': commonService.screenMaxHeight, 'min-width': 'auto'}">
+            <table #customTable mat-table matTableExporter [hiddenColumns]='[10]' #exporter="matTableExporter" [dataSource]="parameterDataSource" matSort class="resize-table" style="min-width: 1200px;" matSortDisableClear>
+                <ng-container matColumnDef="poId">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto mat-header-column-'+columns[0].field" >
+                        {{ columns[0].name }}
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index"  >
+                        <span [ngClass]="'nonEditiableField'">{{ paginator.pageSize * paginator.pageIndex + i + 1 }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poNumber">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[1].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span [ngClass]="'nonEditiableField'">{{element.poNumber ? element.poNumber : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poType">
+                    <th mat-header-cell *matHeaderCellDef  [ngClass]="'mat-header-column-'+columns[2].field" (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[2].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span [ngClass]="'nonEditiableField'">{{element.poTypeName ? element.poTypeName : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poStatus">
+                    <th mat-header-cell *matHeaderCellDef  [ngClass]="'mat-header-column-'+columns[3].field" (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[3].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span [ngClass]="'nonEditiableField'">{{element.lookupValueDesc ? element.lookupValueDesc : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="ouCode">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[4].field" (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[4].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span [ngClass]="'nonEditiableField'">{{element.ouCode ? element.ouCode : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="supplierName">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[5].field" (mousedown)="commonService.onResizeColumn($event, 5, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[5].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span [ngClass]="'nonEditiableField'">{{element.supplierName ? element.supplierName : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="supplierSiteName">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[6].field" (mousedown)="commonService.onResizeColumn($event, 6, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[6].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span [ngClass]="'nonEditiableField'">{{element.supplierSiteName ? element.supplierSiteName : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poCurrencyCodeValue">
+                    <th mat-header-cell *matHeaderCellDef  [ngClass]="'mat-header-column-'+columns[7].field" (mousedown)="commonService.onResizeColumn($event,7, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[7].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span [ngClass]="'nonEditiableField'">{{element.poCurrencyCodeValue ? element.poCurrencyCodeValue : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poAmount">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[8].field" (mousedown)="commonService.onResizeColumn($event, 8, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[8].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span [ngClass]="'nonEditiableField'">{{element.poAmount ? element.poAmount : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="action" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef  [ngClass]="'cursor-auto actionColumn1 mat-header-column-'+columns[9].field">
+                        {{ columns[9].name }}
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons1'">
+                            <span (click)="goFor('view', element)" matRipple matTooltip="View"
+                                [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                [matRippleCentered]="true" [matRippleRadius]="false">
+                                <mat-icon>remove_red_eye</mat-icon>
+                            </span>
+                            <span *ngIf="element.poHostId === null" (click)="goFor('edit', element.poId)" matRipple matTooltip="Edit"
+                                [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                [matRippleCentered]="true" [matRippleRadius]="false">
+                                <mat-icon>edit</mat-icon>
+                            </span>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumns"></tr>
+            </table>
+
+            <ng-container *ngIf="listProgress">
+                <mat-spinner
+                    [diameter]="40"
+                    [ngClass]="'loaderSpinner'"
+                ></mat-spinner>
+            </ng-container>
+            <ng-container
+                *ngIf="!parameterDataSource.data.length && !listProgress"
+            >
+                <div [ngClass]="'noDataFound'">
+                    <small>{{ poTableMessage }}</small>
+                </div>
+            </ng-container>
+        </div>
+        <mat-paginator
+       
+        (page)="commonService.setPaginationSize($event)"
+            showFirstLastButtons
+            [ngClass]="'mat-paginator-sticky'"
+        >
+        </mat-paginator>
+    </div>
+    <div
+        [fxShow]="searchEnable"
+        [ngClass]="searchEnable ? 'searchRight top-68' : ''"
+    >
+        <mat-sidenav class="rightSideNav" opened mode="side" position="end" [disableClose]="true">
+            <app-purchase-order-search
+                fxLayout="row"
+                (searchComponentToggle)="getSearchToggle($event)"
+            ></app-purchase-order-search>
+        </mat-sidenav>
+    </div>
+</div>

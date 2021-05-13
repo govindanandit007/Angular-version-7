@@ -1,0 +1,37 @@
+.formHeader {
+    padding: 10px 20px;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+.customTable{
+    overflow: auto;
+}
+::ng-deep .mat-column-No{
+    min-width: 50px;
+}
+::ng-deep .mat-column-poIuId{
+    min-width: 100px;
+}
+
+::ng-deep .inputMarginClass {
+    margin-right: 10px;
+}
+
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff !important;
+}
+.customWidth80 {
+    position: relative;
+}
+.mat-form-field-type-mat-native-select.mat-form-field-disabled
+    .mat-form-field-infix::after,
+.mat-input-element:disabled {
+    color: #000000;
+}
+
+.item-head {
+    font-size: 12px;
+    color: #098ccd;
+    font-weight: 600 !important;
+}

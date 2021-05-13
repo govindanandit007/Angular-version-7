@@ -1,0 +1,355 @@
+<div [ngClass]="searchEnable ? 'sideContent' : ''">
+    <div class="contentBorder marginT15" [ngClass]="searchEnable ? 'content-wrapper1' : ''">
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle"><app-breadcrumb></app-breadcrumb></span>
+            </div>
+            <div fxLayoutAlign="end">
+                <button *ngIf="!searchEnable" mat-mini-fab class="btn-search-bg mr10"
+                    (click)="searchComponentOpen()" matTooltip="Search">
+                    <span class="headerIcon icon-search"></span>
+                </button>
+            </div>
+        </div>
+        <div class="formContainer" fxLayout="column" style="padding-left:0px;padding-right:0px;">
+            <div class="container" fxLayout="column">
+            <div #customTable [ngClass]="!parameterDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'" [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+                    <table mat-table [dataSource]="parameterDataSource"  matSort class="resize-table" style="min-width: 3900px;" matSortDisableClear>
+                    <!-- row checkbox -->
+                    <ng-container matColumnDef="cycleCountId">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto mat-header-column-'+columns[0].field">
+                            <mat-checkbox [(ngModel)]="selectAllRow" (change)="selectAll()" >
+                            </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i=index">
+                            <mat-checkbox  (change)="onCheckBoxChanged()" [(ngModel)]="element.rowSelected" [disabled]="element.isDisable"></mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <!-- No -->
+                    <ng-container matColumnDef="ccTaskId">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto mat-header-column-'+columns[1].field">
+                            {{ columns[1].name }}
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i=index">
+                          <span [ngClass]="'nonEditiableField Number'">{{paginator.pageSize * paginator.pageIndex + i + 1}}</span>
+                        </td>
+                    </ng-container>
+                    <!-- IU -->
+                    <ng-container matColumnDef="iuCode">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto mat-header-column-'+columns[2].field" (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[2].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span>{{ element.iuCode }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- count sequence -->
+                    <ng-container matColumnDef="taskSequenceId">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[3].field" (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[3].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.taskSequenceId}}</span>
+                        </td>
+                    </ng-container>
+                    <!-- item name -->
+                    <ng-container matColumnDef="itemName">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[4].field" (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[4].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.itemName}}</span>
+                        </td>
+                    </ng-container>
+                    <!-- LG Code -->
+                    <ng-container matColumnDef="lgCode">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[5].field" (mousedown)="commonService.onResizeColumn($event, 5, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[5].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.lgCode !== null ? element.lgCode : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- Locator -->
+                    <ng-container matColumnDef="locCode">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[6].field" (mousedown)="commonService.onResizeColumn($event, 6, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[6].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.locCode !== null ? element.locCode : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- revsnNumber -->
+                    <ng-container matColumnDef="revsnNumber">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[7].field" (mousedown)="commonService.onResizeColumn($event, 7, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[7].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.revsnNumber !== null ? element.revsnNumber : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- LPN Number -->
+                    <ng-container matColumnDef="lpnNum">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[8].field" (mousedown)="commonService.onResizeColumn($event, 8, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[8].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.lpnNum !== null ? element.lpnNum : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- Batch Number -->
+                    <ng-container matColumnDef="batchNumber">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[9].field" (mousedown)="commonService.onResizeColumn($event, 9, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[9].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.batchNumber !== null ? element.batchNumber : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- Serial Number -->
+                    <ng-container matColumnDef="serialNumber">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[10].field" (mousedown)="commonService.onResizeColumn($event, 10, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[10].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.serialNumber !== null ? element.serialNumber : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- taskStatusCode -->
+                    <ng-container matColumnDef="taskStatusCode">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[11].field" (mousedown)="commonService.onResizeColumn($event, 11, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[11].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.taskStatus !== null ? element.taskStatus : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- countDate -->
+                    <ng-container matColumnDef="countDate">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[12].field" (mousedown)="commonService.onResizeColumn($event, 12, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[12].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.countDate !== null ? (element.countDate | date) : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- userName -->
+                    <ng-container matColumnDef="userName">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[13].field" (mousedown)="commonService.onResizeColumn($event, 13, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[13].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.userName !== null ? element.userName : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- primaryCountQuantity -->
+                    <ng-container matColumnDef="primaryCountQuantity">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[14].field" (mousedown)="commonService.onResizeColumn($event, 14, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[14].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.primaryCountQuantity !== null ? element.primaryCountQuantity : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- primaryUom -->
+                    <ng-container matColumnDef="primaryUom">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[15].field" (mousedown)="commonService.onResizeColumn($event, 15, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[15].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.primaryUom}}</span>
+                        </td>
+                    </ng-container>
+                    <!-- secondaryCountQuantity -->
+                    <ng-container matColumnDef="secondaryCountQuantity">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[16].field" (mousedown)="commonService.onResizeColumn($event, 16, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[16].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.secondaryCountQuantity !== null ? element.secondaryCountQuantity : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- secondaryUom -->
+                    <ng-container matColumnDef="secondaryUom">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[17].field" (mousedown)="commonService.onResizeColumn($event, 17, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[17].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.secondaryUom !== null ? element.secondaryUom : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- systemQuantity -->
+                    <ng-container matColumnDef="systemQuantity">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[18].field" (mousedown)="commonService.onResizeColumn($event, 18, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[18].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.systemQuantity}}</span>
+                        </td>
+                    </ng-container>
+                    <!-- secondarySystemQuantity -->
+                    <ng-container matColumnDef="secondarySystemQty">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[19].field" (mousedown)="commonService.onResizeColumn($event, 19, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[19].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.secondarySystemQty !== null ? element.secondarySystemQty : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- adjustmentQuantity -->
+                    <ng-container matColumnDef="adjustmentQuantity">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[20].field" (mousedown)="commonService.onResizeColumn($event, 20, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[20].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.adjustmentQuantity !== null ? element.adjustmentQuantity : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- secondaryAdjustmentQuantity -->
+                    <ng-container matColumnDef="secondaryAdjustmentQuantity">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[21].field" (mousedown)="commonService.onResizeColumn($event, 21, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[21].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.secondaryAdjustmentQuantity !== null ? element.secondaryAdjustmentQuantity : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- approvalDate -->
+                    <ng-container matColumnDef="approvalDate">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[22].field" (mousedown)="commonService.onResizeColumn($event, 22, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[22].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                        <span>{{element.approvalDate !== null ? (element.approvalDate | date) : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- reviewerName -->
+                    <ng-container matColumnDef="reviewerName">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[23].field" (mousedown)="commonService.onResizeColumn($event, 23, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[23].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span>{{element.reviewerName !== null ? element.reviewerName : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- deviationPercentage -->
+                    <ng-container matColumnDef="deviationPer">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[24].field" (mousedown)="commonService.onResizeColumn($event, 24, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[24].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span>{{element.deviationPer !== null ? element.deviationPer : '-' }}</span>
+                        </td>
+                    </ng-container>
+                    <!-- transactionReason -->
+                    <ng-container matColumnDef="transactionReason">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[25].field" (mousedown)="commonService.onResizeColumn($event, 25, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[25].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span>{{element.transactionReason !== null ? element.transactionReason : '-' }}</span>
+                            <!-- <mat-form-field>
+                                <mat-select required [ngClass]="" [(ngModel)]='element.transactionReason'>
+                                    <mat-option *ngFor="let reason of reasonList" [value]="reason.value">
+                                        {{reason.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field> -->
+                        </td>
+                    </ng-container>
+                    <!-- Action -->
+                    <ng-container matColumnDef="approvalType">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto mat-header-column-'+columns[26].field">
+                            <span mat-sort-header>{{ columns[26].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i=index">
+                            <span>{{element.approvalTypeValue !== null ? element.approvalTypeValue : '-' }}</span>
+                            <!-- <mat-form-field>
+                                <mat-select required [ngClass]="" [(ngModel)]='element.approvalType'>
+                                    <mat-option *ngFor="let action of actionList" [value]="action.value">
+                                        {{action.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field> -->
+                        </td>
+                        </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumns;"></tr>
+                    </table>
+                    <ng-container *ngIf="listProgress">
+                        <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                    </ng-container>
+                    <ng-container *ngIf="!parameterDataSource.data.length && !listProgress">
+                        <!-- <div [ngClass]="'positionRelative'"> -->
+                        <div [ngClass]="'noDataFound'"><small>{{cycleCountTableMessage}}</small></div>
+                        <!-- </div> -->
+                    </ng-container>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <div class="pl-20">
+                        <button *ngIf="parameterDataSource.data.length && isDataSelected" mat-flat-button [ngClass]="'formButton saveButton mr10'" (click)="openActionDialog(actionDialog)">
+                            Review
+                        </button>
+                        <button  mat-flat-button [ngClass]="'formButton saveButton mr10'" (click)="refresh()">
+                            Refresh
+                        </button>
+                        <button  mat-flat-button [ngClass]="'formButton saveButton mr10'"
+                            (click)="commonService.openConfirmationDialog('Review','cyclecount/cyclecountlist')">
+                            Cancel
+                        </button>
+                    </div>
+                    <mat-paginator (page)="commonService.setPaginationSize($event)"  showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div [fxShow]="searchEnable" [ngClass]="searchEnable ? 'searchRight top-68' : ''">
+        <mat-sidenav class="rightSideNav" opened mode="side" position="end" [disableClose]="true">
+            <app-cc-review-search-bar fxLayout="row" (searchComponentToggle)="getSearchToggle($event)">
+            </app-cc-review-search-bar>
+        </mat-sidenav>
+    </div>
+</div>
+
+<ng-template #actionDialog>
+    <div [ngClass]="'deleteDialog'">
+        <h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+            <div fxLayout="row" fxLayoutGap="10px">
+                <div fxFlex="60" fxLayoutGap="10px"><span class="viewDialogTitle">Approval Action</span></div>
+            </div>
+        </h1>
+        <div mat-dialog-content [ngClass]="'pb-24'">
+            <div fxLayout="row" fxLayoutGap="10px">
+                <div fxFlex="50">
+                    <mat-label>Reason</mat-label>
+                    <mat-form-field>
+                        <mat-select placeholder="Required" required [(ngModel)]='transactionReason'>
+                            <mat-option *ngFor="let reason of reasonList" [value]="reason.value">
+                                {{reason.label}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div fxFlex="50">
+                    <mat-label>Action</mat-label>
+                    <mat-form-field>
+                        <mat-select placeholder="Required" required [(ngModel)]='approvalType'>
+                            <mat-option *ngFor="let action of actionList" [value]="action.value">
+                                {{action.label}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start">
+                <button mat-flat-button [disabled]='transactionReason === "" || approvalType === "" ' [ngClass]="'formButton saveButton deleteBtn'" matDialogClose color="primary" (click)="saveReview($event)">
+                    Save
+                </button>
+                <button mat-flat-button matDialogClose [ngClass]="'formButton saveButton cancelBtn'" color="accent">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>

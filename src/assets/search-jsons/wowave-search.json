@@ -1,0 +1,89 @@
+{
+    "type": "WAVE",
+    "searchType": "wave",
+    "searchFor": "Search Wave",
+    "companyKey": "",
+    "searchArray": [
+  
+         {
+            "type": "LOV",
+            "lovType": "waveNumber",
+            "label": "Wave Number",
+            "key": "waveNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "workOrderNumber",
+            "label": "Work Order Number",
+            "key": "woNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },         
+        {
+            "type": "LOV",
+            "lovType": "assemblyItem",
+            "label": "Assembly Item",
+            "key": "woAssmItemId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "waveStatus",
+            "label": "Status",
+            "key": "waveStatus",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+       
+        {
+            "type": "LOV",
+            "lovType": "wavePolicy",
+            "label": "Policy",
+            "key": "wavePolicyId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+             
+        {
+            "type": "LOV",
+            "lovType": "IuCode",
+            "label": "IU",
+            "key": "waveIuId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,162 @@
+<div fxFlex="100" class="contentBorder marginT15">
+    <div [ngClass]="'formHeader'" fxLayout="row">
+        <div fxFlex fxLayoutAlign="start">
+            <span class="formHeaderTitle"><app-breadcrumb></app-breadcrumb> </span>
+        </div>
+        <div fxLayoutAlign="end">
+            <!-- <button  mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                Attribute
+            </button> -->
+        </div>
+    </div>
+    <div fxLayout="row">
+        <mat-divider fxFlex="100"></mat-divider>
+    </div>
+    <div class="formContainer" fxLayout="column">
+        <form #materialSetupForm="ngForm"  id="ngForm" [formGroup]="MaterialSetupForm" autocomplete="off"(ngSubmit)="onSubmit($event, materialSetupForm)">
+            <div class="container" fxLayout="column">
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <mat-form-field class="materailFieldSize" fxFlex="20">
+                        <input matInput placeholder="Name" formControlName="materialStatusName" (blur)="logValidationErrors()" required/>
+                        <mat-error *ngIf="formErrors.materialStatusName">{{formErrors.materialStatusName}}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                        <input matInput placeholder="Description" formControlName="description" />
+                    </mat-form-field>
+                    <mat-checkbox class="materailFieldSize mt10" fxFlex="15" formControlName="allowReservations"
+                            >Allow Reservations</mat-checkbox>
+                    <mat-checkbox class="materailFieldSize mt10" fxFlex="15" formControlName="enabledFlag"
+                            >Enabled Flag</mat-checkbox>
+                    
+                </div>
+                <div fxLayout="row" fxLayoutGap="20px" class='mb10 mt15'>
+                    <label fxFlex="100">Entity :</label>
+                    </div>
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <mat-checkbox class="materailFieldSize" fxFlex="18" formControlName="lgEnabled"
+                            style="margin-top: 10px">Locator Group</mat-checkbox>
+                    <mat-checkbox class="materailFieldSize" fxFlex="18" formControlName="locEnabled"
+                            style="margin-top: 10px">Stock Locators</mat-checkbox>
+                    <mat-checkbox class="materailFieldSize" fxFlex="18" formControlName="batchEnabled"
+                            style="margin-top: 10px">Batch</mat-checkbox>
+                    <mat-checkbox class="materailFieldSize" fxFlex="18" formControlName="serialEnabled"
+                            style="margin-top: 10px">Serial</mat-checkbox>
+                    <mat-checkbox class="materailFieldSize" fxFlex="18" formControlName="lpnEnabled"
+                            style="margin-top: 10px">LPN</mat-checkbox>
+                    
+                </div>
+               
+                <div fxLayout="row" fxLayoutGap="20px" class='mb20 mt20 '>
+                <label fxFlex="100">Transaction Type :</label>
+                </div>
+            </div>
+        </form>
+        <div fxLayout="row wrap" [ngClass]="listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'" fxLayoutGap="20px">
+            <ng-container *ngIf="listProgress">
+                <mat-spinner
+                    [diameter]="40"
+                    [ngClass]="'loaderSpinner'"
+                ></mat-spinner>
+            </ng-container>
+            <ng-container *ngIf="!listProgress">
+                
+                <section class="example-section">
+                    <span class="example-list-section">
+                        <mat-checkbox class="headingCheck"
+                          [checked]="inBoundAllCheck"
+                          [indeterminate]="inBoundCheck"
+                          (change)="setAll($event.checked,'Inbound')">
+                        <strong fxFlex="100" class="typeHeading">{{columns[1].name}}</strong>
+                        </mat-checkbox>
+                    </span>
+                    <span class="example-list-section">
+                        <ul>
+                        <li *ngFor="let item of transactionTypeArray; let i=index">
+                            <div *ngIf="item.parentValue === 'Inbound'">
+                                <mat-checkbox class="materailFieldSize" 
+                                                fxFlex="18" 
+                                            [(ngModel)]="item.enableFlag" 
+                                            style="margin-top: 10px" 
+                                            (change)="txnTypeChange($event,item, item.parentValue)">
+                                            {{item.description}}
+                                </mat-checkbox>
+                            </div>
+                        </li>
+                        </ul>
+                    </span>
+                </section>
+                <section class="example-section">
+                <span class="example-list-section">
+                    <mat-checkbox class="headingCheck"
+                        [checked]="wareHouseAllCheck"
+                        [indeterminate]="wareHouseCheck"
+                        (change)="setAll($event.checked,'Warehouse')"    
+                    >
+                    <strong fxFlex="100">{{columns[2].name}}</strong>
+                    </mat-checkbox>
+                </span>
+                <span class="example-list-section">
+                    <ul>
+                    <li *ngFor="let item of transactionTypeArray; let i=index">
+                        <div *ngIf="item.parentValue === 'Warehouse'">
+                            <mat-checkbox class="materailFieldSize" 
+                                            fxFlex="18" 
+                                        [(ngModel)]="item.enableFlag" 
+                                        style="margin-top: 10px" 
+                                        (change)="txnTypeChange($event,item, item.parentValue)">
+                                        {{item.description}}
+                            </mat-checkbox>
+                        </div>
+                    </li>
+                    </ul>
+                </span>
+                </section>
+                <section class="example-section">
+                    <span class="example-list-section">
+                      <mat-checkbox class="headingCheck"
+                      [checked]="onBoundAllCheck"
+                      [indeterminate]="onBoundCheck"
+                      (change)="setAll($event.checked,'Outbound')">
+                        <strong fxFlex="100">{{columns[0].name}}</strong>
+                      </mat-checkbox>
+                    </span>
+                    <span class="example-list-section">
+                      <ul>
+                        <li *ngFor="let item of transactionTypeArray; let i=index">
+                            <div *ngIf="item.parentValue === 'Outbound'">
+                                <mat-checkbox class="materailFieldSize" 
+                                             fxFlex="18" 
+                                            [(ngModel)]="item.enableFlag" 
+                                            style="margin-top: 10px" 
+                                            (change)="txnTypeChange($event,item, item.parentValue)">
+                                            {{item.description}}
+                                </mat-checkbox>
+                            </div>
+                        </li>
+                      </ul>
+                    </span>
+                </section>
+                
+            </ng-container>
+           </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center" class='mt15'>
+            <div>
+        
+                <button *ngIf="!isEdit" mat-flat-button [ngClass]="'formButton saveButton mr10'"
+                    (click)="materialSetupForm.ngSubmit.emit()" form="ngForm">
+                    Save
+                </button>
+                <button *ngIf="isEdit" mat-flat-button [ngClass]="'formButton saveButton mr10'"
+                    (click)="onSubmit($event, MaterialSetupForm)">
+                    Update
+                </button>
+                <button mat-flat-button [ngClass]="'formButton saveButton mr10'"
+                    (click)="commonService.openConfirmationDialog('Material Status Setup','materialstatussetup')">
+                    Cancel
+                </button>
+            </div>
+            
+        </div>
+    </div>
+</div>

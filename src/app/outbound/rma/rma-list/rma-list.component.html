@@ -1,0 +1,236 @@
+<div [ngClass]="searchEnable ? 'sideContent' : ''">
+    <div
+        class="contentBorder marginT15"
+        [ngClass]="searchEnable ? 'content-wrapper1' : ''"
+    >
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">RMA :</span>
+            </div>
+            <div fxLayoutAlign="end">
+                <button
+                    *ngIf="!searchEnable"
+                    mat-mini-fab
+                    class="btn-search-bg mr10"
+                    (click)="searchForSalesOrder()"
+                    matTooltip="Search"
+                >
+                    <span class="headerIcon icon-search"></span>
+                </button>
+                <button
+                    mat-stroke-button
+                    class="orangeButtonBorder colorOperatingUnit mr10"
+                    color="primary"
+                    (click)="goFor('add')"
+                >
+                    Add RMA
+                </button>
+                <span class="down-arrow" [matMenuTriggerFor]="exportmenu">
+                    <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                        Export
+                    </button>
+                </span>
+                <mat-menu #exportmenu="matMenu">
+                    <button mat-menu-item (click)="exporter.exportTable('xls', {fileName:'Flexi WMS - Sales Order List'})">XLS</button>
+                    <button mat-menu-item (click)="exporter.exportTable('xlsx', {fileName:'Flexi WMS - Sales Order List'})">XLSX</button>
+                    <button mat-menu-item (click)="exporter.exportTable('csv', {fileName:'Flexi WMS - Sales Order List'})">CSV</button>
+                </mat-menu>
+            </div>
+        </div>
+        <div #customTable [ngClass]="!parameterDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'" [ngStyle]="{ 'min-width': 'auto', 'max-height': commonService.screenMaxHeight }">
+            <table mat-table matTableExporter [hiddenColumns]='[9]' #exporter="matTableExporter" [dataSource]="parameterDataSource" matSort class="resize-table" style="min-width: 1400px;" matSortDisableClear>
+                <ng-container matColumnDef="soId">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto mat-header-column-'+columns[0].field" >
+                        {{ columns[0].name }}
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index"  >
+                        <span>{{ paginator.pageSize * paginator.pageIndex + i + 1 }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soNumber">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[1].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span>{{element.soNumber ? element.soNumber : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="rmaNumber">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[10].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span>{{element.rmaNumber ? element.rmaNumber : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soType">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[2].field" (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[2].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span>{{element.rmaId ? 'Return Material Authorization' : element.typeName}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soDate">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[3].field" (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[3].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span>{{element.soDate ? (element.soDate | date) : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soStatus">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[4].field" (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[4].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span>{{element.rmaStatusName ? (element.rmaStatusName) : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soOU">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[5].field" (mousedown)="commonService.onResizeColumn($event, 5, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[5].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span>{{element.ouCode ? element.ouCode : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soCustomer">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[6].field" (mousedown)="commonService.onResizeColumn($event, 6, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[6].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span>{{element.customerName ? element.customerName : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soCustomerSite">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[7].field" (mousedown)="commonService.onResizeColumn($event, 7, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[7].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span>{{element.customerSiteName ? element.customerSiteName : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soPriority">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[8].field" (mousedown)="commonService.onResizeColumn($event, 8, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[8].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <span>{{element.soPriority ? (element.priorityName) : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="action" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef  [ngClass]="'cursor-auto actionColumn1 mat-header-column-'+columns[9].field">
+                        {{ columns[9].name }}
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons1'" >
+                        <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center">
+                            <span  *ngIf="(element.soStatus === 'SHIPPED' && element.rmaEdit ==='Y') && (element.rmaStatusCode === null || element.rmaStatusCode === 'INRECVNG' || element.rmaStatusCode === 'RECEIVED')" class="icon-add"
+                                (click)="goFor('add',element)" matRipple matTooltip="Add RMA" 
+                                [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                [matRippleRadius]="false"></span>
+
+                            <span  *ngIf="element.rmaStatusCode === 'CREATED'" class="icon-edit"
+                                (click)="goFor('add',element)" matRipple matTooltip="Edit RMA" 
+                                [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                [matRippleRadius]="false"></span> 
+
+                            <span *ngIf="element.rmaId" (click)="goFor('view', element)" matRipple matTooltip="View"
+                                [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                [matRippleCentered]="true" [matRippleRadius]="false">
+                                <mat-icon>remove_red_eye</mat-icon>
+                            </span>
+                            <!-- *ngIf="!element.addNewRecord && element.isDefault && element.soLineStatus === 'SHIPPED'" -->
+                            
+                        </div>
+                            
+                    </td>
+                </ng-container>
+                <!-- (click)="getSelectedItemRecord(row,  paginator.pageSize * paginator.pageIndex + i)"
+                [ngClass]="{'highlightRowSelect': selectedRowIndex == paginator.pageSize * paginator.pageIndex + i}" -->
+                <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumns; let i = index;"
+                ></tr>
+            </table>
+            <ng-container *ngIf="listProgress">
+                <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+            </ng-container>
+            <ng-container *ngIf="!parameterDataSource.data.length && !listProgress">
+                <div [ngClass]="'noDataFound'">
+                    <small>{{ soTableMessage }}</small>
+                </div>
+            </ng-container>
+        </div>
+        <mat-paginator (page)="commonService.setPaginationSize($event)"  showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+        </mat-paginator>
+    </div>
+    <div [fxShow]="searchEnable" [ngClass]="searchEnable ? 'searchRight top-68' : ''">
+        <mat-sidenav class="rightSideNav" opened mode="side" position="end" [disableClose]="true">
+            <app-rma-search fxLayout="row" (searchComponentToggle)="getSearchToggle($event)"></app-rma-search>
+        </mat-sidenav>
+    </div>
+</div>
+
+
+<ng-template #myDialog let-data>
+    <h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+        <div fxLayout="row" fxLayoutGap="10px">
+            <div fxFlex="90" fxLayoutGap="10px"><span class="viewDialogTitle">Select Sales Order</span></div>
+            <div fxFlex="10" fxLayoutGap="10px">
+                <button mat-icon-button matDialogClose >
+                    <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </h1>
+   
+    <div mat-dialog-content>
+        
+        <!-- <ng-container *ngIf="!listProgressRMA">
+            <mat-form-field class="materailFieldSize" fxFlex="100">
+                <mat-select [(ngModel)]="soForRMA" >
+                    <mat-option *ngFor="let temp of soForRMAList" [value]="temp.value">
+                        {{temp.label}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </ng-container> -->
+        <ng-container>
+            <div *ngIf="inlineSOSearchLoader === 'hide'" fxFlex="100">
+                <mat-form-field class="materailFieldSize"
+                    *ngIf="showSOLov === 'show'" fxFlex="90">
+                    <mat-select [(ngModel)]="soForRMA" >
+                        <mat-option *ngFor="let temp of soForRMAList" [value]="temp.value">
+                            {{temp.label}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="materailFieldSize"
+                    *ngIf="showSOLov === 'hide'" fxFlex="90">
+                    <input matInput (keydown)="fetchNewSearchListForSO($event, false)"
+                        (keypress)="commonService.isWholeNumber($event)"
+                        (blur)="fetchNewSearchListForSO($event, false)" placeholder="Search Sales Order"
+                        [(ngModel)]="soSearchValue" autocomplete="off" />
+                </mat-form-field>
+                <div fxFlex="5"></div>
+                <div [ngClass]="'pt-15'" fxFlex="5">
+                    <div class="icon-search" matTooltip="Search"
+                        [matTooltipPosition]="tooltipPosition"
+                        (click)="fetchNewSearchListForSO($event, true)">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="inlineSOSearchLoader === 'show'"
+                style="padding-top: 14px;">
+                <div style="font-size: 14px;">Searching...</div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="listProgressRMA">
+            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+        </ng-container>
+    </div>
+    <div mat-dialog-actions class="padding10">
+        <button mat-flat-button color="primary"  class="formButton saveButton mr10" (click)='goForRMA()'>Add RMA</button>
+        <button mat-flat-button  color="accent" class="formButton cancelButton" (click)="closeDialog()">Cancel</button>
+    </div>
+</ng-template>

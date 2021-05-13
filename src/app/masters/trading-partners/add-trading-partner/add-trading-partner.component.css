@@ -1,0 +1,18 @@
+.formHeader {
+    padding: 10px 20px;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+.materailFieldSize {
+    font-size: 14px;
+}
+/* .tradingPartnerStepper .mat-horizontal-stepper-header-container {
+    width: 50% !important;
+} */
+/* ::ng-deep .mat-horizontal-stepper-header-container {
+    width: 50% !important;
+} */
+.mat-select-disabled .mat-select-value {
+    color: #000;
+}

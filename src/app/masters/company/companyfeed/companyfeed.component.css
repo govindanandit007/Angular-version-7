@@ -1,0 +1,225 @@
+.header {
+    height: 40px;
+    padding-top: 20px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.customTable {
+    overflow-x: auto;
+}
+
+.item {
+    margin-top: 10px;
+    text-align: left;
+}
+
+.subItem {
+    /* width: 200px; */
+    text-align: left;
+    font-size: 14px;
+    height: 100px;
+}
+.iconSubItem {
+    /* width: 100px; */
+    text-align: left;
+    font-size: 14px;
+    height: 100px;
+}
+
+.materailFieldSize {
+    font-size: 14px;
+}
+
+.roundedBorder {
+    border-radius: 20px, 20px, 20px, 20px;
+}
+
+.formHeader {
+    padding: 10px 20px;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+
+.custom-file-input {
+    font-weight: normal;
+    font-family: inherit;
+    background: #f2f2f4;
+    position: relative;
+    min-height: 100px;
+    border: dashed 2px #d9d9d9;
+    color: transparent;
+}
+.custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+    padding-left: 30px;
+    font-weight: 500;
+    color: rgb(88, 88, 88);
+}
+.custom-file-input::before,
+.custom-file-input::after {
+    display: block;
+    color: #676666;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: -15px;
+    bottom: 0;
+    height: 25px;
+}
+.custom-file-input::before {
+    font-family: 'icomoon';
+    content: '\e928';
+    font-size: 20px;
+}
+
+.custom-file-input::after {
+    content: 'Choose on image or drag it here.';
+    top: 25px;
+    font-size: 12px;
+}
+
+.custom-file-input:hover::before {
+    border-color: rgb(168, 163, 163);
+}
+.custom-file-input:active {
+    outline: 0;
+}
+.custom-file-input:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+.iconImageSize {
+    max-width: 65px;
+    max-height: 65px;
+}
+.logoImageSize {
+    max-width: 200px;
+    max-height: 65px;
+}
+
+.marginforCompany {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.marginforLogo {
+  margin-top: 10px;
+      /* border: 1px solid #ccc; */
+  border: dashed 2px #d9d9d9;;
+  padding: 5px;
+  position: relative;
+}
+
+.editImageIcon {
+padding: 5px;
+background-color: #fff;
+border-radius: 50%;
+position: absolute;
+left: 50%;
+top: 50%;
+transform: translate(-50%, -50%);
+}
+
+.enableImageChangeOption {
+display: none;
+background-color: rgba(0, 0, 0, 0.62);
+position: absolute;
+width: 100%;
+height: 100%;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+}
+
+.marginforLogo:hover{
+color: #676666;
+/* cursor: pointer; */
+}
+.pointerHover:hover{
+/* color: #676666; */
+cursor: pointer;
+}
+
+.marginforLogo:hover .enableImageChangeOption{
+display: block;
+}
+
+.full-container-img {
+/* width: 100%;
+height: 100%; */
+max-width: 100%;
+max-height: 100%;
+}
+
+.mat-form-field-type-mat-native-select.mat-form-field-disabled
+    .mat-form-field-infix::after,
+.mat-input-element:disabled {
+    color: #000000;
+}
+.helpIcon {
+    font-size: 20px;
+}
+
+.LogosubItem {
+    padding: 10px;
+}
+.LogosubItem img {
+    /* min-height: 43px; */
+    height: 100%;
+    width: auto;
+    /* min-width: 50px; */
+    /* height: auto; */
+    /* border: 1px solid #ccc;
+    padding: 10px; */
+}
+
+.logoImg, .iconImg{
+    height: 87px;;
+    border: 2px solid #ccc;
+    text-align: center;
+}
+.wordWrap {
+    overflow-wrap: break-word;
+}
+/* .mat-header-cell {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+.mat-column-companyCode {
+    flex: 0 0 15% !important;
+    width: 15% !important;
+}
+.mat-column-companyAddr1,
+.mat-column-companyName {
+    flex: 0 0 25% !important;
+    width: 25% !important;
+}
+.mat-column-action {
+    width: 65px;
+}
+.mat-column-companyEnabledFlag {
+    width: 100px;
+} */
+.mat-dialog-title {
+    margin: 0 0 10px;
+}
+.companyViewDialogLabelBar {
+    min-height: 35px;
+}
+::ng-deep .mat-select-disabled .mat-select-value{
+    color: #000000;
+}
+::ng-deep .selectArrowHide .mat-select-arrow {
+    color: #fff;
+    border-top: 0px;
+}

@@ -1,0 +1,202 @@
+{
+    "type": "TASK",
+    "searchType": "task",
+    "searchFor": "Search Task",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "pickSlipNumber",
+            "label": "Pick Slip Number",
+            "key": "pickSlipNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "taskNumber",
+            "label": "Task Number",
+            "key": "taskNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "taskStatus",
+            "label": "Task Status",
+            "key": "taskStatus",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "itemName",
+            "label": "Item",
+            "key": "itemName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "taskLg",
+            "label": "Locator Group",
+            "key": "sourceLgId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "revisionNumber",
+            "label": "Revision",
+            "key": "revisionNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "shipmentNumber",
+            "label": "Shipment",
+            "key": "shipmentNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "salesOrder",
+            "label": "Sales Order",
+            "key": "salesOrder",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "workOrder",
+            "label": "Work Order",
+            "key": "woNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "waveNumber",
+            "label": "Wave Number",
+            "key": "waveNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "employee",
+            "label": "User",
+            "key": "userName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "cycleCountName",
+            "label": "Cycle Count Name",
+            "key": "cycleCountName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "tasktype",
+            "label": "Task Type",
+            "key": "taskType",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "replenishmentNum",
+            "label": "Replenishment Number",
+            "key": "replenishmentNum",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "iuCode",
+            "label": "IU",
+            "key": "iuId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

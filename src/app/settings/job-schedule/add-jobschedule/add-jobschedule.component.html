@@ -1,0 +1,111 @@
+<div fxFlex="100" class="contentBorder marginT15">
+    <div [ngClass]="'formHeader'" fxLayout="row">
+        <div fxFlex fxLayoutAlign="start">
+            <!-- <span class="formHeaderTitle">{{ formTitle }} </span> -->
+            <span class="formHeaderTitle"><app-breadcrumb></app-breadcrumb></span>
+        </div>
+    </div>
+
+    <div fxLayout="row">
+        <mat-divider fxFlex="100"></mat-divider>
+    </div>
+
+    <div class="formContainer" fxLayout="column" >
+        <form #jsForm="ngForm"  id="ngForm" [formGroup]="jobScheduleForm" autocomplete="off" (ngSubmit)="onSubmit($event, jsForm)">
+            <div class="container" fxLayout="column">
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <mat-form-field class="materailFieldSize" fxFlex="25">
+                        <input matInput placeholder="Job Name" formControlName="jobName" (blur)="jsLogValidationErrors()" required/>
+                        <mat-error *ngIf="jsFormErrors.jobName">{{jsFormErrors.jobName}}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="materailFieldSize" fxFlex="25">
+                        <mat-select formControlName="jobType"  placeholder="Job Type" required (blur)="jsLogValidationErrors()" >
+                            <mat-option *ngFor="let element of jobTypeList" [value]="element.value"
+                                (onSelectionChange)="jobTypeSelectionChanged($event,element.value)"  >
+                                {{element.label}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="jsFormErrors.jobType">{{jsFormErrors.jobType}}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="materailFieldSize" fxFlex="12.5">
+                        <mat-select formControlName="schedule"  placeholder="Interval" required (blur)="jsLogValidationErrors()" >
+                            <mat-option (onSelectionChange)="intervalChanged($event,element.value)" *ngFor="let element of intervalList" [value]="element.value" >
+                                {{element.label}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="jsFormErrors.schedule">{{jsFormErrors.schedule}}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="materailFieldSize" fxFlex="12.5">
+                        <input matInput [placeholder]='placeHolder' formControlName="value" 
+                        (keydown)="commonService.inputLengthCheck($event,3)"
+                        (keypress)="commonService.isDecimal($event)" (blur)="valueFocusOut()"  />
+                    </mat-form-field>
+                    <mat-form-field class="materailFieldSize" fxFlex="25">
+                        <input matInput placeholder="Log Name" formControlName="logName" readonly />
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <div class="item-head" fxFlex="23">Start Date/ Time:</div>
+                    <div class="item-head" fxFlex="75">Job Parameters</div>
+                </div>
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <mat-form-field floatLabel="never" fxFlex="11" [hideRequiredMarker]="true" >
+                        <input matInput [matDatepicker]="picker" [min]="setStartDate" placeholder="Start Date*" autocomplete="off" (click)="picker.open()"
+                        formControlName="date" autocomplete="off"  required (blur)="jsLogValidationErrors()"  (dateChange)="onDateChange()" />
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-error *ngIf="jsFormErrors.date">{{jsFormErrors.date}}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="materailFieldSize" fxFlex="10.8">
+                        <input matInput placeholder="Time *" type="time"  formControlName="time" (blur)="jsLogValidationErrors()" />
+                        <mat-error *ngIf="jsFormErrors.time">{{jsFormErrors.time}}</mat-error>
+                    </mat-form-field>
+                    <!-- <div>{{parameters | json}}</div> -->
+                    <mat-form-field *ngIf='parameters.IU === "IU"' class="materailFieldSize" fxFlex="11">
+                        <mat-select formControlName="iu"  placeholder="IU" required (blur)="jsLogValidationErrors()" disabled class="text-black-disabled">
+                            <mat-option *ngFor="let element of iuList" [value]="element.value" 
+                            (onSelectionChange)="iuSelectionChanged($event,element.value)">
+                                {{element.name}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="jsFormErrors.iu">{{jsFormErrors.iu}}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field *ngIf='parameters.LG === "LG"' class="materailFieldSize" fxFlex="10.5">
+                        <mat-select formControlName="lg"  placeholder="LG" required (blur)="jsLogValidationErrors()" >
+                            <mat-option *ngFor="let element of lgList" [value]="element.value" >
+                                {{element.label}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="jsFormErrors.lg">{{jsFormErrors.lg}}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field *ngIf='parameters.Cycle_Count_name === "Cycle_Count_name"' class="materailFieldSize" fxFlex="11">
+                        <!-- <input matInput placeholder="Cycle Count Name" formControlName="ccName" required (blur)="jsLogValidationErrors()" /> -->
+                        <mat-select formControlName="ccName"  placeholder="Cycle Count Name" required (blur)="jsLogValidationErrors()" >
+                            <mat-option *ngFor="let element of ccList" [value]="element.value" >
+                                {{element.label}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="jsFormErrors.ccName">{{jsFormErrors.ccName}}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field *ngIf='parameters.Wave_Criteria === "Wave_Criteria"' class="materailFieldSize" fxFlex="10.5">
+                        <!-- <input matInput placeholder="Wave Name" formControlName="waveName" required (blur)="jsLogValidationErrors()" /> -->
+                        <mat-select formControlName="waveName"  placeholder="Wave Criteria" required (blur)="jsLogValidationErrors()" >
+                            <mat-option *ngFor="let element of waveList" [value]="element.value" >
+                                {{element.label}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="jsFormErrors.waveName">{{jsFormErrors.waveName}}</mat-error>
+                    </mat-form-field>
+                </div>
+               
+            </div>
+        </form>
+        
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div>
+                <button  style="margin-top: 30px;"  mat-flat-button class="formButton saveButton mr10" 
+                (click)="jsForm.ngSubmit.emit()" form="ngForm">
+                    {{isEdit ? 'Update' : 'Save' }}
+                </button>
+                <button  mat-flat-button [ngClass]="'formButton saveButton mr10'"
+                (click)="commonService.openConfirmationDialog('job Schedule','jobschedule')">
+                   Cancel
+               </button>
+            </div>
+        </div>
+    </div>
+</div>

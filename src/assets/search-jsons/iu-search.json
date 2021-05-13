@@ -1,0 +1,59 @@
+{
+    "type": "IU",
+    "searchType": "inventoryOrganization",
+    "searchFor": "Search Inventory Units",
+    "companyKey": "iuCompanyId",
+    "searchArray": [
+        {
+            "type": "selectionChangeLOV",
+            "lovType": "iuOUCode",
+            "label": "Operating Unit Code",
+            "key": "iuOuId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "iuAndLgCode",
+            "label": "Inventory Unit Code",
+            "key": "iuId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "iuAndLgName",
+            "label": "Inventory Unit Name",
+            "key": "iuId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "iuEnabledFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": "" },
+                { "label": "Yes", "value": "Y" },
+                { "label": "No", "value": "N" }
+            ]
+        }
+    ]
+}

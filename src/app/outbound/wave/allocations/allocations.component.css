@@ -1,0 +1,57 @@
+.customTable{
+    overflow: auto;
+}
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff !important;
+}
+.roleSearchBox{
+    background-color:#f2f2f4;
+    padding:10px 10px 10px 20px;
+    position: relative;
+}
+.searchBoxLabel{
+    font-size: 13px;
+    color: black;
+}
+.searchInput{
+    /* border: 1px solid #ccc; */
+    padding: 0px 10px;
+    margin: 0 10px;
+    /* background: #fff; */
+    color: black;
+    width: 250px;
+    font-size: 14px;
+    min-height: 25px;
+    /* border-radius: 3px; */
+}
+.searchInput:disabled{
+    background:transparent;
+}
+.roleSearchBox .mat-flat-button.formButton{
+    height:28px;
+    line-height: 28px;
+}
+.roleSearchBox .mat-error{
+    display: inline-block;
+    font-size:12px;
+}
+::ng-deep .searchInput .mat-select-trigger {
+    height: 25px;
+}
+
+::ng-deep .searchInput .mat-select-trigger .mat-select-value{
+    padding: 5px 0px;
+    height: 25px;
+    box-sizing: border-box;
+}
+
+.mat-expansion-panel-header{
+    padding: 0px;
+}
+::ng-deep .mat-expansion-panel-content .mat-expansion-panel-body {
+    padding: 0px;
+}
+
+.expandableBackground{
+    color: #098ccd
+}

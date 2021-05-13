@@ -1,0 +1,55 @@
+
+
+<div fxLayout="row"  fxLayoutGap="20px"  class="homepageTitle">
+    <div >
+        Flexi Warehouse Management System
+    </div>
+</div>
+<div fxLayout="row" fxLayout="row wrap" fxLayoutAlign="center" class='homepageContent setMargin' [ngClass]="{'homepageContent setMargin1': screenArray.length >= 7}"  >
+   
+    <div  class="setDimension" *ngFor="let screenModule of screenArray">
+        <div fxLayout="column" [ngClass]="'moduleTab'" (click)='gotoDashboard($event,screenModule)'>
+            <div class="cover"></div>
+            <div *ngIf='screenModule === "Transactions"' fxFlex="60"  class="thumb35 icon" fxLayoutAlign="center center">
+                    <img src="assets/images/icons/Transactions.svg" class="setImg" >
+            </div>
+            <div *ngIf='screenModule === "Inbound"' fxFlex="60"  class="thumb35 icon" fxLayoutAlign="center center">
+                <img src="assets/images/icons/Inbound.svg" class="setImg" >
+            </div>
+            <div *ngIf='screenModule === "Settings"' fxFlex="60"  class="thumb35 icon" fxLayoutAlign="center center">
+                <img src="assets/images/icons/Settings.svg" class="setImg">
+            </div>
+            <div *ngIf='screenModule === "Warehouse"' fxFlex="60"  class="thumb35 icon" fxLayoutAlign="center center">
+                <img src="assets/images/icons/warehouse.svg" class="setImg">
+            </div>
+            <div *ngIf='screenModule === "Master"' fxFlex="60"  class="thumb35 icon" fxLayoutAlign="center center">
+                <img src="assets/images/icons/master.svg" class="setImg">
+            </div>
+            <div *ngIf='screenModule === "Outbound"' fxFlex="60"  class="thumb35 icon" fxLayoutAlign="center center">
+                <img src="assets/images/icons/outbound.svg" class="setImg">
+            </div>
+            <div *ngIf='screenModule === "Manufacturing"' fxFlex="60"  class="thumb35 icon" fxLayoutAlign="center center">
+                <img src="assets/images/icons/outbound.svg" class="setImg">
+            </div>
+            <div *ngIf='screenModule === "threePL"' fxFlex="60"  class="thumb35 icon" fxLayoutAlign="center center">
+                <img src="assets/images/icons/outbound.svg" class="setImg">
+            </div>
+            <div *ngIf='screenModule === "LabelSetup"' fxFlex="60"  class="thumb35 icon" fxLayoutAlign="center center">
+                <img src="assets/images/icons/Label Setup.svg" class="setImg">
+            </div>
+            <div *ngIf='screenModule === "ReportViewer"' fxFlex="60"  class="thumb35 icon" fxLayoutAlign="center center">
+                <img src="assets/images/icons/ReportViewer.svg" class="setImg" >
+            </div>
+
+            <div fxFlex="40" fxLayoutAlign="center center" class='tabTitle'>
+                    {{screenModule === 'LabelSetup' ? 'Label Setup' : 
+                     screenModule === 'ReportViewer' ? 'Report Viewer' : 
+                     screenModule === 'threePL' ? '3PL' : screenModule 
+                    }}
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+

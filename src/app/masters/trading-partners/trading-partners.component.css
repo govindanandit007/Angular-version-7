@@ -1,0 +1,28 @@
+.stepperContent{
+    background-color:#fff;
+    border-radius:5px;
+    border:1px solid #ccc;
+}
+/* table {
+    width: 100%;
+  } */
+  .formHeader{
+    padding: 10px 20px;
+  }
+  .formHeaderTitle{
+    font-weight: 500;
+  }
+  
+  th.mat-sort-header-sorted {
+    color: black;
+  }
+
+  .actionIcons span{
+    font-size: 16px;
+    padding: 0px 4px;
+    color:#cccccc;
+}
+.actionIcons span:hover{
+    color:#52ABDA;
+    cursor: pointer;
+}

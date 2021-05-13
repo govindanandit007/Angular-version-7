@@ -1,0 +1,123 @@
+
+
+
+    
+
+    <div fxLayout="row" >
+      <div class='tabHeader'>
+       
+        <div fxFlex="4" >
+          <div  class="sidePanelIcon" #navigationMenuTrigger="matMenuTrigger" [matMenuTriggerFor]="Navigation" >
+            <!-- <img src="assets/images/icons/plus.png"  style="width: 25px; height:25px;;" title="Add" alt="Add"> -->
+            <img src="assets/images/icons/navigation.png" class="sidePanelIconImg" title="Navigation" alt="Navigation">
+    
+          </div>
+        </div>
+          <mat-menu #Navigation="matMenu" class="navigationMenu" >
+              <div (click)="$event.stopPropagation()">
+                  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
+                      <!-- This is the tree node template for leaf nodes -->
+                      <mat-tree-node [ngClass]="node.isTitle ? 'bt-1' : ''" *matTreeNodeDef="let node;index" 
+                          routerLinkActive="nodeActive">
+                          <li class="mat-tree-node position-relative" >
+                              <span [attr.class]="'sidebarChild-icon'" [style.background-image]="'url(assets/images/iconsBlue/'+node.icon+')'" (click)="toggleSideNav($event, node)"></span>
+                              <a *ngIf="!node.isTitle" (click)="closeNavbar(node)" style="cursor: pointer;" >{{node.name}}</a>
+                              <span class="sidenav-subTitle" *ngIf="node.isTitle" [routerLink]="node.url">{{node.name}}</span>
+                              
+                              <button mat-icon-button disabled></button>
+                          </li>
+                      </mat-tree-node>
+                      <!-- This is the tree node template for expandable nodes -->
+                      <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild" >
+                          <li class="position-relative" >
+                              <div class="mat-tree-node" >  
+                                  <span [attr.class]="'sidebar-icon'" [style.background-image]="'url(assets/images/iconsBlue/'+node.icon+')'" (click)="toggleSideNav($event, node)"></span>
+                  
+                                  <a class="nested-title" (click)='toggleNodes(node)'>
+                                      {{
+                                          node.name === 'LabelSetup' ? 'Label Setup' : 
+                                          node.name === 'threePL' ? '3PL' : node.name
+                                      }}</a>
+                                  <button mat-icon-button (click)='toggleNodes(node)' [attr.aria-label]="'toggle ' + node.name">
+                                      <mat-icon class="mat-icon-rtl-mirror">
+                                          {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                      </mat-icon>
+                                  </button>
+                              </div>
+                              <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+                                  <ng-container matTreeNodeOutlet></ng-container>
+                              </ul>
+                          </li>
+                      </mat-nested-tree-node>
+                  </mat-tree>
+              </div>
+          </mat-menu>
+          <div fxFlex="70" style="padding-right: 25px;">
+            <div fxLayout="row" >
+            
+              <div *ngFor="let tab of tabs, let i = index"  
+              [ngClass]=" tab.isActive ? 'tabHeading setTabBgWhite' : 'tabHeading setTabBgBlue'" (click)='tabChanged(i)'>
+                <div fxLayout="row wrap" style="width: 100%;">
+                  <div fxFlex="80" class="ellipsis" [title]='tab.title' > <span >{{ tab.title }} </span> </div>
+                  <div fxFlex="20" > 
+                    <!-- <i  class="material-icons" (click)='closeTab(i)'>close</i> -->
+                   <span class="icon-clear" title='Close'  (click)='closeTab(i)'></span> 
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div fxFlex="2" ></div>
+          
+          <div fxFlex="10" style="color: white;">
+            <div fxLayout="row" class="selected-value" title="Inventory Unit">
+              <!-- <span *ngIf='inventoryUnitList.length' fxFlex="20" style="font-size: 14px; margin-top:6px; color: white;">IU : </span> -->
+              <mat-select *ngIf='inventoryUnitList.length' fxFlex="100" style="font-size: 14px; margin-top:4px; color: white !important;"  [(ngModel)]="iuId">
+                  <mat-option  *ngFor="let iuList of inventoryUnitList"  [value]="iuList.value"
+                  (onSelectionChange)="defaultIUChanged($event,iuList.value, iuList.label)" >
+                      {{iuList.name}}
+                  </mat-option>
+              </mat-select>
+            </div>
+          </div>
+          <div fxFlex="10" style="color: white;">
+            <div fxLayout="row" title="User">
+              <span  fxFlex="25" fxLayoutAlign="center"  style="margin-top: 4px;"><img class="thumb35"[src]="userImgURL" alt="user"></span>
+              <!-- <span fxFlex="20" style="font-size: 14px; margin-top:6px;">User : </span> -->
+              <span  [matMenuTriggerFor]="menu" fxFlex="75" class="userName" style="font-size: 14px; margin-top:6px; padding-left: 5px; cursor: pointer;">{{userName}}</span>
+              <span  [matMenuTriggerFor]="menu" class="down-arrow" >
+                  <mat-icon aria-hidden="false" style="margin-top:3px; cursor: pointer;" aria-label="icon">arrow_drop_down</mat-icon>
+              </span>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="changePassword()">Change Password</button>
+                    <button mat-menu-item (click)="logout()">Logout</button>
+                </mat-menu>
+            </div>
+        </div>
+        <div fxFlex="4" class="company-iconHolder">
+          <img class="company-icon" [src]="logoImgURL" alt="logo" title="iwms" />
+        </div>
+      
+      </div>
+    </div>
+
+       
+
+    <div *ngFor="let tab of tabs, let i = index" class="iframe-container"  >
+      <!-- <div [ngClass]=" tab.isActive ? 'activeLoader' : 'inActiveLoader'">
+          <div [id]="'loaderBackdrop' + i" class="loaderBackdrop">
+          </div>
+          <div [id]="'loader' + i" class="loader">
+            <span style="margin-bottom: 130px">Loading ....</span>
+          </div>
+      </div> -->
+      
+      <iframe [ngClass]=" tab.isActive ? 'active' : 'inActive'" [id]='tab.title' (load)="iframeLoadedCallBack(i)" frameBorder="0" [src]="tab.url"></iframe>
+    </div>
+
+    
+
+
+     
+     
+  

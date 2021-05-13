@@ -1,0 +1,112 @@
+{
+    "type": "WAVE",
+    "searchType": "wave",
+    "searchFor": "Search Wave",
+    "companyKey": "",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "waveNumber",
+            "label": "Wave Number",
+            "key": "waveNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "waveStatus",
+            "label": "Status",
+            "key": "waveStatus",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "soNumber",
+            "label": "SO Number",
+            "key": "soNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "shipmentNumber",
+            "label": "Shipment Number",
+            "key": "shipmentNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "customer",
+            "label": "Customer",
+            "key": "customerId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "workOrderNumber",
+            "label": "Work Order Number",
+            "key": "woNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "wavePolicy",
+            "label": "Policy",
+            "key": "wavePolicyId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "IuCode",
+            "label": "IU",
+            "key": "waveIuId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

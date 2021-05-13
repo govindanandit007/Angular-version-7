@@ -1,0 +1,233 @@
+.formHeader {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+
+.customTable {
+    overflow: auto;
+}
+.content-wrapper1 {
+    padding: 0px;
+   width:  76.5% ;
+}
+
+.customWidthClass {
+    min-width: 135px;
+}
+.customWidth50 {
+    min-width: 50px;
+}
+.customWidth60 {
+    min-width: 60px;
+}
+.customWidth80 {
+    min-width: 80px;
+}
+.customWidth100 {
+    min-width: 110px;
+    max-width: 110px;
+}
+.width80 {
+    min-width: 80px;
+}
+.customWidth95 {
+    min-width: 105px;
+}
+.stickyColumn {
+    min-width: 105px;
+    max-width: 105px;
+}
+.stickyColumn2 {
+    min-width: 135px;
+    max-width: 135px;
+    left: 129px !important;
+}
+.stickyColumn3 {
+    min-width: 135px;
+    max-width: 135px;
+    left: 264px !important;
+}
+.stickyColumn4 {
+    min-width: 80px;
+    max-width: 80px;
+    right: 80px !important;
+}
+.customDescriptionField {
+    margin-right: 10px;
+    min-width: 250px;
+}
+
+.nonEditiableDesField {
+    display: inline-block;
+    width: 160px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+    padding-top: 7px;
+    color: #5b5b5b;
+}
+
+.inputWidthClass {
+    margin-right: 10px;
+    max-width: 95px;
+}
+.locCodeField {
+    margin-right: 10px;
+    max-width: 120px;
+}
+
+.checkFieldWidthClass {
+    min-width: 80px;
+}
+
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+}
+
+.scrollHide {
+    overflow: auto;
+}
+
+.minimumWidth {
+    min-width: 40px;
+
+}
+th.mat-header-cell, td.mat-cell{
+    padding-right:10px;
+}
+th.mat-header-cell:last-child{
+    padding-right:0;
+}
+
+.badge1{
+    padding: 4px 8px;
+    background-color: #dddddd;
+    border-radius: 50%;
+    color: #1a71b1;
+    font-size: 10px;
+
+}
+
+.badge1:hover, .badge2:hover{
+    background-color: #1a71b1;
+    color: white;
+    cursor: pointer;
+}
+
+.badge2{
+    background-color: #dddddd;
+    padding: 3px 6px;
+    border-radius: 13px;
+    color: #1a71b1;;
+    font-size: 10px;
+}
+
+.viewDialogHeader.mat-dialog-title {
+    background-color: #098ccd;
+    color: #fff;
+    padding: 5px 0 5px 20px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+
+.viewDialogCloseIcon {
+    color: #fff;
+    font-size: 14px;
+}
+.viewDialogTitle {
+    color: #fff;
+    font-size: 15px;
+    padding-top: 2px;
+    padding-left: 3px;
+}
+
+.viewDialogDataTitle {
+    font-size: 13px;
+    color: gray;
+}
+.viewDialogLabelBar {
+    position: relative;
+    /* min-height: 40px; */
+}
+.viewDialogLabelBar::after {
+    content: '';
+    width: 100%;
+    display: flex;
+    border-bottom: solid 1px #999;
+    position: absolute;
+    top: 13px;
+}
+.viewDialogLabel {
+    background-color: #fff;
+    z-index: 9;
+    position: relative;
+    padding: 0px 10px 0px 0px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}
+
+
+.noMessagefound{
+    min-height: 30px;
+}
+.viewDialogHeader{
+    padding: 2px 0 0px 10px;
+    margin: 0px;
+}
+
+.mat-dialog-content{
+    padding: 0 14px 10px 14px;
+    min-height: 60px;
+}
+.mat-dialog-content table.mat-table{
+    margin-bottom: 0px !important;
+}
+
+.mat-dialog-container .mat-dialog-title.messageHeaderTitle {
+    font-size: 16px;
+    color: #fff;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 15px;
+    background-color: #098ccd;
+    height: 55px;
+}
+
+.mat-dialog-container .mat-dialog-title.messageHeaderTitle {
+    font-size: 16px;
+    color: #fff;
+    border-bottom: 1px solid #ccc;
+    background-color: #098ccd;
+}
+
+.mat-dialog-title{
+    margin: 0px !important;
+}
+
+.mt5{
+    margin-top: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,99 @@
+{
+    "type": "SHIPMENT",
+    "searchType": "shipment",
+    "searchFor": "Search Shipment",
+    "companyKey": "",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "soNumber",
+            "label": "SO Number",
+            "key": "soNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "shipmentNumber",
+            "label": "Shipment Number",
+            "key": "shipmentNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "status",
+            "label": "Status",
+            "key": "shipmentStatus",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "shipmentCustomer",
+            "label": "Customer",
+            "key": "customer",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "plannedShipDateFrom",
+            "label": "From",
+            "key": "delPlannedDateFrom",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "plannedShipDateTo",
+            "label": "To",
+            "key": "delPlannedDateTo",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "IuCode",
+            "label": "IU",
+            "key": "iuId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

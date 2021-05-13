@@ -1,0 +1,169 @@
+<div [ngClass]="searchEnable ? 'sideContent' : ''">
+    <div class="contentBorder marginT15" [ngClass]="searchEnable ? 'content-wrapper1' : ''">
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">Task Summary :</span>
+            </div>
+            <div fxLayoutAlign="end">
+                <button *ngIf="!searchEnable" mat-mini-fab class="btn-search-bg mr10" (click)="searchComponentOpen()"
+                    matTooltip="Search" [matTooltipPosition]="tooltipPosition">
+                    <span class="headerIcon icon-search"></span>
+                </button>
+                <span class="down-arrow" [matMenuTriggerFor]="exportmenu">
+                    <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                        Export
+                    </button>
+                </span>
+                <mat-menu #exportmenu="matMenu">
+                    <button mat-menu-item
+                        (click)="exporter.exportTable('xls', {fileName:'Flexi WMS - Task Summary List'})">XLS</button>
+                    <button mat-menu-item
+                        (click)="exporter.exportTable('xlsx', {fileName:'Flexi WMS - Task Summary List'})">XLSX</button>
+                    <button mat-menu-item
+                        (click)="exporter.exportTable('csv', {fileName:'Flexi WMS - Task Summary List'})">CSV</button>
+                </mat-menu>
+            </div>
+        </div>
+        <div class="container" fxLayout="column">
+            <div [id]="'customTable'"
+                [ngClass]="!taskDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'"
+                [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+                <table mat-table  matTableExporter [hiddenColumns]='[9]' #exporter="matTableExporter"  [dataSource]="taskDataSource" matSort class="resize-table" style="min-width: 1200px;" matSortDisableClear>
+                    <ng-container matColumnDef="No">
+                        <th mat-header-cell *matHeaderCellDef  [ngClass]="'cursor-auto mat-header-column-'+columns[0].field" >
+                            <span >{{ columns[0].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i = index;" >
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ paginator.pageSize * paginator.pageIndex + i + 1 }} </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="pickSlipNumber">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[1].field"
+                            (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)"><span
+                                mat-sort-header>{{ columns[1].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <span >
+                                {{element.pickSlipNumber ? element.pickSlipNumber : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="replenishmentNum">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[2].field"
+                            (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)"><span
+                                mat-sort-header>{{ columns[2].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <span >
+                                {{element.replenishmentNum ? element.replenishmentNum : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="shipmentNumber">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[3].field"
+                            (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)"><span
+                                mat-sort-header>{{ columns[3].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <span >
+                                {{element.shipmentNumber ? element.shipmentNumber : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                   
+                    <ng-container matColumnDef="salesOrder">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[4].field"
+                            (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)"><span
+                                mat-sort-header>{{ columns[4].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <span >
+                                {{element.salesOrder ? element.salesOrder : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="workOrder">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[5].field"
+                            (mousedown)="commonService.onResizeColumn($event, 5, columns, matTableRef)"><span
+                                mat-sort-header>{{ columns[5].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <span >
+                                {{element.workOrder ? element.workOrder : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="cycleCountName">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[6].field"
+                            (mousedown)="commonService.onResizeColumn($event, 6, columns, matTableRef)"><span
+                                mat-sort-header>{{ columns[6].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <span>
+                                {{element.cycleCountName ? element.cycleCountName : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="taskGroupNumber">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[7].field"
+                            (mousedown)="commonService.onResizeColumn($event, 7, columns, matTableRef)"><span
+                                mat-sort-header>{{ columns[7].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <span >
+                                {{element.taskGroupNumber ? element.taskGroupNumber : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="taskCount">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[8].field"
+                            (mousedown)="commonService.onResizeColumn($event, 8, columns, matTableRef)"><span
+                                mat-sort-header>{{ columns[8].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <span >
+                                {{element.taskCount ? element.taskCount : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+
+
+
+                    <ng-container matColumnDef="action" stickyEnd>
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto actionColumn mat-header-column-'+columns[8].field">
+                            <span>{{ columns[9].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'">
+                            <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center" style="justify-content: center;">
+                                <span class="icon-direct" (click)="gotoDetails($event, element)" matRipple matTooltip="Task Detail"
+                                    [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                    [matRippleRadius]="false"></span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="taskDisplayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: taskDisplayedColumns"></tr>
+                </table>
+
+                <ng-container *ngIf="listProgress">
+                    <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </ng-container>
+                <ng-container *ngIf="!taskDataSource.data.length && !listProgress">
+                    <div [ngClass]="'noDataFound'">
+                        <small>{{taskMessage}}</small>
+                    </div>
+                </ng-container>
+            </div>
+            <div fxLayout="row">
+                <div fxFlex="100">
+                    <mat-paginator (page)="commonService.setPaginationSize($event)"  showFirstLastButtons
+                        [ngClass]="'mat-paginator-sticky'">
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div [fxShow]="searchEnable" [ngClass]="searchEnable ? 'searchRight top-68' : ''">
+        <mat-sidenav class="rightSideNav" opened mode="side" position="end" [disableClose]="true">
+            <app-task-search fxLayout="row" (searchComponentToggle)="getSearchToggle($event)"></app-task-search>
+        </mat-sidenav>
+    </div>
+</div>

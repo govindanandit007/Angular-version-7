@@ -1,0 +1,82 @@
+<div fxLayout="column" fxLayoutAlign="space-between stretch" fxFlex="100">
+    <div fxLayout="column">
+        <div class="search-header" fxLayout="row">
+            <div class="search-title" fxLayout="column" fxFlex="5 0 0">
+                {{ searchLabel }}
+            </div>
+            <div class="search-header-right" (click)="hideSearchContainer()">
+                <span class="searchBarIcon icon-close"></span>
+            </div>
+        </div>
+        
+        <div *ngIf="searchType !== 'BillingTxnHistory'">
+            <div *ngFor="let fieldsInfo of searchFieldData">
+                <div fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container *ngIf="fieldsInfo.lovType === 'customernumber'">
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="customernumber" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                    <ng-container *ngIf="fieldsInfo.lovType === 'customername'">
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="customername" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                    <ng-container *ngIf="fieldsInfo.lovType === 'code'">
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="code" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                    <ng-container *ngIf="fieldsInfo.lovType === 'enableFlag'">
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="enableValue" >
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value" autocomplete="off" >
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </ng-container>
+    
+                </div>
+            </div>
+        </div>
+        <div *ngIf="searchType === 'BillingTxnHistory'" fxLayout="row wrap" class="onhandDivs">
+            <div *ngFor="let fieldsInfo of searchFieldData; let i = index" fxFlex="50">
+                <div  class="search-content">
+                    <ng-container *ngIf="fieldsInfo.lovType === 'fromDate'">
+                        <div class="onHandTitle">Transaction Period :</div>
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="picker" placeholder="From" [(ngModel)]="dateFrom" (click)="this.commonService.disableInput($event)"
+                            on-focus="this.commonService.disableInput($event)" [max]="dateTo">
+                            <mat-datepicker-toggle matSuffix [for]="picker" ></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </ng-container>
+                    
+                    <ng-container *ngIf="fieldsInfo.lovType === 'toDate'">
+                        <mat-form-field class="marginT18">
+                            <input matInput [matDatepicker]="picker1" placeholder="To" [(ngModel)]="dateTo" (click)="this.commonService.disableInput($event)"
+                            on-focus="this.commonService.disableInput($event)" [min]="dateFrom">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        
+
+
+    </div>
+    <div class="search-footer">
+        <button mat-flat-button [ngClass]="'formButton saveButton'" (click)="getSearhInfo()">
+            Search
+        </button>
+        <button mat-flat-button [ngClass]="'formButton cancelButton ml-15'" (click)="clearSearchFields()">
+            Clear
+        </button>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+{
+    "type": "PRINTHISTORY",
+    "searchType": "printHistory",
+    "searchFor": "Print History",
+    "companyKey": "",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "user",
+            "label": "User",
+            "key": "user",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "label",
+            "label": "Label",
+            "key": "label",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "printer",
+            "label": "Printer",
+            "key": "printer",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "status",
+            "label": "Status",
+            "key": "status",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "plannedShipDateFrom",
+            "label": "From",
+            "key": "delPlannedDateFrom",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "plannedShipDateTo",
+            "label": "To",
+            "key": "delPlannedDateTo",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,38 @@
+<div mat-dialog-container>
+    <h2 mat-dialog-title class="messageHeaderTitle mat-dialog-title">
+        <div fxLayout="row" fxLayoutGap="20px">
+            <span fxFlex="90" style="padding-top: 5px;">Change Password</span>
+            <div fxFlex="10">
+                <button  mat-icon-button (click)="onCloseClick()" style="float: right;">
+                    <mat-icon class="viewDialogCloseIcon"  mat-list-icon>close</mat-icon>
+                </button>
+            </div>
+           
+        </div>
+    </h2>
+
+   
+    <div mat-dialog-content>
+        <div class="container" fxLayout="column" style="padding: 20px">
+            <div fxLayout="row" fxLayoutGap="20px">
+        
+                <mat-form-field class="materailFieldSize" fxFlex="33">
+                    <input matInput placeholder="Old Password" [(ngModel)]="oldPassword" required />
+                </mat-form-field>
+    
+                <mat-form-field class="materailFieldSize" fxFlex="33">
+                    <input matInput placeholder="New Password" [(ngModel)]="newPassword" required />
+                </mat-form-field>
+
+                <mat-form-field class="materailFieldSize" fxFlex="34">
+                    <input matInput placeholder="Confirm Password" [(ngModel)]="confirmPassword" required />
+                </mat-form-field>
+
+            </div>
+        </div>
+    </div>
+    <div mat-dialog-actions class="padding10">
+        <button mat-flat-button color="primary"  class="formButton saveButton mr10" (click)="changePassword()">Update</button>
+        <button mat-flat-button color="primary"  class="formButton saveButton mr10" (click)="onCloseClick()">Close</button>
+    </div>
+</div>

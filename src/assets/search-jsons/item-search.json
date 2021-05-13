@@ -1,0 +1,45 @@
+{
+    "type": "ITEM",
+    "searchType": "item",
+    "searchFor": "Search Item",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "name",
+            "label": "Item Name",
+            "key": "itemName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "customer",
+            "label": "Customer",
+            "key": "customerName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "itemEnabledFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": "" },
+                { "label": "Yes", "value": "Y" },
+                { "label": "No", "value": "N" }
+            ]
+        }
+    ]
+}

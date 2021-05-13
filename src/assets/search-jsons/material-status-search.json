@@ -1,0 +1,48 @@
+{
+    "type": "MATERIALSTATUS",
+    "searchType": "materialStatus",
+    "searchFor": "Search Material Status",
+    "companyKey": "",
+    "searchArray": [
+       
+        {
+            "type": "LOV",
+            "lovType": "status",
+            "label": "Material Status",
+            "key": "materialStatusId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "entity",
+            "label": "Entity",
+            "key": "entity",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "IuCode",
+            "label": "IU",
+            "key": "iuId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

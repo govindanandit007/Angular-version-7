@@ -1,0 +1,149 @@
+.formHeader {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+
+.customTable {
+    overflow-x: auto;
+}
+
+/*.customWidthClass {
+    min-width: 135px;
+}
+.customWidth80 {
+    min-width: 95px;
+    position: relative;
+}
+.customWidth100 {
+    min-width: 100px;
+    max-width: 100px;
+}
+.width80 {
+    min-width: 80px;
+}
+.customWidth95 {
+    min-width: 105px;
+} 
+.stickyColumn {
+    min-width: 105px;
+    max-width: 105px;
+}
+ .stickyColumn2 {
+    min-width: 135px;
+    max-width: 135px;
+    left: 129px !important;
+}
+.stickyColumn3 {
+    min-width: 135px;
+    max-width: 135px;
+    left: 264px !important;
+}
+.stickyColumn4 {
+    min-width: 80px;
+    max-width: 80px;
+    right: 80px !important;
+} */
+
+/* .nonEditiableDesField {
+    display: inline-block;
+    width: 160px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+    padding-top: 7px;
+    color: #5b5b5b;
+}
+
+.inputWidthClass {
+    margin-right: 10px;
+    max-width: 95px;
+}
+.locCodeField {
+    margin-right: 10px;
+    max-width: 135px;
+    min-width: 135px;
+    padding-left: 10px;
+}
+.stockLocatorName {
+    margin-right: 10px;
+    max-width: 120px;
+    min-width: 120px;
+}
+
+.checkFieldWidthClass {
+    min-width: 80px;
+}
+
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+}*/
+
+.scrollHide {
+    overflow-x: auto;
+} 
+.mat-form-field-appearance-legacy .mat-form-field-wrapper {
+    padding-bottom: 10px !important;
+}
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff;
+}
+
+/* .unitTab,.volumnTab,.weightTab,.dimensionTab {
+    position: relative;
+} */
+.unitTab:before,.volumnTab:before,.weightTab:before,.dimensionTab:before {
+    content: 'Units';
+    font-size: 11px !important;
+    color: #a2a2a2;
+    margin-top: -11px;
+    margin-left: -37px;
+    position: absolute;
+    left: 0px;
+    /* background-color: #fff;
+    width:400%;
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+    line-height: 12px; */
+}
+/* .dimensionTab:before {
+    margin-left: 0%; 
+    width:300%;
+} */
+.volumnTab:before {
+    content: 'Volume';
+}
+.weightTab:before {
+    content: 'Weight';
+}
+.dimensionTab:before {
+    content: 'Dimensions';
+    margin-left: -5px;
+}
+.grayBg {
+    background-color: #f2f2f4;
+}
+.border-left{
+    border-left: solid 1px #bdbdbe;
+}
+.border-right{
+    border-right: solid 1px #bdbdbe;
+}
+.mat-column-locLgId{
+    left: 118px !important;
+}
+.mat-column-locCode{
+    left: 317px !important;
+}
+
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-subscript-wrapper {
+    top: calc(100% - 2.07em) !important;
+}
+::ng-deep tr.mat-row{
+    height: 51px !important;
+}

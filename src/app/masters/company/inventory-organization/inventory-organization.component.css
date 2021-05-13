@@ -1,0 +1,32 @@
+.formHeader {
+    padding: 10px 20px;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+/* .mat-header-cell {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+.mat-column-iuCode {
+    flex: 0 0 15% !important;
+    width: 15% !important;
+}
+.mat-column-iuAddress1,
+.mat-column-iuName {
+    flex: 0 0 25% !important;
+    width: 25% !important;
+}
+.mat-column-action {
+    width: 65px;
+}
+.mat-column-iuEnabledFlag {
+    width: 100px;
+} */

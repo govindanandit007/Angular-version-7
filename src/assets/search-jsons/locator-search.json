@@ -1,0 +1,86 @@
+{
+    "type": "SL",
+    "searchType": "stockLocator",
+    "searchFor": "Search Stock Locator",
+    "companyKey": "locCompanyId",
+    "searchArray": [
+       
+        {
+            "type": "LOV",
+            "lovType": "LocGroupCode",
+            "label": "Locator Group Code",
+            "key": "lgCode",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "slName",
+            "label": "Stock Locator Name",
+            "key": "locCode",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+       {
+            "type": "LOV",
+            "lovType": "slMaterialStatus",
+            "label": "Material Status",
+            "key": "materialStatusId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "customer",
+            "label": "Customer",
+            "key": "customerName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "locEnabledFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": "" },
+                { "label": "Yes", "value": "Y" },
+                { "label": "No", "value": "N" }
+            ]
+        },
+         {
+            "type": "LOV",
+            "lovType": "INVCode",
+            "label": "Inventory Unit Code",
+            "key": "locIuId",
+            "value": "",
+            "list": [
+                {
+                    "label": "Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

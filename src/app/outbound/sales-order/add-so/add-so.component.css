@@ -1,0 +1,77 @@
+.formHeader {
+    padding: 10px 20px;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+.customTable{
+    overflow: auto;
+}
+::ng-deep .mat-column-No{
+    min-width: 50px;
+}
+::ng-deep .mat-column-poIuId{
+    min-width: 100px;
+}
+
+::ng-deep .inputMarginClass {
+    margin-right: 10px;
+}
+
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff !important;
+}
+.customWidth80 {
+    position: relative;
+}
+
+.mat-form-field-type-mat-native-select.mat-form-field-disabled
+    .mat-form-field-infix::after,
+.mat-input-element:disabled,::ng-deep .mat-select-disabled .mat-select-value, .inputDisable {
+    color: #000000 !important;
+}
+span.mat-error{
+    position: absolute;
+    font-size: 12px;
+    bottom: -15px;
+}
+
+.width130{
+    min-width: 130px !important;
+    max-width: 130px !important;
+}
+.width120{
+    min-width: 120px !important;
+    max-width: 120px !important;
+}
+.width170{
+    min-width: 170px !important;
+    max-width: 170px !important;
+}
+.width160{
+    min-width: 160px !important;
+    max-width: 160px !important;
+}
+.crossDocWidth{
+    min-width: 170px !important;
+    
+}
+.mat-form-field{
+    font-size: 14px;
+    line-height: 1.2;
+    /* width: 100%; */
+}
+.width100{
+    min-width: 100px !important;
+    max-width: 100px !important;
+    
+}
+.width140{
+    min-width: 140px !important;
+    max-width: 140px !important;
+    
+}
+
+::ng-deep .actionIcons .icon-add{
+    font-size: 19px;
+}

@@ -1,0 +1,34 @@
+{
+    "type": "MATERIALSTATUSSETUP",
+    "searchType": "materialStatusSetup",
+    "searchFor": "Search Material Status Setup",
+    "companyKey": "",
+    "searchArray": [
+   
+        {
+            "type": "LOV",
+            "lovType": "materialStatusName",
+            "label": "Material Status",
+            "key": "materialStatusName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "enabledFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": ""},
+                { "label": "Yes", "value": "Y" },
+                { "label": "No", "value": "N" }
+            ]
+        }
+    ]
+}

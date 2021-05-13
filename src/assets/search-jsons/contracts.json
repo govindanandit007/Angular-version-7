@@ -1,0 +1,46 @@
+{
+    "type": "CONTRACTS",
+    "searchType": "contracts",
+    "searchFor": "Search Contracts",
+    "companyKey": "",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "customername",
+            "label": "Customer Name",
+            "key": "customerName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "code",
+            "label": "Contract Number",
+            "key": "contractCode",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "enableFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": ""  },
+                { "label": "Yes", "value": "Y" },
+                { "label": "No" , "value": "N" }
+            ]
+        }
+    ]
+}

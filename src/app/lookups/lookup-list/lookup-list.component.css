@@ -1,0 +1,158 @@
+.formHeader {
+    padding: 7px 10px;
+    border-bottom: 1px solid #ccc;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+
+/* .customTable { 
+    min-width: 1000px;
+    overflow: auto;
+} */
+
+.customWidthClass {
+    min-width: 135px;
+}
+.customWidth80 {
+    min-width: 95px;
+}
+.width80 {
+    min-width: 80px;
+}
+.customWidth95 {
+    min-width: 105px;
+}
+.stickyColumn {
+    min-width: 105px;
+    max-width: 105px;
+}
+.stickyColumn2 {
+    min-width: 135px;
+    max-width: 135px;
+    left: 129px !important;
+}
+.stickyColumn3 {
+    min-width: 135px;
+    max-width: 135px;
+    left: 264px !important;
+}
+.stickyColumn4 {
+    min-width: 80px;
+    max-width: 80px;
+    right: 80px !important;
+}
+.customDescriptionField {
+    margin-right: 10px;
+    min-width: 250px;
+}
+
+.nonEditiableDesField {
+    display: inline-block;
+    width: 160px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+    padding-top: 7px;
+    color: #5b5b5b;
+}
+.nonEditiableField {
+    padding-top: 7px;
+    display: inline-block;
+    color: #5b5b5b;
+}
+.inputMarginClass {
+    margin-right: 10px;
+    /* max-width: 70px */
+}
+.dateField {
+    margin-right: 10px;
+    /* max-width: 90px */
+}
+.checkFieldWidthClass {
+    min-width: 80px;
+}
+
+.actionIcons span {
+    font-size: 22px;
+    padding: 0px 4px;
+    color:#9e9797;
+}
+.actionIcons span:hover,
+.editIconEnable {
+    color: #52abda !important;
+    cursor: pointer;
+}
+
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+}
+.actionColumn {
+    min-width: 60px;
+}
+.actionIcons span {
+    min-width: 25px;
+    padding: 8px 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0px 0px !important;
+    box-sizing: border-box;
+}
+.lookupSearchBox {
+    background-color: #f2f2f4;
+    padding: 10px 10px 10px 20px;
+}
+.searchBoxLabel {
+    font-size: 14px;
+}
+.searchInput {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    margin: 0 10px;
+}
+.lookupSearchBox .mat-flat-button.formButton {
+    height: 28px;
+    line-height: 28px;
+}
+
+.flex-display {
+    display: flex;
+}
+
+.top-688  {
+    top: 68px !important;
+}
+.content-wrapper1 {
+    padding: 0px;
+    /* width: 76%; */
+}
+.searchRight {
+    position: fixed;
+    right: 5px;
+}
+/* .mat-column-lookupId{
+    width:60px;
+}
+.mat-column-lookupName, .mat-column-lookupMainDesc{
+    width:35%;
+}
+.mat-column-lookupEnabledFlag {
+    width: 100px;
+} */
+
+::ng-deep .viwDialogData{
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+::ng-deep .nonEditiableField{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 170px;
+}

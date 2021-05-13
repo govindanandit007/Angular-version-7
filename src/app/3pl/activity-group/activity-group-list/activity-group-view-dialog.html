@@ -1,0 +1,135 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle">Activity Group Detail</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" tabindex="0" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'">
+    <div class="container" fxLayout="column">
+        <div [ngClass]="'mb10'" fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex>
+                <div fxLayout="row" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Group Name</span>
+                  
+                        <span [ngClass]="'viwDialogData'">{{data[0].activityGroupName}}</span>
+
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Group Code</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].activityGroupCode}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Start Date</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].startDate}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">End Date</span>
+                        <span [ngClass]="'viwDialogData'"> {{data[0].endDate}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <mat-checkbox class="materailFieldSize" disabled='true'
+                        [(ngModel)]="data[0].enableFlag" value='data[0].enableFlag'>
+                        Enabled Flag</mat-checkbox>
+                    </div>
+                   
+                </div>
+              
+               
+            </div>
+        </div>
+       <div [ngClass]="'marginT15'" fxLayout="row" fxLayoutGap="5px">
+            <div fxFlex="100" [ngClass]="'viewDialogLabelBar'">
+                <mat-label [ngClass]="'viewDialogLabel'">Activities :</mat-label>
+            </div>
+        </div>
+        <div [ngClass]="'customTable'" [ngStyle]="{ 'min-width': 'auto', 'max-height': '240px', 'margin-bottom' : '30px'}">
+            <table mat-table [dataSource]="parameterDataSource" style="min-width: 1100px;">
+               
+                <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef style="max-width: 70px; width: 70px;">#</th>
+                    <td mat-cell *matCellDef="let element; let i = index;" >
+                        <div>
+                            <span [ngClass]="'nonEditiableField'">
+                                {{ paginator.pageSize * paginator.pageIndex + i + 1 }}
+                                </span> 
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="activityName">
+                    <th mat-header-cell *matHeaderCellDef >Activity Name</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.activityName ? element.activityName : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="activityCode">
+                    <th mat-header-cell *matHeaderCellDef >Activity Code</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.activityCode ? element.activityCode : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+               
+                <ng-container matColumnDef="transactiontype">
+                    <th mat-header-cell *matHeaderCellDef >Transaction Type</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.transactionTypeDesc ? element.transactionTypeDesc : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="subactivities">
+                    <th mat-header-cell *matHeaderCellDef >Sub Activities</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.subactivityDesc ? element.subactivityDesc : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef >Description</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.description ? element.description : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="enableFlag">
+                    <th mat-header-cell *matHeaderCellDef >Enable Flag</th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-checkbox class="materailFieldSize" disabled='true'
+                        [(ngModel)]="data[0].enableFlag">
+                        </mat-checkbox>
+                    </td>
+                </ng-container> -->
+           
+             
+                <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumns"></tr>
+            </table>
+            <ng-container *ngIf="
+                    !parameterDataSource.data.length">
+                <div [ngClass]="'noDataFound'"><small>{{activityMsg}}</small></div>
+            </ng-container>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div>
+                <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="activityGroupHeaderId"
+                cdkFocusInitial>Edit</button>
+            </div>
+            <mat-paginator (page)="commonService.setPaginationSize($event)" showFirstLastButtons
+                [ngClass]="'mat-paginator-sticky'">
+            </mat-paginator>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions [ngClass]="'viewActionFooter'" *ngIf="data[0].poHostId === null">
+    <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data[0].poId"
+        cdkFocusInitial>Edit</button>
+</div>

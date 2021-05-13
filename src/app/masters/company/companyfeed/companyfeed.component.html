@@ -1,0 +1,452 @@
+<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start">
+    <div *ngIf="companyList" fxFlex="100" class="contentBorder">
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">Companies List :</span>
+            </div>
+            <div fxLayoutAlign="end">
+                <button *ngIf="!searchEnableFlag" mat-mini-fab class="btn-search-bg mr10" (click)="searchComponentOpen()" matTooltip="Search"
+                    [matTooltipPosition]="tooltipPosition">
+                    <span class="headerIcon icon-search"></span>
+                </button>
+                <button mat-stroke-button (click)="addCompany('add')" class="orangeButtonBorder colorOperatingUnit"
+                    color="primary">
+                    Add Company
+                </button>
+
+            </div>
+        </div>
+
+        <div fxLayout="row">
+            <mat-divider fxFlex="100"></mat-divider>
+        </div>
+
+        <div class="container">
+            <div [ngClass]=" !companyDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'"
+            [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+                <table mat-table [dataSource]="companyDataSource" matSort class="resize-table" style="min-width: 1500px;">
+                    <!-- No Column -->
+                    <ng-container matColumnDef="companyCode">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[0].field" (mousedown)="commonService.onResizeColumn($event, 0, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[0].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.companyCode }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="companyName">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[1].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.companyName }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="companyAddr1">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[2].field" (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[2].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.companyAddr1 }}
+                        </td>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="creationDate">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto mat-header-column-'+columns[3].field">
+                            <span mat-sort-header>{{ columns[3].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.creationDate | date }}
+                        </td>
+                    </ng-container>
+                    <!-- Enabled Flag Column -->
+                    <ng-container matColumnDef="companyEnabledFlag">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto text-center mat-header-column-'+columns[4].field">
+                            {{ columns[4].name }}
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center">
+                            <mat-checkbox [(ngModel)]="element.companyEnabledFlag" value="element.companyEnabledFlag"
+                                disabled="true">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="expressLabelFlag">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto text-center mat-header-column-'+columns[5].field">
+                            {{ columns[5].name }}
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center">
+                            <mat-checkbox [(ngModel)]="element.expressLabelFlag" value="element.expressLabelFlag"
+                                disabled="true">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="activityBillingFlag">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto text-center mat-header-column-'+columns[6].field">
+                            {{ columns[6].name }}
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center">
+                            <mat-checkbox [(ngModel)]="element.activityBillingFlag" value="element.activityBillingFlag"
+                                disabled="true">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="mfgFlag">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto text-center mat-header-column-'+columns[7].field">
+                            {{ columns[7].name }}
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center">
+                            <mat-checkbox [(ngModel)]="element.mfgFlag" value="element.mfgFlag"
+                                disabled="true">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="ymsFlag">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto text-center mat-header-column-'+columns[8].field">
+                            {{ columns[8].name }}
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center">
+                            <mat-checkbox [(ngModel)]="element.ymsFlag" value="element.ymsFlag"
+                                disabled="true">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action" stickyEnd>
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto actionColumn mat-header-column-'+columns[9].field">
+                            {{ columns[9].name }}
+                        </th>
+                        <td mat-cell *matCellDef="let element" [ngClass]="'actionIcons'">
+                            <span [ngClass]="viewDisable ? 'disableBtn' : ''" (click)="getCompanyDetailsById(element.companyId,element.companyName,'view')"
+                                matRipple matTooltip="View" [matTooltipPosition]="tooltipPosition"
+                                [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true" [matRippleRadius]="false">
+                                <mat-icon>remove_red_eye</mat-icon>
+                            </span>
+                            <span (click)="getCompanyDetailsById(element.companyId,element.companyName)" matRipple
+                                matTooltip="Edit" [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                [matRippleCentered]="true" [matRippleRadius]="false">
+                                <mat-icon>edit</mat-icon>
+                            </span>
+                            <!-- <span class="icon-edit"
+                                (click)="getCompanyDetailsById(element.companyId,element.companyName)" matRipple
+                                matTooltip="Edit" [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                [matRippleCentered]="true" [matRippleRadius]="false"></span> -->
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                </table>
+
+                <ng-container *ngIf="listProgress">
+                    <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </ng-container>
+
+                <ng-container *ngIf="
+                    !companyDataSource.data.length && !listProgress
+                ">
+                    <div [ngClass]="'noDataFound'"><small>{{companyMessage}}</small></div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!companyList" class="contentBorder" fxLayout="column" fxFlex='100'>
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">{{ isEdit ? showCompanyName : 'Define Company :'}}</span>
+            </div>
+            <div fxLayoutAlign="end">
+
+                <!-- <button *ngIf="!fieldDisable" mat-stroke-button (click)="addCompany('back')"
+                    class="orangeButtonBorder colorOperatingUnit mr10" color="primary">
+                    List Page
+                </button> -->
+                <!-- (click)="openDialogWithRef(myDialog)" -->
+                <button *ngIf="!fieldDisable" mat-stroke-button class="orangeButtonBorder colorAttribute"
+                    color="primary">
+                    Add Attribute
+                </button>
+            </div>
+        </div>
+
+        <div fxLayout="row">
+            <mat-divider fxFlex="100"></mat-divider>
+        </div>
+
+        <div class="container" class="formContainer">
+            <form [formGroup]="companyForm" fxLayout="column" autocomplete="off">
+                <div fxLayoutGap="20px">
+                    <div fxLayout="column" fxFlex="70">
+                        
+                        <div fxLayout="row" fxLayoutGap="20px">
+                            <mat-form-field class="materailFieldSize" fxFlex="33.33">
+                                <input matInput placeholder="Name" formControlName="companyName" required
+                                    (blur)="logValidationErrors()">
+                                <mat-error *ngIf="formErrors.companyName">{{formErrors.companyName}}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="33.33">
+                                <input matInput placeholder="Code" formControlName="companyCode" [readonly]="isEdit"
+                                    required maxlength="10" (blur)="logValidationErrors()">
+                                <mat-error *ngIf="formErrors.companyCode">{{formErrors.companyCode}}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="33.33">
+                                <input matInput  placeholder="Licensed User" type="text" (keypress)="commonService.isNaturalNumber($event)"
+                                    maxlength="5" formControlName="companyLicensedUsers" required (blur)="logValidationErrors()">
+                                <mat-error *ngIf="formErrors.companyLicensedUsers">{{formErrors.companyLicensedUsers}}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="20px">
+                            <mat-form-field class="materailFieldSize" fxFlex="33.33">
+                                <input matInput placeholder="Address 1" formControlName="companyAddr1" required
+                                    (blur)="logValidationErrors()">
+                                <mat-error *ngIf="formErrors.companyAddr1">{{formErrors.companyAddr1}}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="33.33">
+                                <input matInput placeholder="Address 2" formControlName="companyAddr2">
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="33.33">
+                                <input matInput placeholder="Address 3" formControlName="companyAddr3">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="20px">
+                            <mat-form-field class="materailFieldSize" fxFlex="33.33">
+                                <mat-select formControlName="companyCountry" placeholder="Country" required
+                                   [ngClass]="fieldDisable ? 'selectArrowHide' : ''" (blur)="logValidationErrors()">
+                                    <mat-option *ngFor="let element of countryList" [value]="element.value"
+                                        (onSelectionChange)="lookupSelectionChanged($event,'State',element.id, element)">
+                                        {{ element.label }}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formErrors.companyCountry">{{formErrors.companyCountry}}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="33.33">
+                                <mat-select formControlName="companyStateCounty" placeholder="State/County" required
+                                    [ngClass]="fieldDisable ? 'selectArrowHide' : ''" (blur)="logValidationErrors()">
+                                    <mat-option *ngFor="let element of stateFilterList" [value]="element.name"
+                                        (onSelectionChange)="lookupSelectionChanged($event,'City',element.id, element)">
+                                        {{ element.name }}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formErrors.companyStateCounty">{{formErrors.companyStateCounty}}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="33.33">
+                                <mat-select formControlName="companyCity" placeholder="City" required
+                                    [ngClass]="fieldDisable ? 'selectArrowHide' : ''" (blur)="logValidationErrors()">
+                                    <mat-option *ngFor="let element of cityFilterList" [value]="element.name">
+                                        {{ element.name }}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formErrors.companyCity">{{formErrors.companyCity}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="20px">
+                            <mat-form-field class="materailFieldSize" fxFlex="33.33">
+                                <input matInput placeholder="Postal Code" formControlName="companyPincode" required
+                                   maxlength="10" (blur)="logValidationErrors()">
+                                <mat-error *ngIf="formErrors.companyPincode">{{formErrors.companyPincode}}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="33.33">
+                                <input matInput placeholder="Phone Number" formControlName="companyPhone" required
+                                   maxlength="15" (blur)="logValidationErrors()" (keypress)="commonService.isWholeNumber($event)">
+                                <mat-error *ngIf="formErrors.companyPhone">{{formErrors.companyPhone}}</mat-error>
+                            </mat-form-field>
+                            <div fxFlex="33.33">
+                                <div fxFlex="27"></div>
+                                <mat-checkbox class="materailFieldSize" [style.margin-top]="'10px'" fxFlex="73"
+                                    formControlName="companyEnabledFlag" style="margin-top: 10px">Enabled Flag
+                                </mat-checkbox>
+                            </div>
+                           
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="20px"  style="margin-top: 10px; margin-bottom: 10px;">
+                            <mat-checkbox class="materailFieldSize" [style.margin-top]="'10px'" fxFlex="25"
+                                formControlName="activityBillingFlag" style="margin-top: 10px">3PL Flag
+                            </mat-checkbox>
+                            <mat-checkbox class="materailFieldSize" [style.margin-top]="'10px'" fxFlex="25"
+                                formControlName="mfgFlag" style="margin-top: 10px">MFG Flag
+                            </mat-checkbox>
+                            <mat-checkbox class="materailFieldSize" [style.margin-top]="'10px'" fxFlex="25"
+                                formControlName="ymsFlag" style="margin-top: 10px">YMS Flag
+                            </mat-checkbox>
+                            <mat-checkbox class="materailFieldSize" [style.margin-top]="'10px'" fxFlex="25"
+                                formControlName="expressLabelFlag" style="margin-top: 10px">Express label
+                            </mat-checkbox>
+                        </div>
+
+                    </div>
+
+                    <div fxLayout="column" fxFlex="30">
+                        <div fxLayout="row" style="margin-bottom: 20px;" fxLayoutGap="10px">
+                            <div fxLayout="column" class="item" fxFlex="60">
+
+                              <mat-label class="inline-item-align-center">Company Logo
+                                <mat-icon class="helpIcon" aria-hidden="false"
+                                    matTooltip="Logo should not be greater than 256 kb."
+                                    aria-label="file upload">help_outline
+                                </mat-icon>
+                            </mat-label>
+                              <div fxLayout="column" fxFlex *ngIf="!isLogoSelected">
+                                <!-- <div fxLayout="column" fxFlex>
+                                    <mat-label class="inline-item-align-center">Company Logo
+                                        <mat-icon class="helpIcon" aria-hidden="false"
+                                            matTooltip="Logo should not be greater than 256 kb."
+                                            aria-label="file upload">help_outline
+                                        </mat-icon>
+                                    </mat-label> -->
+                                    <div fxFlex="100" style="margin-top: 10px;" *ngIf="!fieldDisable">
+                                        <input #file type="file" fxFlex="100" class="custom-file-input "
+                                            accept='image/*' (change)="preview(file.files, 'logo')" />
+                                    </div>
+                                </div>
+                                <div fxLayout="column" fxFlex="100" [ngClass]="fieldDisable ? 'marginforLogo' : 'marginforLogo pointerHover'" *ngIf="isLogoSelected">
+                                  <div [ngClass]="'enableImageChangeOption'" *ngIf="isLogoSelected && !fieldDisable">
+                                    <mat-icon [ngClass]="'editImageIcon'" (click)="changeImage('logo')">delete_forever</mat-icon>
+                                  </div>
+                                    <div class="subItem" *ngIf="logoImgURL" style="text-align: center;">
+                                      <img [src]="logoImgURL" [ngClass]="'full-container-img'">
+                                    </div>
+                                    <!-- <div fxFlex="100" style="color:red;" *ngIf="messageLogo">{{messageLogo}}</div> -->
+                                </div>
+                                <div fxFlex="100" style="color:red;" *ngIf="messageLogo">{{messageLogo}}</div>
+                            </div>
+                            <div fxLayout="column" class="item" fxFlex="40">
+                              <mat-label class="inline-item-align-center">Company Icon
+                                <mat-icon class="helpIcon" aria-hidden="false"
+                                    matTooltip="Icon should not be greater than 256 kb."
+                                    aria-label="file upload">help_outline
+                                </mat-icon>
+                            </mat-label>
+                            <div fxLayout="column" fxFlex *ngIf="!isIconSelected">
+                                <!-- <div fxLayout="column" fxFlex>
+                                    <mat-label class="inline-item-align-center">Company Icon
+                                        <mat-icon class="helpIcon" aria-hidden="false"
+                                            matTooltip="Icon should not be greater than 256 kb."
+                                            aria-label="file upload">help_outline
+                                        </mat-icon>
+                                    </mat-label> -->
+                                    <div fxFlex="100" style="margin-top: 10px;" *ngIf="!fieldDisable">
+                                        <input #fileicon type="file" fxFlex="80" class="custom-file-input "
+                                            accept='image/*' (change)="preview(fileicon.files, 'icon')" />
+                                    </div>
+                                </div>
+                                <div fxLayout="column" fxFlex="100" [ngClass]="fieldDisable ? 'marginforLogo' : 'marginforLogo pointerHover'" *ngIf="isIconSelected">
+                                  <div [ngClass]="'enableImageChangeOption'" *ngIf="isIconSelected && !fieldDisable">
+                                    <mat-icon [ngClass]="'editImageIcon'" (click)="changeImage('icon')">delete_forever</mat-icon>
+                                  </div>
+                                    <div class="iconSubItem" *ngIf="iconImgURL" style="text-align: center;">
+                                      <img [src]="iconImgURL" [ngClass]="'full-container-img'">
+                                    </div>
+                                    <!-- <div fxFlex="100" style="color:red;" *ngIf="messageIcon">{{messageIcon}}</div> -->
+
+                                </div>
+                                <div fxFlex="100" style="color:red;" *ngIf="messageIcon">{{messageIcon}}</div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div>
+
+                    <div fxLayout="row" fxLayoutGap="5px" [ngClass]="'marginforCompany'">
+                        <div fxFlex="100">
+                            <mat-label>Company Contact : </mat-label>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="20px">
+                        <div fxFlex="50" fxLayoutGap="20px">
+                            <mat-form-field class="materailFieldSize" fxFlex="50">
+                                <input matInput placeholder="Person Name" formControlName="companyPersonName" required
+                                    (blur)="logValidationErrors()">
+                                <mat-error *ngIf="formErrors.companyPersonName">{{formErrors.companyPersonName}}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="50">
+                                <input matInput placeholder="Phone Number" formControlName="companyPersonPhoneNum"
+                                   maxlength="15" required (blur)="logValidationErrors()" (keypress)="commonService.isWholeNumber($event)">
+                                <mat-error *ngIf="formErrors.companyPersonPhoneNum">{{formErrors.companyPersonPhoneNum}}
+                                </mat-error>
+                                <!-- <mat-hint>Hint: (123-456-7890)</mat-hint> -->
+                                <!-- <mat-hint>Note: Only number, space and plus (+ sign) allowed</mat-hint> -->
+                            </mat-form-field>
+                        </div>
+                        <mat-form-field class="materailFieldSize" fxFlex="50">
+                            <input oninput="this.value = this.value.toLowerCase()" matInput placeholder="Email Address" formControlName="companyPersonEmail" required
+                                (blur)="logValidationErrors()">
+                            <mat-error *ngIf="formErrors.companyPersonEmail">{{formErrors.companyPersonEmail}}
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="5px" [ngClass]="'marginforCompany'">
+                        <div fxFlex="100">
+                            <mat-label>Admin User :</mat-label>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="20px">
+                        <mat-form-field class="materailFieldSize" fxFlex="50">
+                            <input matInput placeholder="User Name" autocomplete="disabled" formControlName="userName"
+                                required (blur)="logValidationErrors()">
+                            <mat-error *ngIf="formErrors.userName">{{formErrors.userName}}</mat-error>
+                        </mat-form-field>
+                        <div fxFlex="50" fxLayoutGap="20px">
+                            <mat-form-field class="materailFieldSize" fxFlex="50">
+                                <input matInput [matDatepicker]="startDate" autocomplete="off"
+                                    formControlName="userStartDate" (click)="startDate.open()" placeholder="Start Date"
+                                    required (blur)="logValidationErrors()">
+                                <mat-error *ngIf="formErrors.userStartDate">{{formErrors.userStartDate}}</mat-error>
+                                <mat-datepicker-toggle *ngIf= "!fieldDisable" matSuffix [for]="startDate"></mat-datepicker-toggle>
+                                <mat-datepicker #startDate></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="50">
+                                <input matInput [matDatepicker]="endDate" autocomplete="off" (click)="endDate.open()"
+                                    placeholder="End Date" formControlName="userEndDate">
+                                <mat-datepicker-toggle *ngIf= "!fieldDisable" matSuffix [for]="endDate"></mat-datepicker-toggle>
+                                <mat-datepicker #endDate></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="20px">
+                        <mat-form-field class="materailFieldSize" fxFlex="50">
+                            <input oninput="this.value = this.value.toLowerCase()" matInput placeholder="User Email" formControlName="userEmail" required
+                                (blur)="logValidationErrors()">
+                            <mat-error *ngIf="formErrors.userEmail">{{formErrors.userEmail}}</mat-error>
+                        </mat-form-field>
+                        <div fxFlex="50" fxLayoutGap="20px">
+                            <mat-form-field fxFlex="50">
+                                <input matInput placeholder="User Password" autocomplete="off" formControlName="userPassword"
+                                    [type]="hide ? 'password' : 'text'" [required]="isEdit ? 'false' : 'true'" />
+                                <button mat-icon-button matSuffix (click)="hide = !hide"
+                                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                    <mat-icon *ngIf = "!fieldDisable">{{
+                                        hide
+                                            ? 'visibility_off'
+                                            : 'visibility'
+                                    }}</mat-icon>
+                                </button>
+                                <mat-error *ngIf="formErrors.userPassword">{{formErrors.userPassword}}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="50">
+                                <input matInput placeholder="Password Validity Days" type="number" (keypress)="commonService.isNaturalNumber($event)"
+                                    formControlName="userPswdValidityDays">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <input matInput placeholder="Description" formControlName="userDescription">
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row wrap" fxFlex="2 0 0" *ngIf="!fieldDisable" fxLayoutGap="15px" class="marginT15">
+                    <button mat-flat-button [ngClass]="'formButton saveButton'" (click)="onSubmit()" color="primary">
+                        {{ isEdit ? 'Update' : 'Save' }}
+                    </button>
+                    <button mat-flat-button [ngClass]="'formButton saveButton'" (click)="openConfirmationDialog('company','company')" color="primary">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

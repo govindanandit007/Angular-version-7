@@ -1,0 +1,633 @@
+<div [ngClass]="searchEnable ? 'sideContent' : ''">
+    <div class="contentBorder marginT15" [ngClass]="searchEnable ? 'content-wrapper1' : ''">
+        <div [ngClass]="'formHeader setBtm'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">Batch :</span>
+            </div>
+            <div fxLayoutAlign="end">
+                <button *ngIf="!searchEnable" mat-mini-fab class="btn-search-bg mr10" (click)="searchComponentOpen()" matTooltip="Search"
+                    [matTooltipPosition]="tooltipPosition">
+                    <span class="headerIcon icon-search"></span>
+                </button>
+                <button mat-stroke-button class="orangeButtonBorder colorOperatingUnit mr10" color="primary"
+                (click)="addRow($event)">
+                    Add Batch
+                </button>
+                <span class="down-arrow" [matMenuTriggerFor]="exportmenu">
+                    <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                        Export
+                    </button>
+                </span>
+                <mat-menu #exportmenu="matMenu">
+                    <button mat-menu-item (click)="exporter.exportTable('xls', {fileName:'Flexi WMS - Batch List'})">XLS</button>
+                    <button mat-menu-item (click)="exporter.exportTable('xlsx', {fileName:'Flexi WMS - Batch List'})">XLSX</button>
+                    <button mat-menu-item (click)="exporter.exportTable('csv', {fileName:'Flexi WMS - Batch List'})">CSV</button>
+                </mat-menu>
+            </div>
+        </div>
+
+        <div class="container" fxLayout="column">
+            <div #customTable [ngClass]="!parameterDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'"
+                [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+                <table mat-table matTableExporter [hiddenColumns]='[22]' #exporter="matTableExporter" [dataSource]="parameterDataSource"  matSort class="resize-table" style="min-width :3000px;" 
+                (matSortChange)= "sortChanged($event)"  matSortDisableClear>
+                    <ng-container matColumnDef="batchId">
+                        <th mat-header-cell *matHeaderCellDef  [ngClass]="'cursor-auto mat-header-column-'+columns[0].field" >
+                            <span >{{ columns[0].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                            <div class="pt-7">{{ paginator.pageSize * paginator.pageIndex + i + 1 }}</div>
+                        </td>
+                    </ng-container>
+                  
+                    <!-- <ng-container matColumnDef="iuCode">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event,1 , columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[1].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[1].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i=index" >
+                            <div *ngIf="element.editing">
+                                <mat-form-field [ngClass]="'inputWidthClass'">
+                                   <mat-select *ngIf="element.addNewRecord" [(ngModel)]="element.batchIuId" name="class" [ngClass]="!element.addNewRecord ? 'text-black-disabled pointerEventnone selectArrowHide' : 'text-black-disabled'"
+                                    placeholder="Required" required disabled>
+                                        <mat-option *ngFor="let temp of iuLov" [value]="temp.key">
+                                            {{temp.viewValue}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <div *ngIf="!element.addNewRecord">
+                                        <input matInput [(ngModel)]="element.iuCode" [disabled]="true" />
+                                    </div>
+                                    <mat-error> Please Select Item</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{element.iuCode ? element.iuCode : '-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container> -->
+                    <ng-container matColumnDef="itemName">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[1].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[1].name }} <sup class="requiredMark">*</sup></span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i=index" >
+                            <div *ngIf="element.editing">
+
+                                <div *ngIf="element.addNewRecord">
+
+                                    <div fxLayout="row"  *ngIf="element.inlineSearchLoader === 'hide'">
+                                        <div fxFlex="80">
+                                            <!-- [placeholder]="element.addNewRecord ? 'Required' : ''" -->
+                                            <mat-form-field *ngIf="element.showLov === 'show'" autofocus>
+                                                    <mat-select  [(ngModel)]="element.batchItemId" name="class"
+                                                     autofocus
+                                                    [disabled]="element.editing && !element.addNewRecord" required>
+                                                        <mat-option *ngFor="let temp of element.itemLov" [value]="temp.key"
+                                                        (onSelectionChange)="itemSelectionChanged($event, temp.key, paginator.pageSize * paginator.pageIndex + i)">
+                                                            {{temp.viewValue}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field *ngIf="element.showLov === 'hide'">
+                                                <input matInput
+                                                (keydown)="fetchNewSearchList($event, paginator.pageSize * paginator.pageIndex + i, false, element.searchValue)"
+                                                (blur)="fetchNewSearchList($event, paginator.pageSize * paginator.pageIndex + i, false, element.searchValue)"
+                                                placeholder="Search Item" [(ngModel)]="element.searchValue"  autocomplete="off" />
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div fxFlex="20"  >
+                                            <div [ngClass]="'pt-15'" >
+                                                <button  class="searchBtn icon-search" matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                                                (click)="fetchNewSearchList($event, paginator.pageSize * paginator.pageIndex + i, true, element.searchValue)" >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div  fxLayout="row"  *ngIf="element.inlineSearchLoader === 'show'">
+                                        <div fxFlex="100">Searching...</div>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="element.editing && !element.addNewRecord">
+                                    <mat-form-field [ngClass]="'inputWidthClass'">
+                                        <input matInput [(ngModel)]="element.itemName" [disabled]="true" />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'" style="pointer-events: none; " class="maxWidthSelect setWidth">
+                                    <ng-container >
+                                        <span >{{element.itemName}}</span>
+                                    </ng-container>
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="batchNumber">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[2].field" (mousedown)="commonService.onResizeColumn($event,2 , columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[2].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[2].name }} <sup class="requiredMark">*</sup></span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field [ngClass]="'inputMarginClassExtend'" *ngIf="!element.addNewRecord">
+                                    <input matInput [(ngModel)]="element.batchNumber" (ngModelChange)="element.batchNumber = $event.toUpperCase()" [disabled]="true" />
+                                </mat-form-field>
+                                <mat-form-field [ngClass]="'inputMarginClassExtend'" *ngIf="element.addNewRecord">
+                                    <input matInput [(ngModel)]="element.batchNumber"  (ngModelChange)="element.batchNumber = $event.toUpperCase()" autocomplete="off" required/>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{element.batchNumber ? element.batchNumber : '-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchQuantity">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[3].field" (mousedown)="commonService.onResizeColumn($event,3 , columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[3].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[3].name }} <sup class="requiredMark">*</sup></span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field [ngClass]="'inputMarginClassExtend'" *ngIf="!element.addNewRecord">
+                                    <input matInput [(ngModel)]="element.batchQuantity" [disabled]="true" />
+                                </mat-form-field>
+                                <mat-form-field [ngClass]="'inputMarginClassExtend'" *ngIf="element.addNewRecord">
+                                    <input matInput [(ngModel)]="element.batchQuantity" autocomplete="off"
+                                    (keypress)="commonService.isNaturalNumber($event)" required/>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{ element.batchQuantity ? element.batchQuantity : '-' }}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchSupplierNumber">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[4].field" (mousedown)="commonService.onResizeColumn($event,4 , columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[4].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[4].name }} <sup class="requiredMark">*</sup></span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i=index" >
+
+                            <div *ngIf="element.editing">
+                                <div fxLayout="row"  *ngIf="element.inlineSearchLoader1 === 'hide'">
+                                        <div fxFlex="80">
+                                            <mat-form-field *ngIf="element.showLov1 === 'show'" autofocus>
+                                                <mat-select  [(ngModel)]="element.batchSupplierNumber" [ngClass]="''"
+                                                required >
+                                                    <mat-option *ngFor="let temp of element.batchSupplierList" [value]="temp.value"
+                                                    (onSelectionChange)="supplierSelectionChanged($event, temp.label, paginator.pageSize * paginator.pageIndex + i, temp)" >
+                                                        {{ temp.label }}
+                                                    </mat-option>
+                                               </mat-select>
+                                                <mat-error *ngIf="element.batchSupplierNumber === ''" >Please Enter Item Name</mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field *ngIf="element.showLov1 === 'hide'">
+                                                <input matInput
+                                                (keydown)="fetchNewSearchList1($event, paginator.pageSize * paginator.pageIndex + i, false, element.searchValue1)"
+                                                (blur)="fetchNewSearchList1($event, paginator.pageSize * paginator.pageIndex + i, false, element.searchValue1)"
+                                                placeholder="Search Supplier" [(ngModel)]="element.searchValue1"  autocomplete="off" required/>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div fxFlex="20"  >
+                                            <div [ngClass]="'pt-15'" >
+                                                <button  class="searchBtn icon-search" matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                                                (click)="fetchNewSearchList1($event, paginator.pageSize * paginator.pageIndex + i, true, element.searchValue1)" >
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div  fxLayout="row"  *ngIf="element.inlineSearchLoader1 === 'show'">
+                                        <div fxFlex="100">Searching...</div>
+                                    </div>
+
+
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'" style="pointer-events: none; " class="maxWidthSelect setWidth">
+
+                                        <span >{{element.supplierNumberCode ? element.supplierNumberCode : '-'}}</span>
+
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchSupplierName">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[5].field" (mousedown)="commonService.onResizeColumn($event,5 , columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[5].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[5].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                    <input matInput [(ngModel)]="element.supplierName" disabled />
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{element.supplierName ? element.supplierName : '-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchStatus">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[6].field" (mousedown)="commonService.onResizeColumn($event,6, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[6].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[6].name }} <sup class="requiredMark">*</sup></span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                            <div *ngIf="element.editing">
+                                <!-- [placeholder]="element.addNewRecord ? 'Required' : ''" -->
+                                <mat-form-field [ngClass]="'inputWidthClass'">
+                                    <mat-select [(ngModel)]="element.batchStatus"
+                                     required>
+                                        <mat-option *ngFor="let temp of statusLov" [value]="temp.value"
+                                        (onSelectionChange)="statusChanged($event, temp.label, paginator.pageSize * paginator.pageIndex + i)">
+                                            {{temp.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error> Please Select Status</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{element.batchStatusName ? element.batchStatusName : '-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchOriginationDate">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[7].field" (mousedown)="commonService.onResizeColumn($event,7 , columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[7].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[7].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field floatLabel="never" [hideRequiredMarker]="true" [ngClass]="'dateField'">
+                                    <input matInput [matDatepicker]="picker" autocomplete="off" (click)="picker.open()"
+                                        [(ngModel)]="element.batchOriginationDate" disabled />
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker ></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{ element.batchOriginationDate | date }}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchExpirationDate">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[8].field" (mousedown)="commonService.onResizeColumn($event, 8, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[8].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[8].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field floatLabel="never" [hideRequiredMarker]="true" [ngClass]="'dateField'">
+                                    <input matInput [matDatepicker]="picker" autocomplete="off" (click)="this.commonService.disableInput($event)"
+                                       [min]='element.batchOriginationDate' [(ngModel)]="element.batchExpirationDate" on-focus="this.commonService.disableInput($event)" />
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker disabled="false"></mat-datepicker>
+                                    <mat-error> Please Select expiration date</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{ element.batchExpirationDate | date }}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchDescription">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[9].field" (mousedown)="commonService.onResizeColumn($event,9 , columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[9].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[9].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                    <input matInput [(ngModel)]="element.batchDescription" placeholder="Description" />
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{element.batchDescription ? element.batchDescription : '-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                  
+                    <ng-container matColumnDef="batchParentNumber">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[10].field" (mousedown)="commonService.onResizeColumn($event, 10, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[10].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[10].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <!-- <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                    <input matInput [(ngModel)]="element.batchParentNumber" autocomplete="off" />
+                                </mat-form-field> -->
+                                <mat-form-field [ngClass]="'inputWidthClass'">
+                                    <mat-select [(ngModel)]="element.batchParentNumber" name="class">
+                                        <mat-option *ngFor="let temp of element.batchList" [value]="temp.value">
+                                            {{temp.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{element.batchParentNumber ? element.batchParentNumber :'-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchGradeCode">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[11].field" (mousedown)="commonService.onResizeColumn($event,11, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[11].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[11].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field [ngClass]="'inputWidthClass'">
+                                    <mat-select [(ngModel)]="element.batchGradeCode">
+                                        <mat-option *ngFor="let temp of gradeCodeLov" [value]="temp.value">
+                                            {{temp.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <!-- <span [ngClass]="'nonEditiableField'">{{element.batchGradeCode ? element.batchGradeCode : '-'}}</span>                                 -->
+                                <span [ngClass]="'nonEditiableField'">
+                                    <mat-select [(ngModel)]="element.batchGradeCode" [ngClass]="'pointerEventnone selectArrowHide'">
+                                    <mat-option *ngFor="let temp of gradeCodeLov" [value]="temp.value">
+                                        {{ (element.batchGradeCode && element.batchGradeCode !== null) ? temp.label : '-'}}
+                                    </mat-option>
+                                    </mat-select>
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchColor">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[12].field" (mousedown)="commonService.onResizeColumn($event, 12, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[12].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[12].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field [ngClass]="'inputWidthClass'">
+                                    <mat-select [(ngModel)]="element.batchColor" name="class">
+                                        <mat-option *ngFor="let temp of colorLov" [value]="temp.value">
+                                            {{temp.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{element.batchColor ? element.batchColor : '-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="batchVolume">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[13].field" (mousedown)="commonService.onResizeColumn($event,13 , columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[13].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[13].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                    <input matInput [(ngModel)]="element.batchVolume" autocomplete="off"
+                                    (keypress)="commonService.isDecimal($event)" />
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{element.batchVolume ? element.batchVolume : '-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchVolumeUom">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[14].field" (mousedown)="commonService.onResizeColumn($event, 14, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[14].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[14].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element" >
+                            <div *ngIf="element.editing">
+                                <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                    <mat-select [(ngModel)]="element.batchVolumeUom">
+                                        <mat-option *ngFor="let temp of volumeList" [value]="temp.value">
+                                            {{temp.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <!-- <span [ngClass]="'nonEditiableField'">{{element.batchVolumeUom ? element.batchVolumeUom : '-'}}</span> -->
+                                <span [ngClass]="'nonEditiableField'">
+                                    <mat-select [(ngModel)]="element.batchVolumeUom" [ngClass]="'pointerEventnone selectArrowHide'">
+                                        <mat-option *ngFor="let temp of volumeList" [value]="temp.value">
+                                            {{ element.batchVolumeUom ? temp.label : '-'}}
+                                        </mat-option>
+                                    </mat-select>
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchOriginPlace">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[15].field" (mousedown)="commonService.onResizeColumn($event,15 , columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[15].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[15].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                    <input matInput [(ngModel)]="element.batchOriginPlace" autocomplete="off" />
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{element.batchOriginPlace ? element.batchOriginPlace : '-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchLengthUom">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[16].field" (mousedown)="commonService.onResizeColumn($event,16 , columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[16].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[16].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <mat-select [(ngModel)]="element.batchLengthUom">
+                                        <mat-option (onSelectionChange)="uomSelectionChanged($event, temp.value, paginator.pageSize * paginator.pageIndex + i)"*ngFor="let temp of lengthList" [value]="temp.value">
+                                            {{temp.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{element.batchLengthUom ? element.batchLengthUom : '-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchLength">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[17].field" (mousedown)="commonService.onResizeColumn($event, 17, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[17].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[17].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i = index" >
+                            <div *ngIf="element.editing">
+                                <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                    <input matInput [(ngModel)]="element.batchLength"
+                                    (blur)='focusOut($event, paginator.pageSize * paginator.pageIndex + i)' autocomplete="off"
+                                    (keypress)="commonService.isDecimal($event)" />
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{element.batchLength ? element.batchLength : '-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchThickness">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[18].field" (mousedown)="commonService.onResizeColumn($event, 18, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[18].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[18].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                            <div *ngIf="element.editing">
+                                <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                    <input matInput [(ngModel)]="element.batchThickness" autocomplete="off"
+                                    (blur)='focusOut($event, paginator.pageSize * paginator.pageIndex + i)'
+                                    (keypress)="commonService.isDecimal($event)" />
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{element.batchThickness ? element.batchThickness : '-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                   
+                    <ng-container matColumnDef="batchWidth">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[19].field" (mousedown)="commonService.onResizeColumn($event, 19, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[19].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[19].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                            <div *ngIf="element.editing">
+                                <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                    <input matInput [(ngModel)]="element.batchWidth" autocomplete="off"
+                                    (blur)='focusOut($event, paginator.pageSize * paginator.pageIndex + i)'
+                                    (keypress)="commonService.isDecimal($event)" />
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{element.batchWidth ? element.batchWidth : '-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+          
+                    <ng-container matColumnDef="batchMaterialStatus">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[20].field" (mousedown)="commonService.onResizeColumn($event, 20, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[20].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[20].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field [ngClass]="'inputWidthClass'">
+                                    <mat-select [(ngModel)]="element.materialStatusId" name="class">
+                                        <mat-option *ngFor="let temp of materialStatusLovList" [value]="temp.value">
+                                            {{temp.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <!-- <span [ngClass]="'nonEditiableField'">{{element.materialStatusName ? element.materialStatusName :'-'}}</span> -->
+                                <span [ngClass]="'nonEditiableField width170'">
+                                    <mat-select [(ngModel)]="element.materialStatusId" [ngClass]="'pointerEventnone selectArrowHide'">
+                                        <mat-option *ngFor="let temp of materialStatusLovList" [value]="temp.value">
+                                            {{ element.materialStatusId ? temp.label : '-'}}
+                                        </mat-option>
+                                    </mat-select>
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- <ng-container matColumnDef="batchHoldDate">
+                        <th mat-header-cell *matHeaderCellDef    [ngClass]="'mat-header-column-'+columns[20].field" (mousedown)="commonService.onResizeColumn($event, 20, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[20].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[20].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field floatLabel="never" [hideRequiredMarker]="true" [ngClass]="'dateField'">
+                                    <input matInput [matDatepicker]="picker" autocomplete="off" (click)="picker.open()"
+                                        [(ngModel)]="element.batchHoldDate" on-focus="this.commonService.disableInput($event)" />
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker ></mat-datepicker>
+                                    <mat-error> Please Select hold date</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'">{{ element.batchHoldDate ? (element.batchHoldDate | date) : '-' }}</span>
+                            </div>
+                        </td>
+                    </ng-container> -->
+                    <ng-container matColumnDef="batchEnabledFlag">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto text-center mat-header-column-'+columns[21].field">
+                            <span >{{ columns[21].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center">
+                            <span *ngIf="element.editing" matTooltip="Enable Flag"
+                                [matTooltipPosition]="tooltipPosition" [ngClass]="'padding0'">
+                                <mat-checkbox fxLayout="row" fxLayoutAlign="center center"
+                                    [(ngModel)]="element.batchEnabledFlag">
+                                    <mat-icon>{{element.batchEnabledFlag}}</mat-icon>
+                                </mat-checkbox>
+                            </span>
+                            <span *ngIf="!element.editing" matTooltip="Disable Flag"
+                                [matTooltipPosition]="tooltipPosition" [ngClass]="'padding0'">
+                                <mat-checkbox class="locEnabledFlag" fxLayout="row" fxLayoutAlign="center center"
+                                    [(ngModel)]="element.batchEnabledFlag" disabled>
+                                    <mat-icon>{{element.batchEnabledFlag}}</mat-icon>
+                                </mat-checkbox>
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="action" stickyEnd >
+                        <th mat-header-cell *matHeaderCellDef  [ngClass]="'cursor-auto actionColumn mat-header-column-'+columns[22].field">
+                            <span >{{ columns[22].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'">
+                            <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center"
+                                style="justify-content: center;">
+                                <span *ngIf="!element.addNewRecord && element.batchId" class="icon-edit"
+                                    (click)="beginEdit(element,$event,  paginator.pageSize * paginator.pageIndex + i)" matRipple matTooltip="Edit"
+                                    [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                    [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                                <span *ngIf="!element.addNewRecord && element.editing" [ngClass]="'padding0'">
+                                    <span class="icon-clear" (click)="disableEdit(element, paginator.pageSize * paginator.pageIndex + i)" matRipple
+                                        matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                        [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                        [matRippleRadius]="false"></span>
+                                </span>
+                                <span *ngIf="element.addNewRecord" [ngClass]="'padding0'">
+                                    <span class="icon-clear" (click)="deleteRow(element, i)" matRipple
+                                        matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                        [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                        [matRippleRadius]="false"></span>
+
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns; sticky: true"></tr>
+                    <tr mat-row [ngClass]="{'highlightRowError': selectedRowIndex == paginator.pageSize * paginator.pageIndex + i}" *matRowDef="let row; let i= index; columns: parameterDisplayedColumns"></tr>
+                </table>
+                <ng-container *ngIf="listProgress">
+                    <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </ng-container>
+
+                <ng-container *ngIf="!parameterDataSource.data.length && !listProgress">
+                    <div [ngClass]="'noDataFound'"><small>{{batchTableMessage}}</small></div>
+                </ng-container>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <div [ngClass]="(isAdd || isEdit) ? 'formContainer' : ''">
+                    <button *ngIf="isAdd" mat-flat-button 
+                    [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10': 'formButton saveButton mr10'"
+                    color="primary"
+                        (click)="onSubmit('save')">
+                        Save
+                    </button>
+                    <button *ngIf="isEdit" mat-flat-button 
+                    [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10': 'formButton saveButton mr10'"
+                     color="primary"
+                        (click)="onSubmit('update')">
+                        Update
+                    </button>
+                </div>
+                <mat-paginator (page)="commonService.setPaginationSize($event)"  showFirstLastButtons [ngClass]="'mat-paginator-sticky'"></mat-paginator>
+                <!-- <mat-paginator  showFirstLastButtons [ngClass]="'mat-paginator-sticky'"> 
+                </mat-paginator>-->
+            </div>
+        </div>
+    </div>
+    <div [fxShow]="searchEnable" [ngClass]="searchEnable ? 'searchRight top-68' : ''">
+        <mat-sidenav class="rightSideNav" opened mode="side" position="end" [disableClose]="true">
+            <app-transaction-search-bar fxLayout="row" (searchComponentToggle)="getSearchToggle($event)"></app-transaction-search-bar>
+        </mat-sidenav>
+    </div>
+</div>

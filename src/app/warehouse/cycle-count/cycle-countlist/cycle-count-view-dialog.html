@@ -1,0 +1,234 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+  <mat-toolbar role="toolbar" class="task-header">
+      <span class="viewDialogTitle"> {{ !showItemDetails ? 'Cycle Count View' : 'View Items'}}</span>
+      <span class="fx-spacer"></span>
+      <button mat-icon-button (click)="onCloseClick()">
+          <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+      </button>
+  </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'">
+  <div class="container" fxLayout="row" fxLayoutGap="20px" *ngIf="!showItemDetails">
+    <div fxFlex="100" fxLayout="column">
+      <div fxLayout="row" class="cc-margin-bottom">
+        <!-- Cycle Count Name -->
+        <div fxLayout="column" fxLayoutGap="2px" fxFlex="20">
+          <span class="viewDialogDataTitle">Cycle Count Name</span>
+          <span class="viwDialogData wrap">{{ data[0].cycleCountName }}</span>
+        </div>
+        <!-- Desctiption -->
+        <div fxLayout="column" fxLayoutGap="2px" fxFlex="30">
+          <span class="viewDialogDataTitle">Description</span>
+          <span class="viwDialogData wrap">{{ data[0].description }}</span>
+        </div>
+        <!-- IU -->
+        <div fxLayout="column" fxLayoutGap="2px" fxFlex="15">
+          <span class="viewDialogDataTitle">IU</span>
+          <span class="viwDialogData wrap">{{ data[0].iuCode }}</span>
+        </div>
+        <!-- Mannual Count Allowed -->
+        <div fxLayout="column" fxLayoutGap="2px" fxFlex="15">
+          <span class="viewDialogDataTitle">Mannual Count Allowed</span>
+          <span class="viwDialogData">{{ data[0].newCountAllowed === 'Y' ? 'Yes' : 'No' }}</span>
+        </div>
+        <div fxLayout="column" fxLayoutGap="2px" fxFlex="5"></div> 
+        <!-- Serial Allowed -->
+        <div fxLayout="column" fxLayoutGap="2px" fxFlex="15" >
+          <span class="viewDialogDataTitle">Serial Allowed</span>
+          <span class="viwDialogData">{{ data[0].serialCountAllowed === 'Y' ? 'Yes' : 'No' }}</span>
+        </div>
+      </div>
+
+      <!-- 2nd Row -->
+      <div fxLayout="row" class="cc-margin-bottom" *ngIf="data[0].approvalRequired != null">
+        <span class="formHeaderTitle" fxFlex="16" class="viewDialogLabel">Approval Required :</span>
+        <mat-radio-group fxFlex="42" fxLayout="row" class="setCircle">
+          <mat-radio-button value="no" fxFlex="50" class="mr10 cc-option-heading" *ngIf="data[0].approvalRequired === 'N'" checked=true>No</mat-radio-button>
+          <mat-radio-button value="yes" fxFlex="50" class="mr10 cc-option-heading" *ngIf="data[0].approvalRequired === 'Y'" checked=true>Yes</mat-radio-button>
+          <!-- <mat-radio-button value="custom" class="mr10 cc-option-heading" *ngIf="data[0].approvalRequired === 'C'" checked=true>Custom</mat-radio-button> -->
+          <mat-radio-button value="custom" fxFlex="50" class="cc-option-heading" *ngIf="data[0].approvalRequired === 'T'" checked=true>If Tolerance above</mat-radio-button>
+          <span class="cc-option-input-value viwDialogData" style="justify-content: center; display: flex;" *ngIf="data[0].approvalRequired === 'T'">{{data[0].tolerancePercentage}}</span>
+          <span class="cc-option-heading" *ngIf="data[0].approvalRequired === 'T'">&nbsp;% of Qty</span>
+        </mat-radio-group>
+
+      </div>
+
+      <!-- 3rd Row -->
+      <div fxLayout="row">
+
+        <!-- LG -->
+        <div  fxFlex="45"  class="setBorder">
+          <div fxLayout="row" >
+            <div class="dialogBoxHeader optionHeading" fxFlex="100">List Of LG to Include in Cycle Count :</div>
+          </div>
+          <div fxLayout="column"style="padding:10px; overflow-y: auto; max-height: 200px;">
+            <div class="cc-sub-heading" fxFlex="100">LG Code</div>
+            <div class="" fxFlex="100">
+              <div class="cc-value mb10" *ngFor="let code of data[0].ccLgDetails">{{code.lgCode}}</div>
+            </div>
+          </div>
+        </div>
+
+        <div  fxFlex="10" ></div>
+
+        <!-- Class -->
+        <div  fxFlex="45"  class="setBorder">
+          <div fxLayout="row" >
+            <div class="dialogBoxHeader optionHeading" fxFlex="100">List of Class to Include in Cycle Count :</div>
+          </div>
+          <div fxLayout="cloumn"style="padding:10px; overflow-y: auto; max-height: 200px;">
+            <div  fxFlex="100">
+              <span class="cc-sub-heading cc-w-38" fxFlex="50">Class Name</span>
+              <span class="cc-sub-heading cc-action-heading-panel"  [ngClass]="'actionIcons'" fxFlex="50">Action</span>
+            </div>
+          </div>
+          <div fxLayout="column"style="padding:10px">
+              <div *ngFor="let ccode of data[0].ccClasses" fxFlex="100">
+                <div class=" mb10" fxFlex="50">{{ccode.abcClassCodeDesc}}</div>
+                <div [ngClass]="'actionIcons'" fxFlex="50"><span class="icon-box-3" matRipple matTooltip="Item" [matRippleColor] ="'#098ccd3b'"
+                  [matRippleCentered]="true" [matRippleRadius]="false" (click) = "showItems(ccode.abcClassCode, data[0].ccItemDetails)"></span>
+                </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Frequency -->
+      <div  fxFlex="45"  class="setBorder" style="margin-top: 50px;">
+        <div fxLayout="row" >
+          <div class="dialogBoxHeader optionHeading" fxFlex="100">Frequency :</div>
+        </div>
+        <div fxLayout="row" >
+          <div fxLayout="column" fxLayoutGap="2px" fxFlex="100" class='mt10' *ngIf="data[0].frequencyRequired === 'Y'">
+            <span class="cc-sub-heading" fxFlex="100">Recurrence Pattern</span>
+            <div fxFlex="15" class="mt8" >
+              <mat-radio-group  fxFlex="40" class="setCircle">
+                <mat-radio-button value="D" class="mr10 optionHeading" *ngIf="data[0].ccFrequencyDetails[0].frequencyType === 'D'" checked=true>Daily</mat-radio-button>
+                <mat-radio-button value="W" class="mr10 optionHeading" *ngIf="data[0].ccFrequencyDetails[0].frequencyType === 'W'" checked=true>Weekly</mat-radio-button>
+                <mat-radio-button value="M" class="mr10 optionHeading" *ngIf="data[0].ccFrequencyDetails[0].frequencyType === 'M'" checked=true>Monthly</mat-radio-button>
+                <mat-radio-button value="Y" class="mr10 optionHeading" *ngIf="data[0].ccFrequencyDetails[0].frequencyType === 'Y'" checked=true>Yearly</mat-radio-button>
+              </mat-radio-group>
+            </div>
+            <div fxFlex="85" class="setLeftBorder mt8">
+              <!-- Daily -->
+              <div class="optionSection" *ngIf="data[0].ccFrequencyDetails[0].frequencyType === 'D'">
+                Every &nbsp;<input matInput class="searchInput width" value="{{data[0].ccFrequencyDetails[0].recurInterval}}" autocomplete="off" disabled> &nbsp;day(s)
+              </div>
+              <!-- Weekly -->
+              <div *ngIf="data[0].ccFrequencyDetails[0].frequencyType === 'W'" class="optionSection">
+                <div fxLayout="row" fxLayoutGap="20px" >
+                  Recur every &nbsp;<input matInput class="searchInput width" value="{{data[0].ccFrequencyDetails[0].recurInterval}}" autocomplete="off" disabled> &nbsp;week(s) on
+                </div>
+                <div fxLayout="column"  >
+                    <div fxLayout="row"  class="mt10" >
+                      <mat-checkbox fxFlex="25" *ngIf="data[0].ccFrequencyDetails[0].sundaySchedule === 'Y'" checked=true disabled>Sunday</mat-checkbox>
+                      <mat-checkbox fxFlex="25" *ngIf="data[0].ccFrequencyDetails[0].mondaySchedule === 'Y'" checked=true disabled>Monday</mat-checkbox>
+                      <mat-checkbox fxFlex="25" *ngIf="data[0].ccFrequencyDetails[0].tuesdaySchedule === 'Y'" checked=true disabled>Tuesday</mat-checkbox>
+                      <mat-checkbox fxFlex="25" *ngIf="data[0].ccFrequencyDetails[0].wednesdaySchedule === 'Y'" checked=true disabled>Wednesday</mat-checkbox>
+                    </div>
+                    <div fxLayout="row"  >
+                      <mat-checkbox fxFlex="25" *ngIf="data[0].ccFrequencyDetails[0].thursdaySchedule === 'Y'" checked=true disabled>Thursday</mat-checkbox>
+                      <mat-checkbox fxFlex="25" *ngIf="data[0].ccFrequencyDetails[0].fridaySchedule === 'Y'" checked=true disabled>Friday</mat-checkbox>
+                      <mat-checkbox fxFlex="25" *ngIf="data[0].ccFrequencyDetails[0].saturdaySchedule === 'Y'" checked=true disabled>Saturday</mat-checkbox>
+                      <div fxFlex="25"></div>
+                    </div>
+                </div>
+              </div>
+              <!-- Monthly -->
+              <div *ngIf="data[0].ccFrequencyDetails[0].frequencyType === 'M'" class="optionSection">
+                Day &nbsp;<input matInput class="searchInput width" value="{{data[0].ccFrequencyDetails[0].onDate}}" autocomplete="off" disabled> &nbsp;of every&nbsp;
+                <input matInput class="searchInput width" value="{{data[0].ccFrequencyDetails[0].recurInterval}}" autocomplete="off" disabled> &nbsp;month(s)
+              </div>
+              <!-- Yearly -->
+              <div *ngIf="data[0].ccFrequencyDetails[0].frequencyType === 'Y'" class="optionSection">
+                <div fxLayout="row"  class="mt10" >
+                  Recur &nbsp;<input matInput class="searchInput width" value="{{data[0].ccFrequencyDetails[0].recurInterval}}" autocomplete="off" disabled> &nbsp;year(s)&nbsp;
+                </div>
+                <div fxLayout="row"  class="mt10" >
+                  <div fxFlex="50" style="padding-top: 15px;">
+                    on &nbsp;<input matInput class="searchInput width custom-width" value="{{data[0].ccFrequencyDetails[0].onMonthName}}" autocomplete="off" disabled> &nbsp;
+                    <input matInput class="searchInput width" value="{{data[0].ccFrequencyDetails[0].onDate}}" autocomplete="off" disabled>
+                  </div>
+              </div>
+              </div>
+            <!-- </div> -->
+            <!-- Range of Recurrence -->
+            <span class="cc-sub-heading mt8">Range of Recurrence</span>
+            <div fxLayout="row">
+              <div fxFlex="45" class="mt8">
+                <span>Start Date:</span>&nbsp;<input matInput class="searchInput" style="width: 40%;" value="{{data[0].ccFrequencyDetails[0].startDate | date}}" autocomplete="off" disabled>
+              </div>
+              <div fxFlex="55">
+                <mat-radio-group class="setCircle">
+                  <mat-radio-button value="D" class="mr10 optionHeading" *ngIf="data[0].ccFrequencyDetails[0].noEndDateFlag != null" checked=true>No end date</mat-radio-button>
+                  <mat-radio-button value="W" class="mr10 optionHeading" *ngIf="data[0].ccFrequencyDetails[0].endAfterInterval != null" checked=true>End after</mat-radio-button>
+                  <span *ngIf="data[0].ccFrequencyDetails[0].endAfterInterval != null">&nbsp;<input matInput class="searchInput width" value="{{data[0].ccFrequencyDetails[0].endAfterInterval | date}}" autocomplete="off" disabled>&nbsp;occurrences</span>
+                  <mat-radio-button value="M" class="mr10 optionHeading" *ngIf="data[0].ccFrequencyDetails[0].endByDate != null" checked=true>End by</mat-radio-button>
+                  &nbsp;<input *ngIf="data[0].ccFrequencyDetails[0].endByDate != null" matInput class="searchInput" style="width: 40%;" value="{{data[0].ccFrequencyDetails[0].endByDate | date}}" autocomplete="off" disabled>
+                </mat-radio-group>
+              </div>
+            </div>
+          <!-- </div> -->
+        </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="data[0].taskGenAllowed === 'Y'" mat-dialog-actions fxLayout="row" [ngClass]="'viewActionFooter'" class='mb10 mb13' style="margin-top: 50px;">
+        <button
+            mat-flat-button
+            [ngClass]="'formButton saveButton'"
+            color="primary"
+            [mat-dialog-close]="data[0]"
+            cdkFocusInitial>
+            Edit
+        </button>
+      </div>
+      <div style="height: 40px;">&nbsp;</div>
+    </div>
+  </div>
+  <div class="container" fxLayout="column" *ngIf="showItemDetails">
+    <div [ngClass]="!parameterDataSourceClassItem.data.length" [ngClass]="customTable" >
+          <table mat-table [dataSource]="parameterDataSourceClassItem">
+              <ng-container matColumnDef="sno">
+                <th mat-header-cell *matHeaderCellDef class="sticky" style="min-width:70px;">#</th>
+                <td mat-cell *matCellDef="let element; let i = index;">
+                    <div>
+                        <span [ngClass]="'nonEditiableField'">{{ i +1 }}</span>
+                    </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="item">
+                <th mat-header-cell *matHeaderCellDef  class="setWith15Percent">Item</th>
+                <td mat-cell *matCellDef="let element;"  >
+                    <div>
+                        <span [ngClass]="'nonEditiableField'">{{ element.item }}</span>
+                    </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef  class="setWith15Percent" style="padding-left:20px;" >Description</th>
+              <td mat-cell *matCellDef="let element;"  style="padding-left:20px;" >
+                  <div>
+                      <span [ngClass]="'nonEditiableField'">{{ element.description }}</span>
+                  </div>
+              </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsCLassItems; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumnsCLassItems; "></tr>
+          </table>
+    </div>
+    <div mat-dialog-actions [ngClass]="'viewActionFooter'">
+      <button
+          mat-flat-button
+          [ngClass]="'formButton saveButton'"
+          color="primary"
+          cdkFocusInitial
+          *ngIf="showItemDetails"
+          (click)="hideItems()">
+          Back
+      </button>
+  </div>
+  </div>
+</div>
+

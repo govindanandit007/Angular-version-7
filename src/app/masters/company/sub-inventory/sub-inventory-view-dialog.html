@@ -1,0 +1,91 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle"> Locator Group</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+
+</h1>
+<div mat-dialog-content>
+    <div class="container" style="height:215px" fxLayout="column">
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Code</span>
+                <span [ngClass]="'viwDialogData'">{{data.lgCode}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Name</span>
+                <span [ngClass]="'viwDialogData'">{{data.lgName}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">IU Name</span>
+                <span [ngClass]="'viwDialogData'">{{data.iuName}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <mat-checkbox class="materailFieldSize" fxFlex="25" [(ngModel)]="data.lgEnabledFlag"
+                    style="margin-top: 10px" disabled>
+                    Enabled Flag</mat-checkbox>
+            </div>
+        </div>
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="100">
+                    <span [ngClass]="'viewDialogDataTitle'">Description</span>
+                    <span [ngClass]="'viwDialogData'" style="word-wrap: break-word;">{{data.lgDescription ? data.lgDescription : '-'}}</span>
+                </div>
+            </div>
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="100">
+                    <span [ngClass]="'viewDialogDataTitle'">Material Status</span>
+                    <span [ngClass]="'viwDialogData'">{{data.materialStatusName}}</span>
+                </div>
+            </div>
+        </div>
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="50">
+                    <span [ngClass]="'viewDialogDataTitle'">Picking Order</span>
+                    <span [ngClass]="'viwDialogData'">{{data.lgPickingOrder ? data.lgPickingOrder : '-'}}</span>
+                </div>
+                <div fxLayout="column" fxFlex="50">
+                    <span [ngClass]="'viewDialogDataTitle'">Dropping Order</span>
+                    <span [ngClass]="'viwDialogData'">{{data.lgDroppingOrder ? data.lgDroppingOrder : '-'}}</span>
+                </div>
+            </div>
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="100">
+                    <span [ngClass]="'viewDialogDataTitle'">Type</span>
+                    <span [ngClass]="'viwDialogData'">{{data.lgTypeName}}</span>
+                </div>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="50">
+                    <mat-checkbox class="materailFieldSize" fxFlex="25" [(ngModel)]="data.lgLpnControlledFlag"
+                        style="margin-top: 10px" disabled>
+                        LPN Controlled Flag</mat-checkbox>
+                </div>
+                <div fxLayout="column" fxFlex="50">
+                    <mat-checkbox class="materailFieldSize" fxFlex="25" [(ngModel)]="data.lgCartonizationFlag"
+                        style="margin-top: 10px" disabled>
+                        Cartonization Flag</mat-checkbox>
+                </div>
+            </div>
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="100">
+                    <mat-checkbox class="materailFieldSize" fxFlex="25" [(ngModel)]="data.lgBulkPickFlag"
+                        style="margin-top: 10px" disabled>
+                        Enabled Bulk Pick</mat-checkbox>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data.lgId"
+        cdkFocusInitial>Edit</button>
+</div>

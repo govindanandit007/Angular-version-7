@@ -1,0 +1,1252 @@
+<div fxFlex="100" class="contentBorder marginT15">
+    <div [ngClass]="'formHeader'" fxLayout="row">
+        <div fxFlex fxLayoutAlign="start">
+            <span class="formHeaderTitle"><app-breadcrumb></app-breadcrumb></span>
+        </div>
+        <div fxLayoutAlign="end">
+            <span class="down-arrow" [matMenuTriggerFor]="exportmenu">
+                <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                    Export
+                </button>
+            </span>
+            <mat-menu #exportmenu="matMenu">
+                <button mat-menu-item
+                    (click)="exporter.exportTable('xls', {fileName:'Flexi WMS - Work Order Issue List'})">XLS</button>
+                <button mat-menu-item
+                    (click)="exporter.exportTable('xlsx', {fileName:'Flexi WMS - Work Order Issue List'})">XLSX</button>
+                <button mat-menu-item
+                    (click)="exporter.exportTable('csv', {fileName:'Flexi WMS - Work Order Issue List'})">CSV</button>
+            </mat-menu>
+        </div>
+    </div>
+    <div class="roleSearchBox" fxLayout="row" fxLayoutAlign="space-evenly center" fxLayoutGap="0px">
+
+        <!-- <div  fxFlex="28" class="searchBoxLabel" >Inventory Unit <span class='mandatory'></span>: 
+            <mat-select class="
+            " #model="ngModel" [(ngModel)]="iuId" disabled >
+                <mat-option *ngFor="let temp of iuLov" [value]="temp.value"
+                (onSelectionChange)="iuChanged($event,temp.value)" >
+                    {{temp.label}}
+                </mat-option>
+            </mat-select>
+        </div> -->
+        <div fxFlex="25" class="searchBoxLabel">
+            <span fxFlex="42">Transaction Type&nbsp;:</span>
+            <mat-radio-group fxFlex="58" class="setCircle radio-direction-column" [(ngModel)]="workOrderType"
+                (change)="transactTypeChanged($event)">
+                <mat-radio-button value="ISSUE" class="mr5 optionHeading" [disabled]="listProgressHeader">Issue</mat-radio-button>
+                <mat-radio-button value="RETURN" class="ml5 optionHeading" [disabled]="listProgressHeader">Return</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <div fxFlex="25" class="searchBoxLabel center">Work Order<span class='mandatory'>*</span><span class=''>:</span>
+            <div *ngIf="inlineWOSearchLoader === 'hide'" fxFlex="50">
+                <mat-form-field class="materailFieldSize ml5" *ngIf="showWOLov === 'show'" fxFlex="95" autofocus>
+                    <mat-select class=" iuInputWidth" #model="ngModel" [(ngModel)]="woNumber"
+                        [disabled]="listProgressHeader">
+                        <mat-option *ngFor="let temp of woList; let i=index;" [value]="temp.woNumber"
+                            (onSelectionChange)="workOrderChanged($event,temp, i)">
+                            {{temp.woNumber}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="materailFieldSize" *ngIf="showWOLov === 'hide'" fxFlex="95">
+                    <input matInput (keydown)="fetchNewSearchListForWO($event, null, false)"
+                        (blur)="fetchNewSearchListForWO($event, null, false)" placeholder=" WO Number"  [disabled]="listProgressHeader"
+                        [(ngModel)]="WOSearchValue" autocomplete="off" />
+                </mat-form-field>
+
+                <div [ngClass]="'pt-20 ml5 center'" fxFlex="5">
+                    <div class="icon-search center " matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                        (click)="fetchNewSearchListForWO($event, null, true)" >
+                    </div>
+                     
+                </div>
+            </div>
+            <div *ngIf="inlineWOSearchLoader === 'show'" fxFlex="50" style="padding-top: 10px;padding-left: 10px;">
+                <div fxFlex="90">Searching...</div>
+            </div>
+            <!-- <ng-container *ngIf="listProgressHeader" >
+                <mat-spinner [diameter]="20" [ngClass]="'loaderSpinner'"></mat-spinner>
+            </ng-container> -->
+
+        </div>
+
+
+
+        <div fxFlex="25" class="searchBoxLabel">Assembly Item&nbsp;:
+            <!-- <label class='width100'>
+               {{ woAssemblyItemname ? woAssemblyItemname : '-' }}
+             </label> -->
+            <mat-form-field [ngClass]="'mat-form-field1'" style=" width: 125px !important;">
+                <input matInput autocomplete="off" [(ngModel)]="woAssemblyItemname" disabled />
+            </mat-form-field>
+        </div>
+
+        <div fxFlex="25" class="searchBoxLabel">Work Order Quantity&nbsp;:
+            <!-- <label  class='width100' >
+                {{ woQty ? woQty:'-' }}
+              </label> -->
+            <mat-form-field [ngClass]="'mat-form-field3'">
+                <input matInput autocomplete="off" [(ngModel)]="woQty" disabled />
+            </mat-form-field>
+        </div>
+
+
+        <!-- <div class="errorblock"><mat-error *ngIf="!model.valid && (model.touched || model.dirty)"> Please Select inventory Unit</mat-error></div>
+         -->
+    </div>
+
+    <div class="roleSearchBox" fxLayout="row" fxLayoutAlign="space-evenly center" fxLayoutGap="0px">
+
+
+        <div fxFlex="25" *ngIf="screenType === 'DIS' && !isManual" class="searchBoxLabel "
+            style="display:block !important;margin-top: 10px;">
+            Complete Qty&nbsp;:&nbsp;
+            <mat-form-field style="width: 80px !important;margin-right: 1px;">
+                <input matInput autocomplete="off" disabled [(ngModel)]="completionQty" />
+            </mat-form-field>
+        </div>
+        <div fxFlex="16" *ngIf="screenType === 'DIS' && isManual" class="searchBoxLabel "
+            style="display:block !important;margin-top: 10px;">
+            Complete Qty&nbsp;:&nbsp;
+            <mat-form-field style="width: 80px !important;margin-right: 1px;">
+                <input matInput autocomplete="off" disabled [(ngModel)]="completionQty" />
+            </mat-form-field>
+        </div>
+        <div fxFlex="25" *ngIf="screenType === 'ASM'" class="searchBoxLabel "
+            style="display:block !important;margin-top: 10px;">
+            Complete Qty&nbsp;:&nbsp;
+            <mat-form-field style="width: 80px !important;margin-right: 1px;">
+                <input matInput autocomplete="off" disabled [(ngModel)]="completionQty" />
+            </mat-form-field>
+        </div>
+        <div fxFlex="25" class="searchBoxLabel">Available to Complete Qty&nbsp;:&nbsp;
+            <mat-form-field style="width: 50px !important;margin-right: 0px;">
+                <input matInput autocomplete="off" disabled [(ngModel)]="avlTocompleteQty" />
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="screenType === 'ASM'" fxFlex="25" class="searchBoxLabel center">
+            Destination LG<span class='mandatory'>*</span><span class=''> : </span>
+            <mat-form-field *ngIf="isManual && !isDestinationSelected" class="materailFieldSize ml5 " fxFlex="35"
+                autofocus>
+                <mat-select class=" iuInputWidth" [(ngModel)]="destinationLgId" [disabled]="isDestinationSelected"
+                    [ngClass]="!isDestinationSelected ? '' : 'pointerEventnone selectArrowHide'">
+                    <mat-option *ngFor="let element of destinationLgList" [value]="element.value"
+                        (onSelectionChange)="lgDestinationSelectionChanged($event,element)">
+                        {{ element.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field *ngIf="isDestinationSelected" class="materailFieldSize ml5" fxFlex="50" autofocus>
+                <input matInput autocomplete="off" [(ngModel)]="destinationLgCode" disabled />
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="screenType === 'DIS'" fxFlex="25" class="searchBoxLabel center">Source LG<span
+                class='mandatory'>*</span><span class=''>:</span>
+            <mat-form-field *ngIf="!isManual" class="materailFieldSize ml5" fxFlex="50" autofocus>
+
+                <input matInput autocomplete="off" [(ngModel)]="sourceLgCode" disabled />
+            </mat-form-field>
+            <mat-form-field *ngIf="isManual  &&  sourceLgId && !dropLpnId" class="materailFieldSize ml5 " fxFlex="50"
+                autofocus>
+                <mat-select class=" iuInputWidth" [(ngModel)]="sourceLgId">
+                    <mat-option *ngFor="let element of sourceLgList" [value]="element.value"
+                        (onSelectionChange)="lgSourceSelectionChanged($event,element)">
+                        {{ element.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+        </div>
+        <!-- <div  *ngIf="screenType === 'DIS' && !onhandQty"   fxFlex="25"  class="searchBoxLabel center">Source LG33<span class='mandatory'>*</span><span class=''>:</span>
+            <mat-form-field class="materailFieldSize ml5"  fxFlex="50"  
+            autofocus>            
+                <input matInput autocomplete="off" [(ngModel)]="sourceLgCode" disabled />
+            </mat-form-field> 
+        </div> -->
+        <!-- <div  *ngIf="screenType === 'DIS' && !onhandQty "   fxFlex="25"  class="searchBoxLabel center">Source LOCdd<span class='mandatory'>*</span><span class=' '>:</span>
+            <mat-form-field  *ngIf="!isManual" class="materailFieldSize ml5"  fxFlex="35"  
+            autofocus>
+            
+                <input matInput autocomplete="off" [(ngModel)]="sourceLocCode" disabled />
+            </mat-form-field>             
+        </div> -->
+
+        <div *ngIf="screenType === 'DIS'" fxFlex="25" class="searchBoxLabel center">Source LOC<span
+                class='mandatory'>*</span><span class=' '>:</span>
+            <mat-form-field *ngIf="!isManual" class="materailFieldSize ml5" fxFlex="35" autofocus>
+                <input matInput autocomplete="off" [(ngModel)]="sourceLocCode" disabled />
+            </mat-form-field>
+            <mat-form-field *ngIf="isManual && !dropLpnId" class="materailFieldSize ml5 " fxFlex="50" autofocus>
+                <mat-select class=" iuInputWidth" [(ngModel)]="sourceLocId">
+                    <mat-option *ngFor="let element of sourceLocactorList" [value]="element.value"
+                        (onSelectionChange)="slocatorSelectionChanged($event,element)">
+                        {{ element.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+        </div>
+
+        <div *ngIf="screenType === 'DIS' && isManual && !dropLpnId " fxFlex="9" class="searchBoxLabel center">Qty<span
+                class='mandatory'>*</span><span class=' '> :&nbsp; </span>
+
+            <mat-form-field *ngIf="isManual " class="materailFieldSize" fxFlex="50">
+                <input matInput [(ngModel)]="onhandQty" disabled />
+            </mat-form-field>
+        </div>
+        <div *ngIf="screenType === 'ASM'" fxFlex="25" class="searchBoxLabel center"> Destination LOC<span
+                class='mandatory'>*</span><span class=''> : </span>
+            <mat-form-field *ngIf="isDestinationSelected" class="materailFieldSize ml5" fxFlex="35" autofocus>
+
+                <input matInput autocomplete="off" [(ngModel)]="destLocatorCode" disabled />
+            </mat-form-field>
+
+            <mat-form-field *ngIf="isManual && !isDestinationSelected" class="materailFieldSize ml5" fxFlex="35"
+                autofocus>
+                <mat-select class="iuInputWidth" [(ngModel)]="destinationLocatorId" [disabled]="isDestinationSelected"
+                    [ngClass]="!isDestinationSelected ? '' : 'pointerEventnone selectArrowHide'">
+
+                    <mat-option *ngFor="let element of stagingLocactorList" [value]="element.value"
+                        (onSelectionChange)="locatorSelectionChanged($event,element)">
+                        {{ element.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <!-- <mat-form-field *ngIf="isDestinationSelected" class="materailFieldSize ml5"  fxFlex="50"  autofocus>            
+                <input matInput autocomplete="off" [(ngModel)]="destLocatorCode" disabled />
+            </mat-form-field> -->
+        </div>
+
+    </div>
+    <!-- <div class="roleSearchBox" fxLayout="row" fxLayoutAlign="space-evenly center"  fxLayoutGap="0px" >
+        <ng-container *ngIf="listProgressHeader">
+            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+        </ng-container>
+    </div> -->
+    <div class="container" fxLayout="column">
+        <div [ngClass]="!parameterDataSource1.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'"
+            [ngStyle]="{'max-height': screenMaxHeight }">
+            <table mat-table matTableExporter [hiddenColumns]='[6]' #exporter="matTableExporter"
+                [dataSource]="parameterDataSource1">
+
+                <ng-container matColumnDef="componentItemId">
+                    <th mat-header-cell *matHeaderCellDef class="percent18">
+                        <span>Item</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="percent18">
+                        <div>
+                            <span [ngClass]="'nonEditiableField'">{{element.woCmpItemName ? element.woCmpItemName :
+                                '-'}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="itemType">
+                    <th mat-header-cell *matHeaderCellDef class="percent15">
+                        <span>Item Type</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="percent15">
+
+                        <div>
+                            <span [ngClass]="'nonEditiableField'">{{element.itemcategory ? element.itemcategory :
+                                '-'}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="woLineStatus">
+                    <th mat-header-cell *matHeaderCellDef class="percent17">
+                        Line Status
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="percent17">
+                        <div>
+                            <span [ngClass]="'nonEditiableField'">{{element.woLineStatusDescription ?
+                                element.woLineStatusDescription : '-'}}</span>
+                        </div>
+
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="perAssembly">
+                    <th mat-header-cell *matHeaderCellDef class="percent10">
+                        Per Assembly
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="percent10">
+                        <span [ngClass]="'nonEditiableField'">{{element.perAssmebly ? element.perAssmebly : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="requireQty">
+                    <th mat-header-cell *matHeaderCellDef class="percent10">
+                        Required Qty
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="percent10">
+                        <!-- <span   [ngClass]="'nonEditiableField'">{{element.woCmpQty ? element.woCmpQty : '-'}}</span> -->
+                        <div *ngIf="screenType === 'ASM' || (screenType === 'DIS' && isAssemblyItem)">
+                            <span [ngClass]="'nonEditiableField'">{{element.woCmpQty ? element.woCmpQty : '0' }}</span>
+                        </div>
+                        <div *ngIf="screenType === 'DIS' && !isAssemblyItem">
+                            <span [ngClass]="'nonEditiableField'">{{element.woCmpQty ? element.woCmpQty : '0' }}</span>
+                        </div>
+                    </td>
+
+                </ng-container>
+                <ng-container matColumnDef="issueQty">
+                    <th mat-header-cell *matHeaderCellDef class="percent10">
+                        Issued Qty
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="percent10">
+                        <!-- <div *ngIf="element.editing">
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="element.woIssuedQty" autocomplete="off"   disabled />
+                        </mat-form-field>
+                      </div> -->
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">{{element.woIssuedQty ? element.woIssuedQty :
+                                '0'}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="openQty">
+                    <th mat-header-cell *matHeaderCellDef class="percent10">
+                        Open Qty
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="percent10">
+
+                        <!-- <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">{{element.openQty ? element.openQty : '0' }}</span>
+                        </div> -->
+                        <div *ngIf="screenType === 'ASM' || (screenType === 'DIS' && isAssemblyItem)">
+                            <span [ngClass]="'nonEditiableField'">{{element.openQty ? element.openQty : '0' }}</span>
+                        </div>
+                        <div *ngIf="screenType === 'DIS' && !isAssemblyItem">
+                            <span [ngClass]="'nonEditiableField'">{{element.openQty ? element.openQty : '0' }}</span>
+                        </div>
+                        <!-- <div *ngIf="!element.editing && screenType === 'DIS' && !isAssemblyItem">
+                            <span [ngClass]="'nonEditiableField'">{{element.openQty ? element.openQty : '0' }}</span>
+                        </div> -->
+                    </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="onhandQty">
+                    <th mat-header-cell *matHeaderCellDef class="percent10">
+                       Reserved Qty
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="percent10">
+                        <div >
+                            <span [ngClass]="'nonEditiableField'">{{element.alctnAllocatedQty ? element.alctnAllocatedQty : '0'}}</span>
+                        </div>
+                    </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'actionColumn percent10'"> Action </th>
+                    <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons percent10'">
+                        <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center"
+                            style="justify-content: center;">
+                            <span class="icon-direct" (click)="showDetails(element,myDialog,i)" matRipple
+                                matTooltip="LPN Detail" [matTooltipPosition]="tooltipPosition"
+                                [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                [matRippleRadius]="false"></span>
+                            <span class="icon-checkbox-checked"
+                                *ngIf="screenType === 'DIS' && element.isAssemblyItem && showCompleteBtn" matRipple
+                                [matRippleCentered]="true" [matTooltipPosition]="tooltipPosition"
+                                [matRippleColor]="'#098ccd3b'" matTooltip="Complete" (click)="completeWOIssue()">
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns1; sticky: true"></tr>
+                <tr mat-row
+                    [ngClass]="{'highlightRowError': selectedRowIndex == paginator.pageSize * paginator.pageIndex + i}"
+                    *matRowDef="let row; let i= index; columns: parameterDisplayedColumns1"></tr>
+            </table>
+            <ng-container *ngIf="listProgress">
+                <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+            </ng-container>
+            <ng-container *ngIf="!parameterDataSource1.data.length && !listProgress">
+                <div [ngClass]="'noDataFound'"><small>{{routingTableMessage}}</small></div>
+            </ng-container>
+             
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div [ngClass]="'ml10'">                
+                <div *ngIf="screenType === 'ASM'">
+                    <button *ngIf="assmBatchEnabled === 'N' && screenType === 'ASM'"
+                        [disabled]="parameterDataSource1.data.length && !showCompleteBtn  " mat-flat-button
+                        [ngClass]="'formButton saveButton mr10'" color="primary" (click)="completeWOIssue()">
+                        Complete
+                    </button>
+                    <button *ngIf="assmBatchEnabled === 'Y' && screenType === 'ASM'"
+                        [disabled]="parameterDataSource1.data.length && !showCompleteBtn  " mat-flat-button
+                        [ngClass]="'formButton saveButton mr10'" color="primary" (click)="showDailogForBatchDetails()">
+                        Complete
+                    </button>
+                </div>
+ 
+            </div>
+            <mat-paginator (page)="commonService.setPaginationSize($event)" showFirstLastButtons
+                [ngClass]="'mat-paginator-sticky'">
+            </mat-paginator>
+        </div>
+    </div>
+</div>
+
+<ng-template #myDialog>
+    <h1 class="viewDialogHeader setMarginZero" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+        <div fxLayout="row" fxLayoutGap="10px">
+            <div fxFlex="96" fxLayoutGap="10px"><span class="viewDialogTitle">Transact Item</span></div>
+            <div fxFlex="4" fxLayoutGap="10px">
+                <button mat-icon-button matDialogClose>
+                    <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </h1>
+    <div class="dialogSubtitle">
+        <div fxLayout="row" fxLayoutGap="10px">
+            <div fxFlex="30" style="padding-left: 20px; padding-top: 10px;" class="setEllipsis">Item Name&nbsp;:<span
+                    class="">&nbsp;{{currentItemName}}</span> </div>
+            <!-- <div  fxFlex="30" style="padding-left: 10px; padding-top: 10px;">Item Description&nbsp; :&nbsp; {{currentItemDescription}}</div> -->
+            <div *ngIf='!isAssemblyItem' fxFlex="20" style="padding-left: 10px; padding-top: 10px;">Per Assembly
+                Qty&nbsp;:&nbsp;{{currentPerAssemblyQty}}</div>
+
+            <div fxFlex="15" style="padding-left: 10px; padding-top: 10px;">Required
+                Qty&nbsp;:&nbsp;{{currentRequiredQty1}}</div>
+            <div fxFlex="15" style="padding-left: 10px; padding-top: 10px;">Issued Qty&nbsp;:&nbsp;{{currentIssuedQty}}
+            </div>
+            <div fxFlex="20" style="padding-left: 10px; padding-top: 10px;">Open Qty&nbsp;:&nbsp;{{currentOpenQty}}
+            </div>
+            <div fxFlex="20" style="padding-right: 15px; padding-top: 5px;">
+                <div fxLayoutAlign="end">
+                    <button mat-stroke-button class="orangeButtonBorder colorOperatingUnit" color="primary"
+                        (click)="addLBSRow(null,null,'fromui')" matTooltip="Add Row">
+                        Add Row
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- <div fxLayout="row" fxLayoutGap="10px" >
+          <div  fxFlex="30" style="padding-left: 10px; padding-top: 10px;">LG&nbsp; :&nbsp; {{currentLG}}</div>
+          <div  fxFlex="40" style="padding-left: 10px; padding-top: 10px;">LOC&nbsp; :&nbsp; {{currentLOC}}</div>
+        </div> -->
+    </div>
+    <div mat-dialog-content>
+
+        <div class="container" fxLayout="column"
+            style="min-height: 200px; max-height: 400px;margin-top: 30px;margin-left: 0px;">
+            <div [ngClass]="!parameterDataSourceLBS.data.length || listProgress ? 'customTable ' : 'customTable'">
+                <table mat-table [dataSource]="parameterDataSourceLBS" style="overflow-y: scroll !important;">
+                    <!-- <table mat-table [dataSource]="parameterDataSourceLBS"   style="min-width: 1200px;"> -->
+                    <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef class="sticky percent2">#</th>
+                        <td mat-cell *matCellDef="let element; let i = index;" class="percent2">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ i +1 }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="lpnLG">
+                        <th mat-header-cell *matHeaderCellDef class="percent10">
+                            {{ lgLable}}</th>
+                        <td mat-cell *matCellDef="let element; let i=index" class="percent10">
+                            <div *ngIf="(element.addNewRecord && isManual && screenType === 'ASM')">
+                                <mat-form-field style="width: 90px !important">
+                                    <mat-select [(ngModel)]="element.lgId" [ngClass]="" placeholder="">
+                                        <mat-option *ngFor="let item of element.lgList" [value]="item.lgId"
+                                            (onSelectionChange)="lgCodeSelectionChanged($event,item,i)">
+                                            {{ item.lgCode }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="element.lgId === ''">Please Select LG-code</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div
+                                *ngIf="(element.addNewRecord && ((!isManual && screenType === 'ASM')|| (screenType === 'DIS' && isAssemblyItem && !isManual)))">
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{element.lgCode ? element.lgCode : '-' }}
+                                </span>
+                            </div>
+                            <div *ngIf="(element.addNewRecord && screenType === 'DIS' && !isAssemblyItem)">
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ destinationLgCode ? destinationLgCode : '-' }}
+                                </span>
+                            </div>
+                            <div *ngIf="element.addNewRecord && screenType === 'DIS' && isAssemblyItem && isManual">
+
+                                <mat-form-field style="width: 90px !important">
+                                    <mat-select [(ngModel)]="element.lgId" [ngClass]="" placeholder="">
+                                        <mat-option *ngFor="let item of destinatinAssItemLGList" [value]="item.value"
+                                            (onSelectionChange)="destAssmLGSelectionChanged($event,item,i)">
+                                            {{ item.label }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="element.lgId === ''">Please Select LG-code</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.addNewRecord">                                 
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ element.lgCode ? element.lgCode : '-' }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="lpnLOC">
+                        <th mat-header-cell *matHeaderCellDef class="percent10">
+                            {{ locLable}}</th>
+                        <td mat-cell *matCellDef="let element; let i=index" class="percent10">
+                            <div *ngIf="(element.addNewRecord && isManual && screenType === 'ASM')">
+                                <div *ngIf="element.inlineLocSearchLoader === 'hide'" fxFlex="100">
+                                    <mat-form-field style="width: 120px !important"
+                                        *ngIf="element.showLocLov === 'show'" fxFlex="90">
+                                        <mat-select [(ngModel)]="element.locId" [ngClass]="''" placeholder="">
+                                            <mat-option *ngFor="let item of element.locList" [value]="item.locatorId"
+                                                (onSelectionChange)="stockLocatorSelectionChanged($event,i,item)">
+                                                {{ item.locCode }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field style="width: 120px !important"
+                                        *ngIf="element.showLocLov === 'hide'" fxFlex="90">
+                                        <input matInput (keydown)="fetchNewSearchListForItem($event, i, false)"
+                                            (blur)="fetchNewSearchListForItem($event, i, false)"
+                                            placeholder="Search Locator" [(ngModel)]="element.locSearchValue"
+                                            autocomplete="off" />
+                                    </mat-form-field>
+                                    <div fxFlex="5"></div>
+                                    <div [ngClass]="'pt-15'" fxFlex="5">
+                                        <div class="icon-search" matTooltip="Search"
+                                            [matTooltipPosition]="tooltipPosition"
+                                            (click)="fetchNewSearchListForItem($event, i, true)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="element.inlineLocSearchLoader === 'show'"
+                                    style="padding-top: 15px; width: 100px !important">
+                                    <div style="width: 100px !important">Searching...</div>
+                                </div>
+
+                            </div>
+                            <div
+                                *ngIf="(element.addNewRecord && ((!isManual && screenType === 'ASM')|| (screenType === 'DIS' && isAssemblyItem && !isManual)))">
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{element.locCode ? element.locCode : '-' }}
+                                </span>
+                            </div>
+                            <div *ngIf="element.addNewRecord && (screenType === 'DIS' && !isAssemblyItem)">
+                                <span [ngClass]="'nonEditiableField'">
+
+                                    {{ destinaionLocCode ? destinaionLocCode : '-' }}
+                                </span>
+                            </div>
+                            <div *ngIf="element.addNewRecord && screenType === 'DIS' && isAssemblyItem && isManual">
+                                <mat-form-field style="width: 90px !important">
+                                    <mat-select [(ngModel)]="element.locId" [ngClass]="" placeholder="">
+                                        <mat-option *ngFor="let item of  destinatinAssItemLocactorList" [value]="item.value"
+                                            (onSelectionChange)="destLocatorSelectionChanged($event,item,i)">
+                                            {{ item.label }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="element.locId === ''">Please Select LOC-code</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.addNewRecord">                                 
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ element.locCode ? element.locCode : '-' }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container *ngIf="(screenType === 'ASM' )|| (screenType === 'DIS' && isAssemblyItem )"  matColumnDef="reservedQty">
+                        <th mat-header-cell *matHeaderCellDef class="percent10">
+                            Res Qty</th>
+                        <td mat-cell *matCellDef="let element; let i=index" class="percent10">
+                            <div style="width: 60px !important">
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{element.locReservedQty ? element.locReservedQty : '0' }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container *ngIf="(screenType === 'ASM' )|| (screenType === 'DIS' && isAssemblyItem )"  matColumnDef="unresQty">
+                        <th mat-header-cell *matHeaderCellDef class="percent12">
+                            UnRes Qty</th>
+                        <td mat-cell *matCellDef="let element; let i=index" class="percent12">
+                            <div style="width: 90px !important">
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{element.locUnresQty ? element.locUnresQty : '0' }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="LPN">
+                        <th mat-header-cell *matHeaderCellDef class="percent12">
+                            {{lpnLabel}}</th>
+                        <td mat-cell *matCellDef="let element; let i=index" class="percent12">
+                            <div *ngIf="(element.lgLpnControlledFlag ==='Y' && element.editing && screenType === 'ASM') || (isAssemblyItem && element.lgLpnControlledFlag ==='Y')">
+                                <div *ngIf="element.inlineLpnSearchLoader === 'hide'" fxFlex="100">
+                                    <mat-form-field style="width: 160px !important"
+                                        *ngIf="element.showLpnLov === 'show'" fxFlex="90">
+                                        <mat-select [(ngModel)]="element.lpnSelectedList" [ngClass]="''"
+                                            (selectionChange)="lpnChanged($event,i)" multiple placeholder="LPN">
+                                            <mat-select-trigger>
+                                                {{(element.lpnSelectedList && element.lpnNumSelectedList) ?
+                                                element.lpnNumSelectedList[0] : ''}}
+                                                <span *ngIf="element.lpnSelectedList?.length > 1"
+                                                    class="example-additional-selection">
+                                                    (+{{element.lpnSelectedList.length-1}} selected)
+                                                </span>
+                                            </mat-select-trigger>
+                                            <mat-option *ngFor="let item of element.lpnList" [value]="item.onhandLpnId">
+                                                {{item.lpnNum }} -{{item.lpnAvlQty}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field style="width: 160px !important"
+                                        *ngIf="element.showLpnLov === 'hide'" fxFlex="90">
+                                        <input matInput (keydown)="fetchNewSearchListForLpn($event, i, false)"
+                                            (blur)="fetchNewSearchListForLpn($event, i, false)" placeholder="Search LPN"
+                                            [(ngModel)]="element.lpnSearchValue" autocomplete="off" />
+                                    </mat-form-field>
+                                    <div fxFlex="5"></div>
+                                    <div [ngClass]="'pt-15'" fxFlex="5">
+                                        <div class="icon-search" matTooltip="Search"
+                                            [matTooltipPosition]="tooltipPosition"
+                                            (click)="fetchNewSearchListForLpn($event, i, true)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="element.inlineLpnSearchLoader === 'show'"
+                                    style="padding-top: 15px; width: 160px !important">
+                                    <div style="width: 160px !important">Searching...</div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="element.addNewRecord && screenType === 'DIS' && !isAssemblyItem">
+                                <mat-form-field style="width: 150px;">
+                                    <input matInput [(ngModel)]="element.lpnNum" placeholder="LPN #" disabled />
+                                </mat-form-field>
+                            </div>
+                            
+                            <div *ngIf="!element.addNewRecord && !element.editing  ">
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{element.lpnNum ? element.lpnNum : '-' }}
+                                </span>
+                            </div>
+                            <div *ngIf="(element.lgLpnControlledFlag ==='N' && element.editing && screenType === 'ASM') || (isAssemblyItem && element.lgLpnControlledFlag ==='N')">
+                                <mat-form-field style="width: 150px;">
+                                    <input matInput  placeholder="LPN #" disabled />
+                                </mat-form-field>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="TLPN">
+                        <th mat-header-cell *matHeaderCellDef class="percent12">
+                            {{secondlpnLabel}}</th>
+                        <td mat-cell *matCellDef="let element; let i=index" class="percent12">
+                            <div >
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{element.tLpnNum ? element.tLpnNum : '-' }}
+                                </span>
+                            </div>
+                            </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Batch">
+                        <th mat-header-cell *matHeaderCellDef class="percent12">Batch #</th>
+                        <td mat-cell *matCellDef="let element; let i=index" class="percent12">
+                            <div
+                                *ngIf="(element.editing && batchEnabled &&  screenType === 'ASM') ||(isAssemblyItem && batchEnabled)">
+                                <div *ngIf="element.inlineBatSearchLoader === 'hide'" fxFlex="100">
+                                    <mat-form-field style="width: 160px !important"
+                                        *ngIf="element.showBatLov === 'show'" fxFlex="90">
+                                        <mat-select [(ngModel)]="element.batchSelectedList" [ngClass]="'requiredField'"
+                                            multiple (selectionChange)="batchChanged($event,i,null)"
+                                            placeholder="Batch">
+                                            <mat-select-trigger>
+                                                {{ element.batchSelectedList ? element.batchNumSelectedList[0] : ''}}
+                                                <span
+                                                    *ngIf="element.batchSelectedList && element.batchSelectedList?.length > 1"
+                                                    class="example-additional-selection">
+                                                    (+{{element.batchSelectedList.length-1}} selected)
+                                                </span>
+                                            </mat-select-trigger>
+                                            <mat-option *ngFor="let item of element.batchList"
+                                                [value]="item.onhandBatchId">
+                                                {{item.batchNumber}}-{{item.primarySum}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="!element.batchSelectedList">Please Select Batch</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field style="width: 160px !important"
+                                        *ngIf="element.showBatLov === 'hide'" fxFlex="90">
+                                        <input matInput (keydown)="fetchNewSearchListForBat($event, i, false)"
+                                            (blur)="fetchNewSearchListForBat($event, i, false)"
+                                            placeholder="Search Batch" [(ngModel)]="element.batSearchValue"
+                                            autocomplete="off" />
+                                    </mat-form-field>
+                                    <div fxFlex="5"></div>
+                                    <div [ngClass]="'pt-15'" fxFlex="5">
+                                        <div class="icon-search" matTooltip="Search"
+                                            [matTooltipPosition]="tooltipPosition"
+                                            (click)="fetchNewSearchListForBat($event, i, true)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="element.inlineBatSearchLoader === 'show'"
+                                    style="padding-top: 15px; width: 160px !important">
+                                    <div style="width: 160px !important">Searching...</div>
+                                </div>
+
+                            </div>
+                            <div *ngIf="element.addNewRecord && batchEnabled && screenType === 'DIS' && !isAssemblyItem">
+                                <mat-form-field style="width: 150px;">
+                                    <input matInput [(ngModel)]="element.batchNumber" [id]="'batnum'+i" 
+                                        placeholder="batch #" disabled />
+                                    <mat-icon matSuffix matTooltip="Batch Detail" (click)="showDailogForBatchDetailsDekit(i,null)" style="cursor: pointer;">search</mat-icon>    
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!batchEnabled && screenType === 'DIS'">
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{'-' }}
+                                </span>
+                            </div>
+                            <div *ngIf="!batchEnabled && screenType === 'ASM'">
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{'-' }}
+                                </span>
+                            </div>
+                            <div *ngIf="element.addNewRecord && !element.editing && batchEnabled && screenType === 'ASM'">
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{element.batchNumber ? element.batchNumber : '-' }}
+                                </span>
+                            </div>
+                            <div *ngIf="!element.addNewRecord && !element.editing && batchEnabled ">
+                                <!-- <span [ngClass]="'nonEditiableField'">
+                                    {{element.batchNumber ? element.batchNumber : '-' }}
+                                </span> -->
+                                <div fxLayout="row" fxLayoutAlign="center">
+                                    <span>
+                                        <span *ngIf="element.batchCount <= 9" (click)='openBatchPopup(myBSDialog, element)'  [ngClass]="batchSerialDialogProcess ? 'pointerEventnone badge1' : 'badge1'">{{element.batchCount}}</span>
+                                        <span *ngIf="element.batchCount > 9"  (click)='openBatchPopup(myBSDialog, element)'  [ngClass]="batchSerialDialogProcess ? 'pointerEventnone badge2' : 'badge2'">{{element.batchCount}}</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Serial">
+                        <th mat-header-cell *matHeaderCellDef class="percent12">Serial #</th>
+                        <td mat-cell *matCellDef="let element; let i=index;   " class="percent12">
+                            <div
+                                *ngIf="(element.editing && serialEnabled && screenType === 'ASM') || (isAssemblyItem && serialEnabled)">
+                                <div *ngIf="element.inlineSerSearchLoader === 'hide'" fxFlex="100">
+                                    <mat-form-field style="width: 160px !important"
+                                        *ngIf="element.showSerLov === 'show'" fxFlex="90">
+                                        <mat-select [(ngModel)]="element.serialSelectedList" [ngClass]="'requiredField'"
+                                            multiple (selectionChange)="serialChanged($event,i,null)"
+                                            placeholder="Serial">
+                                            <mat-select-trigger>
+                                                {{element.serialSelectedList? element.serialNumSelectedList[0] : ''}}
+                                                <span *ngIf="element.serialSelectedList?.length > 1"
+                                                    class="example-additional-selection">
+                                                    (+{{element.serialSelectedList.length-1}} selected)
+                                                </span>
+                                            </mat-select-trigger>
+                                            <mat-option *ngFor="let item of element.serialList" [value]="item.serialId">
+                                                {{item.serialNumber}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="element.serialId=== ''">Please Select Serial</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field style="width: 160px !important"
+                                        *ngIf="element.showSerLov === 'hide'" fxFlex="90">
+                                        <input matInput (keydown)="fetchNewSearchListForSer($event, i, false)"
+                                            (blur)="fetchNewSearchListForSer($event, i, false)"
+                                            placeholder="Search Serial" [(ngModel)]="element.serSearchValue"
+                                            autocomplete="off" />
+                                    </mat-form-field>
+                                    <div fxFlex="5"></div>
+                                    <div [ngClass]="'pt-15'" fxFlex="5">
+                                        <div class="icon-search" matTooltip="Search"
+                                            [matTooltipPosition]="tooltipPosition"
+                                            (click)="fetchNewSearchListForSer($event, i, true)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="element.inlineSerSearchLoader === 'show'"
+                                    style="padding-top: 15px; width: 160px !important">
+                                    <div style="width: 160px !important">Searching...</div>
+                                </div>
+
+                            </div>
+
+                            <div *ngIf="element.editing && serialEnabled && screenType === 'DIS' && !isAssemblyItem">
+                                <mat-form-field style="width: 170px;">
+                                    <!-- <mat-label class="mat-label">{{element.serialNumberG}}</mat-label> -->
+                                    <mat-select [(ngModel)]="element.serialNumSelectedListG" [ngClass]="'requiredField'"
+                                        placeholder="Serial" multiple (selectionChange)="serialGChanged($event,i)">
+                                        <mat-select-trigger>
+                                            {{element.serialNumSelectedListG? element.serialNumSelectedListG[0] : ''}}
+                                            <span *ngIf="element.serialNumSelectedListG?.length > 1"
+                                                class="example-additional-selection">
+                                                (+{{element.serialNumSelectedListG.length-1}} selected)
+                                            </span>
+                                        </mat-select-trigger>
+                                        <mat-option *ngFor="let item of element.serialNumSelectedListGG" [value]="item">
+                                            {{item}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div *ngIf="!serialEnabled">
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{'-' }}
+                                </span>
+                            </div>
+                            <div *ngIf="element.addNewRecord && !element.editing && serialEnabled && !isManual && screenType === 'ASM'">
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{element.serialNumber ? element.serialNumber : '-' }}
+                                </span>
+                            </div>
+                            <div *ngIf="!element.addNewRecord && serialEnabled">
+                                <!-- <span [ngClass]="'nonEditiableField'">
+                                    {{element.serialNumber ? element.serialNumber : '-' }}
+                                </span> -->
+                                <div fxLayout="row" fxLayoutAlign="center">
+                                    <span >
+                                        <span *ngIf="element.serialCount <= 9" (click)='openSerialPopup(myBSDialog, element)' [ngClass]="batchSerialDialogProcess ? 'pointerEventnone badge1' : 'badge1'">{{element.serialCount}}</span>
+                                        <span *ngIf="element.serialCount > 9"  (click)='openSerialPopup(myBSDialog, element)' [ngClass]="batchSerialDialogProcess ? 'pointerEventnone badge2' : 'badge2'">{{element.serialCount}}</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="lineQty">
+                        <th mat-header-cell *matHeaderCellDef class="percent5">
+                            Qty<span class='mandatory'>*</span></th>
+                        <td mat-cell *matCellDef="let element; let i=index" class="percent5">
+                            <div
+                                *ngIf="element.addNewRecord &&  screenType !== 'DIS' && element.editing && element.woLineStatus !== 'COMPLETED'">
+                                <mat-form-field style="width: 50px;">
+                                    <input matInput [(ngModel)]="element.componentLineQty" id="row{{i}}"
+                                        (keypress)="commonService.isWholeNumber($event)"
+                                        (keyup)="calculateQty($event, i, element.componentLineQty)" autocomplete="off"
+                                        placeholder="" required />
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="element.addNewRecord && screenType === 'DIS' && isAssemblyItem">
+                                <mat-form-field style="width: 50px;">
+                                    <input matInput [(ngModel)]="element.componentLineQty" id="row{{i}}"
+                                        (keypress)="commonService.isWholeNumber($event)"
+                                        (keyup)="calculateQty($event, i, element.componentLineQty)" autocomplete="off"
+                                        placeholder="" required />
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="element.addNewRecord && screenType === 'DIS' && !isAssemblyItem">
+                                <mat-form-field style="width: 50px;">
+                                    <input matInput [(ngModel)]="element.componentLineQty" id="row{{i}}"
+                                        (keypress)="commonService.isWholeNumber($event)"
+                                        (keyup)="selectSerialsBasedOnCount($event, i, element.componentLineQty)"
+                                        autocomplete="off" placeholder="" required />
+                                </mat-form-field>
+                            </div>
+                            <!-- <div *ngIf="screenType === 'DIS' && !isAssemblyItem">
+                                        <mat-form-field style="width: 50px;" >
+                                            <input matInput [(ngModel)]="element.componentLineQty"
+                                            id="row{{i}}"
+                                             (keypress)="commonService.isWholeNumber($event)" [disabled]="!isManual" 
+                                             (keyup)="calculateQtyForDekit($event, i, element.componentLineQty)"
+                                            autocomplete="off" placeholder=""  required/>
+                                        </mat-form-field> 
+                                        </div>     -->
+
+                            <!-- [disabled]="!isManual" this to disable the qty field -->
+                            <div *ngIf="element.addNewRecord && !element.editing && !isAssemblyItem">
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{element.componentLineQty ? element.componentLineQty : '-' }}
+                                </span>
+                            </div>
+                            <div *ngIf="!element.addNewRecord && !element.editing ">
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{element.componentLineQty ? element.componentLineQty : '-' }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action" stickyEnd>
+                        <th mat-header-cell *matHeaderCellDef class="percent5">
+                            Action
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'" class="percent5">
+                            <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="left">
+                                <!-- <span *ngIf="!element.addNewRecord" class="icon-edit"
+                                    (click)="beginEdit(element,$event, i)" matRipple matTooltip="Edit"
+                                    [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                    [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                                <span *ngIf="!element.addNewRecord && element.editing" [ngClass]="'padding0'">
+                                    <span class="icon-clear" (click)="disableEdit(element, i)" matRipple
+                                        matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                        [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                        [matRippleRadius]="false"></span>
+                                </span> -->
+                                <span *ngIf="element.addNewRecord" [ngClass]="'padding0'">
+                                    <span class="icon-clear" (click)="deleteRow(element, i)" matRipple
+                                        matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                        [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                        [matRippleRadius]="false"></span>
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <div *ngIf="screenType === 'DIS' && !isAssemblyItem">
+                        <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsForDekitComponents; sticky: true">
+                        </tr>
+                        <tr mat-row
+                            *matRowDef="let row;let i= index; columns: parameterDisplayedColumnsForDekitComponents; "
+                            [ngClass]="{'highlightRowError': selectedLPNRowIndex == paginator.pageSize * paginator.pageIndex + i}">
+                        </tr>
+                    </div>
+                    <div *ngIf="(screenType === 'ASM' )|| (screenType === 'DIS' && isAssemblyItem )" >
+                        <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsLBSItems; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row;let i= index; columns: parameterDisplayedColumnsLBSItems; "
+                            [ngClass]="{'highlightRowError': selectedLPNRowIndex == paginator.pageSize * paginator.pageIndex + i}">
+                        </tr>
+                    </div>
+                    <!-- <div  *ngIf="(screenType === 'ASM' &&  isManual) || (screenType === 'DIS' && isAssemblyItem && isAsseblyItemManual) ">
+                 <tr  mat-header-row *matHeaderRowDef="parameterDisplayedColumnsLBSItemsManual; sticky: true"></tr>
+                 <tr  mat-row *matRowDef="let row;let i= index; columns: parameterDisplayedColumnsLBSItemsManual; " [ngClass]="{'highlightRowError': selectedLPNRowIndex == paginator.pageSize * paginator.pageIndex + i}"></tr>
+                 </div> -->
+                    
+                </table>
+                <ng-container *ngIf="listProgress">
+                    <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </ng-container>
+
+                <ng-container *ngIf="!parameterDataSourceLBS.data.length && !listProgress ">
+                    <div [ngClass]="'positionRelative'" style="min-height:50px;">
+                        <div [ngClass]="'noDataFound'"><small>No record found</small></div>
+                    </div>
+                </ng-container>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div mat-dialog-actions class="padding10">
+        <button mat-flat-button color="primary"
+            [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10': 'formButton saveButton mr10'"
+            (click)="saveLPNDetails()">
+            Transact
+        </button>
+    </div>
+</ng-template>
+
+
+<ng-template #myBatchDialog let-data>
+    <h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+        <div fxLayout="row" fxLayoutGap="10px">
+            <div fxFlex="85" fxLayoutGap="10px"><span class="viewDialogTitle">{{batchTitle}}</span></div>
+            <div fxFlex="10" fxLayoutGap="10px">
+                <button mat-icon-button matDialogClose>
+                    <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </h1>
+
+    <div mat-dialog-content>
+        <!-- <ng-container *ngIf="listProgressBatch">
+            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+        </ng-container> -->
+
+        <ng-container>
+            <mat-form-field style="margin-top: 10px;" *ngIf="!showBatchLov">
+                <input matInput id='batnum1' [(ngModel)]="newBatchNumber" [placeholder]="batchNumberPlaceholder"
+                    (keyup.enter)="generateBatch(null)" required />
+                    <mat-icon matSuffix (click)="showDailogForBatchDetails('LOV')" style="cursor: pointer;">search</mat-icon>                    
+            </mat-form-field>
+            <mat-form-field style="margin-top: 10px;"  *ngIf="showBatchLov">
+                <mat-label>Batch List</mat-label>
+                <mat-select id='batnumlov1' [(ngModel)]="selectedBatch"  required>
+                  <mat-option *ngFor="let element of existedBatchList" [value]="element.onhandBatchId" 
+                   (onSelectionChange)="onExistedBatchSelect($event,element)">
+                   {{element.batchNumber}}- {{element.primarySum}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            <mat-form-field>
+                <input matInput [(ngModel)]="newBatchQty" placeholder="Batch Quantity" disabled />
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput id='mfdate' [matDatepicker]="date" [(ngModel)]="batchMFGDate" [disabled]="showBatchLov"
+                    placeholder="Batch MFG Date" [max]="minDate" [min]="minDate" required
+                    (click)="this.commonService.disableInput($event)"
+                    on-focus="this.commonService.disableInput($event)" />
+                <mat-datepicker-toggle matSuffix [for]="date" [disabled]="showBatchLov"></mat-datepicker-toggle>
+                <mat-datepicker #date></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput id='exdate' [matDatepicker]="expdate" [(ngModel)]="batchEXPDate" [disabled]="showBatchLov"
+                    placeholder="Batch Expiration Date" [min]="minDate" required
+                    (click)="this.commonService.disableInput($event)"
+                    on-focus="this.commonService.disableInput($event)" />
+                <mat-datepicker-toggle matSuffix [for]="expdate" [disabled]="showBatchLov"></mat-datepicker-toggle>
+                <mat-datepicker #expdate></mat-datepicker>
+            </mat-form-field>
+
+        </ng-container>
+
+    </div>
+    <div mat-dialog-actions class="padding10">
+        <button  *ngIf="!showBatchLov"mat-flat-button color="primary" class="formButton saveButton mr10" (click)='completeWithBatch()'>Add
+            Batch</button>
+        <button  *ngIf="showBatchLov" mat-flat-button color="primary" class="formButton saveButton mr10" (click)='completeWithBatch2()'>Add
+            Batch</button>
+        <button *ngIf="!showBatchLov" mat-flat-button color="accent" class="formButton cancelButton" (click)="closeDialog()">Cancel</button>
+        <button *ngIf="showBatchLov" mat-flat-button color="accent" class="formButton cancelButton" (click)="closeBatchLOV()">Back</button>
+    </div>
+</ng-template>
+
+
+
+<ng-template #messageDialog let-data>
+    <h2 mat-dialog-title class="messageHeaderTitle" cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>{{dialogType}} </h2>
+
+    <mat-dialog-content>
+        <p> {{dialogMessage}} </p>
+        <p> {{lpnMessage}} </p>
+        <p> {{message2}} </p>
+        <p> {{message3}} </p>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <button color="primary" (click)="close()" class="mat-flat-button formButton saveButton">Close</button>
+    </mat-dialog-actions>
+</ng-template>
+
+<ng-template #messageDialog2 let-data>
+    <h2 mat-dialog-title class="messageHeaderTitle" cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>{{dialogType2}} </h2>
+
+    <mat-dialog-content>
+        <p> {{message22}} </p>
+        <p> {{message33}} </p>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <button color="primary" (click)="close()" class="mat-flat-button formButton saveButton">Close</button>
+    </mat-dialog-actions>
+</ng-template>
+<ng-template #myBSDialog>
+    <h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+        <div fxLayout="row" fxLayoutGap="10px">
+            <div fxFlex="90" fxLayoutGap="10px"><span class="viewDialogTitle">{{ isBatch ? 'Batch' : 'Serial'}}</span></div>
+            <div fxFlex="10" fxLayoutGap="10px">
+                <button mat-icon-button matDialogClose  (click)='closeBSDialog()' >
+                    <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </h1>
+    <div mat-dialog-content [ngClass]="'pb-24'" >
+        <div class="container" fxLayout="column" *ngIf='isBatch'>
+            <div [ngClass]="!parameterDataSourceBatch.data.length || listProgress ? 'customTable ' : 'customTable'">
+                <table mat-table [dataSource]="parameterDataSourceBatch">
+                    <ng-container matColumnDef="No">
+                        <th mat-header-cell *matHeaderCellDef class="width50" >#</th>
+                        <td mat-cell *matCellDef="let element; let i = index;">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ paginatorBatch.pageSize * paginatorBatch.pageIndex + i +1 }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchNumber">
+                        <th mat-header-cell *matHeaderCellDef  class="percent15">Batch #</th>
+                        <td mat-cell *matCellDef="let element;">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ element.batchNumber }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchMfgDate">
+                        <th mat-header-cell *matHeaderCellDef  class="percent15 width135">MFG Date</th>
+                        <td mat-cell *matCellDef="let element;">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ element.batchOriginationDate ? (element.batchOriginationDate | date) : '-' }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchExpDate">
+                        <th mat-header-cell *matHeaderCellDef  class="percent15 width135">Expiry Date</th>
+                        <td mat-cell *matCellDef="let element;">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ element.batchExpirationDate ? (element.batchExpirationDate | date) : '-' }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="txnBatchQuantity">
+                        <th mat-header-cell *matHeaderCellDef  class="percent15 width120">Quantity</th>
+                        <td mat-cell *matCellDef="let element;">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ element.txnBatchQuantity }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="serialList">
+                        <th mat-header-cell *matHeaderCellDef  class="percent15 width120" style="text-align: center;" >Serial</th>
+                        <td mat-cell *matCellDef="let element;">
+                            <div fxLayout="row" fxLayoutAlign="center">
+                                <span>
+                                    <span *ngIf="element.serialList <= 9" (click)='openBatchSerialPopup(myBSDialog, element)'  class="badge1">{{element.serialList ? element.serialList : 0}}</span>
+                                    <span *ngIf="element.serialList > 9"  (click)='openBatchSerialPopup(myBSDialog, element)'  class="badge2">{{element.serialList ? element.serialList : 0}}</span>
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsBatch"></tr>
+                    <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumnsBatch;"></tr>
+                </table>
+                <ng-container *ngIf="listProgress">
+                    <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </ng-container>
+
+                <ng-container *ngIf="!parameterDataSourceBatch.data.length && !listProgress ">
+                    <div [ngClass]="'positionRelative'" style="min-height:50px;">
+                        <div [ngClass]="'noDataFound'"><small>{{batchTableMessage}}</small></div>
+                    </div>
+                </ng-container>
+            </div>
+            
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <mat-paginator (page)="commonService.setPaginationSize($event)"  #paginatorBatch showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+                </mat-paginator>
+            </div>
+        </div>
+        <div class="container" fxLayout="column" *ngIf='!isBatch'>
+            <div [ngClass]="!parameterDataSourceSerial.data.length || listProgress ? 'customTable ' : 'customTable'">
+                <table mat-table [dataSource]="parameterDataSourceSerial">
+                    <ng-container matColumnDef="No">
+                        <th mat-header-cell *matHeaderCellDef class="percent15" >#</th>
+                        <td mat-cell *matCellDef="let element; let i = index;"   >
+                            <div>
+                                <span [ngClass]="'nonEditiableField'"  >
+                                    {{ paginatorSerial.pageSize * paginatorSerial.pageIndex + i +1 }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="serialNumber">
+                        <th mat-header-cell *matHeaderCellDef  class="percent15">Serial #</th>
+                        <td mat-cell *matCellDef="let element;   "  >
+                            <div>
+                                <span [ngClass]="'nonEditiableField'"  >
+                                    {{ element.serialNumber }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                   
+                    <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsSerial; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumnsSerial;"></tr>
+                </table>
+                <ng-container *ngIf="listProgress">
+                    <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </ng-container>
+
+                <ng-container *ngIf="!parameterDataSourceSerial.data.length && !listProgress ">
+                    <div [ngClass]="'positionRelative'" style="min-height: 20px;">
+                        <div [ngClass]="'noDataFound'"><small>{{serialTableMessage}}</small></div>
+                    </div>
+                </ng-container>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <mat-paginator  (page)="commonService.setPaginationSize($event)"  #paginatorSerial showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+    <div *ngIf='isBackBtnEnable' mat-dialog-actions class="padding5">
+        <button mat-flat-button color="primary" (click)='backToBatchList()' class="formButton saveButton mr10">Back</button>
+    </div>
+
+</ng-template>
+
+<ng-template #myBatchDialogDekit let-data>
+    <h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+        <div fxLayout="row" fxLayoutGap="10px">
+            <div fxFlex="85" fxLayoutGap="10px"><span class="viewDialogTitle">{{batchTitle}}</span></div>
+            <div fxFlex="10" fxLayoutGap="10px">
+                <button mat-icon-button matDialogClose>
+                    <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </h1>
+
+    <div mat-dialog-content>
+        <!-- <ng-container *ngIf="listProgressBatch">
+            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+        </ng-container> -->
+
+        <ng-container>
+            <mat-form-field style="margin-top: 10px;" *ngIf="!showBatchLov">
+                <input matInput id='batnum' [(ngModel)]="newBatchNumber" [placeholder]="batchNumberPlaceholder"
+                    (keyup.enter)="generateBatch(currentLBSIndex)" required />
+                    <mat-icon matSuffix (click)="showDailogForBatchDetailsDekit(currentLBSIndex,'LOV')" style="cursor: pointer;">search</mat-icon>                    
+            </mat-form-field>
+            <mat-form-field style="margin-top: 10px;"  *ngIf="showBatchLov">
+                <mat-label>Batch List</mat-label>
+                <mat-select id='batnumlov' [(ngModel)]="selectedBatch" required >
+                  <mat-option *ngFor="let element of existedBatchList" [value]="element.onhandBatchId" 
+                   (onSelectionChange)="onExistedBatchSelect2($event,element)">
+                    {{element.batchNumber}}- {{element.primarySum}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            <mat-form-field>
+                <input matInput [(ngModel)]="newBatchQty" placeholder="Batch Quantity" disabled />
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput id='mfdate' [matDatepicker]="date" [(ngModel)]="batchMFGDate" [disabled]="showBatchLov"
+                    placeholder="Batch MFG Date" [max]="minDate" [min]="minDate" required
+                    (click)="this.commonService.disableInput($event)"
+                    on-focus="this.commonService.disableInput($event)" />
+                <mat-datepicker-toggle matSuffix [for]="date" [disabled]="showBatchLov"></mat-datepicker-toggle>
+                <mat-datepicker #date></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput id='exdate' [matDatepicker]="expdate" [(ngModel)]="batchEXPDate" [disabled]="showBatchLov"
+                    placeholder="Batch Expiration Date" [min]="minDate" required
+                    (click)="this.commonService.disableInput($event)"
+                    on-focus="this.commonService.disableInput($event)" />
+                <mat-datepicker-toggle matSuffix [for]="expdate" [disabled]="showBatchLov"></mat-datepicker-toggle>
+                <mat-datepicker #expdate></mat-datepicker>
+            </mat-form-field>
+
+        </ng-container>
+
+    </div>
+    <div mat-dialog-actions class="padding10">
+        <button *ngIf="!showBatchLov" mat-flat-button color="primary" class="formButton saveButton mr10" (click)='addBatchDetails()'>Add
+            Batch</button>
+        <button *ngIf="showBatchLov" mat-flat-button color="primary" class="formButton saveButton mr10" (click)='addBatchDetails2()'>Add
+            Batch</button>
+        <button *ngIf="!showBatchLov" mat-flat-button color="accent" class="formButton cancelButton" (click)="closeDialogDekit()">Cancel</button>
+        <button *ngIf="showBatchLov" mat-flat-button color="accent" class="formButton cancelButton" (click)="closeBatchLOVDekit()">Back</button>
+    </div>
+</ng-template>
+

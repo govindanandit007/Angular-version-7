@@ -1,0 +1,149 @@
+<div fxLayout="column" fxLayoutAlign="space-between stretch" fxFlex="100">
+    <div fxLayout="column">
+        <div class="search-header" fxLayout="row">
+            <div class="search-title" fxLayout="column" fxFlex="5 0 0">
+                {{ searchLabel }}
+            </div>
+            <div class="search-header-right" (click)="hideSearchContainer()">
+                <span class="searchBarIcon icon-close"></span>
+            </div>
+        </div>
+        <div *ngFor="let fieldsInfo of searchFieldData">
+            <!-- For SO Number -->
+            <div *ngIf="fieldsInfo.lovType === 'soNumber'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container >
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                       
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="soNumberValue" (keypress)="commonService.isNaturalNumber($event)"
+                            autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+
+            <!-- For RMA Number -->
+            <div *ngIf="fieldsInfo.lovType === 'rmaNumber'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container >
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                       
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="rmaNumberValue" (keypress)="commonService.isNaturalNumber($event)"
+                            autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+
+            <!-- For OU Code -->
+            <!-- <div *ngIf="fieldsInfo.lovType === 'OuCode'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="OuValue">
+                            <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                [value]="listItem.value" autocomplete="off">
+                                {{ listItem.label }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
+            </div> -->
+            
+            <!-- For IU Code -->
+            <!-- <div *ngIf="fieldsInfo.lovType === 'IuCode'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="IuValue" class='text-black-disabled' disabled>
+                            <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                [value]="listItem.value" autocomplete="off">
+                                {{ listItem.label }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
+            </div> -->
+
+            <!-- For So Status -->
+            <div *ngIf="fieldsInfo.lovType === 'soStatus'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="soStatusValue">
+                            <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                [value]="listItem.value" autocomplete="off">
+                                {{ listItem.label }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
+            </div>
+    
+            <!-- For So Type -->
+            <!-- <div *ngIf="fieldsInfo.lovType === 'soType'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="soTypeValue"  class='text-black-disabled' disabled>
+                            <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                [value]="listItem.value" autocomplete="off">
+                                {{ listItem.label }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
+            </div> -->
+
+            <!-- For Customer -->
+            <div *ngIf="fieldsInfo.lovType === 'soCustomerName'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+
+                        <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="customerNameValue" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+
+            <!-- For Customer Sites -->
+            <div *ngIf="fieldsInfo.lovType === 'soCustomerSite'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="customerSiteValue" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+
+            <!-- For SO Priority -->
+            <div *ngIf="fieldsInfo.lovType === 'soPriorityName'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="priorityValue">
+                            <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                [value]="listItem.value" autocomplete="off">
+                                {{ listItem.label }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
+            </div>
+
+            <!-- For Item -->
+            <!-- <div *ngIf="fieldsInfo.lovType === 'itemCode'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+
+                        <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="itemCodeValue" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div> -->
+        </div>
+        
+    </div>
+
+    <div class="search-footer">
+        <button mat-flat-button [ngClass]="'formButton saveButton'" (click)="getSearhInfo()">
+            Search
+        </button>
+        <button mat-flat-button [ngClass]="'formButton cancelButton ml-15'" (click)="clearSearchFields()">
+            Clear
+        </button>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+<div fxLayout="row">
+    <div fxFlex="10">
+        <button mat-mini-fab class="btn-header-bg" *ngIf='showSidebarBtn' (click)="toggleSideNav()">
+            <mat-icon aria-hidden="false" aria-label="icon">menu</mat-icon>
+        </button>
+    </div>
+    <div fxFlex="9 0 0" fxLayoutAlign="end center">
+        <div class="userInfo" fxLayoutAlign="end center">
+           
+            <span  *ngIf='showSidebarBtn' class="mr15" fxLayoutAlign="center center">
+                <img class='dashboardIcon' src="assets/images/icons/Dashboard.svg" (click)='gotoDashboard()' title="Dashboard" alt="user">
+            </span>
+            <span  *ngIf='showSidebarBtn' class="homeIcon mr15" fxLayoutAlign="center center">
+                <img src="assets/images/icons/Home.svg" (click)='gotoHomePage()' title="Home" alt="user">
+            </span>
+            
+            <span *ngIf='showSidebarBtn  && inventoryUnitList.length' style="padding-bottom: 0.5px; padding-right: 8px; font-size: 16px;">IU : </span>
+            <mat-select *ngIf='showSidebarBtn  && inventoryUnitList.length' class="iuTextHeaderInput mr15" [(ngModel)]="iuId">
+                <mat-option  *ngFor="let iuList of inventoryUnitList" [value]="iuList.value"
+                (optionSelected)="defaultIUChanged($event,iuList.value, iuList.label)" >
+                    {{iuList.name}}
+                </mat-option>
+            </mat-select>
+
+            <span class="thumb35" fxLayoutAlign="center center"><img [src]="userImgURL" alt="user"></span>
+            <span style="padding-bottom: 1px; padding-left: 5px; font-size: 16px;">User : </span>
+            <span class="userName">{{userName}}</span>
+            <span class="down-arrow" [matMenuTriggerFor]="menu">
+                <mat-icon aria-hidden="false" aria-label="icon">arrow_drop_down</mat-icon>
+            </span>
+            <mat-menu #menu="matMenu">
+               
+                <button mat-menu-item (click)="changePassword()">Change Password</button>
+                <button mat-menu-item (click)="authService.logout()">Logout</button>
+            </mat-menu>
+
+            <mat-menu #Iumenu="matMenu">
+                <mat-select class="searchInput iuInputWidth" [(ngModel)]="iuId">
+                    <mat-option  *ngFor="let iuList of inventoryUnitList" [value]="iuList.value"
+                    (onSelectionChange)="defaultIUChanged($event,iuList.value, iuList.label)" >
+                        {{iuList.label}}
+                    </mat-option>
+                </mat-select>
+            </mat-menu>
+        </div>
+    </div>
+</div>

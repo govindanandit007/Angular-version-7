@@ -1,0 +1,61 @@
+{
+    "type": "JOB-SCHEDULE",
+    "searchType": "jobschedule",
+    "searchFor": "Search Job Schedule",
+    "companyKey": "",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "jobName",
+            "label": "Job Name",
+            "key": "jobName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "jobType",
+            "label": "Job Type",
+            "key": "jobType",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "jobStatus",
+            "label": "Job Status",
+            "key": "status",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "jobInterval",
+            "label": "Job Interval",
+            "key": "jobInterval",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+
+    ]
+}

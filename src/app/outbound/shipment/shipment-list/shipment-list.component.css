@@ -1,0 +1,63 @@
+.formHeader {
+    padding: 7px 10px;
+    border-bottom: 1px solid #ccc;
+}
+.customTable{
+    /* overflow: auto; */
+    overflow-x: auto;
+}
+
+.top-688  {
+    top: 68px !important;
+}
+
+.screenTitle, .content .contentTitle{
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom:10px;
+}
+.content-wrapper1 {
+    padding: 0px;
+    /* width:  76.5% ; */
+}
+.searchRight {
+    position: fixed;
+    right: 5px;
+}
+.content{
+    border:1px solid #ccc;
+    border-radius: 3px;
+    padding:10px;
+}
+
+.item-head{
+    color: #098ccd;
+}
+
+.dimensions {
+    position: relative;
+}
+.dimensions:after {
+    display: inline-block;
+    /* content: 'CM'; */
+    position: absolute;
+    top: 18px;
+    right: 0px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.kg-dimensions:after {
+    /* content: 'KG'; */
+    content: attr(data_content);
+}
+.cubic-metre-dimensions:after {
+    content: 'Cubic Metre';
+}
+
+.example-right-align {
+    -moz-appearance: textfield;
+  }
+
+.bold{
+    font-weight: 600;
+}

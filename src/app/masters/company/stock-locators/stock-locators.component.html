@@ -1,0 +1,737 @@
+<div class="contentBorder">
+    <div [ngClass]="'formHeader'" fxLayout="row">
+        <div fxFlex fxLayoutAlign="start">
+            <span class="formHeaderTitle">Stock Locators List :</span>
+        </div>
+        <div fxLayoutAlign="end">
+            <button *ngIf="!searchEnableFlag" mat-mini-fab class="btn-search-bg mr10" (click)="searchComponentOpen()" matTooltip="Search"
+                [matTooltipPosition]="tooltipPosition">
+                <span class="headerIcon icon-search"></span>
+            </button>
+            <button mat-stroke-button class="orangeButtonBorder colorOperatingUnit mr10" color="primary" (click)="addRow()">
+                Add Stock Locator
+            </button>
+
+            <span class="down-arrow" [matMenuTriggerFor]="exportmenu">
+                <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                    Export
+                </button>
+            </span>
+            <mat-menu #exportmenu="matMenu">
+                <button mat-menu-item
+                    (click)="exporter.exportTable('xls', {fileName:'Flexi WMS - Stock Locator List'})">XLS</button>
+                <button mat-menu-item
+                    (click)="exporter.exportTable('xlsx', {fileName:'Flexi WMS - Stock Locator List'})">XLSX</button>
+                <button mat-menu-item
+                    (click)="exporter.exportTable('csv', {fileName:'Flexi WMS - Stock Locator List'})">CSV</button>
+            </mat-menu>
+            <!-- <button
+                mat-stroke-button
+                class="orangeButtonBorder colorAttribute"
+                color="primary"
+            >
+                Add Attribute
+            </button> -->
+        </div>
+    </div>
+
+    <div class="container" fxLayout="column">
+        <div #customTable [ngClass]="!parameterDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'"
+        [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+            <table mat-table matTableExporter hiddenColumns='[29]' #exporter="matTableExporter" [dataSource]="parameterDataSource" matSort class="resize-table" style="width:4260px;"
+            (matSortChange)= "sortChanged($event)" matSortActive="name" matSortDisableClear>
+                <ng-container matColumnDef="locCustomerId" [sticky]="true">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[0].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[0].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[0].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'stickyColumn'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputWidthClass'">
+                                <mat-select [(ngModel)]="element.locCustomerId" [ngClass]="'customWidth100'"
+                                   >
+                                    <mat-option *ngFor="let item of _3plCustomerList" [value]="item.value"
+                                    >
+                                        {{ item.label }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <!-- (onSelectionChange)="setCustomerLabel($event,paginator.pageSize * paginator.pageIndex + i,item.customerName, item.label)" -->
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField width170'">
+                            <mat-select [(ngModel)]="element.locCustomerId"
+                                [ngClass]="'pointerEventnone selectArrowHide'">
+                                <mat-option
+                                    *ngFor="let item of _3plCustomerList" [value]="item.value">
+                                    {{item.label}}
+                                </mat-option>
+                            </mat-select>
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locLgId" [sticky]="true">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[1].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[1].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[1].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'stickyColumn2'">
+
+                        <div *ngIf="element.editing">
+                                <div fxLayout="row"  *ngIf="element.inlineSearchLoader === 'hide'">
+                                    <div fxFlex="80">
+                                        <mat-form-field *ngIf="element.showLov === 'show' "  [ngClass]="'inputWidthClass'" autofocus>
+                                            <mat-select  *ngIf="element.addNewRecord"  [(ngModel)]="element.locLgId" [ngClass]="'customWidth100'"
+                                            placeholder="Required"   required >
+                                                <mat-option *ngFor="let item of element.enabledLocatorGroupList" [value]="item.value"
+                                                (onSelectionChange)="stockLocatorCodeSelectionChanged($event,paginator.pageSize * paginator.pageIndex + i,item.lgTypeName, item.label)" >
+                                                    {{ item.label }}
+                                                </mat-option>
+                                           </mat-select>
+                                           <mat-select  *ngIf="!element.addNewRecord" [(ngModel)]="element.locLgId" [ngClass]="'customWidth100'"
+                                            placeholder="Required"   required >
+                                                <mat-option *ngFor="let item of element.locatorGroupList" [value]="item.value"
+                                                (onSelectionChange)="stockLocatorCodeSelectionChanged($event,paginator.pageSize * paginator.pageIndex + i,item.lgTypeName, item.label)" >
+                                                    {{ item.label }}
+                                                </mat-option>
+                                           </mat-select>
+                                           <mat-error *ngIf="element.locLgId === ''">Please enter LG-code</mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field *ngIf="element.showLov === 'hide'">
+                                            <input matInput
+                                            (keydown)="fetchNewSearchList($event, paginator.pageSize * paginator.pageIndex + i, false, element.searchValue)"
+                                            (blur)="fetchNewSearchList($event, paginator.pageSize * paginator.pageIndex + i, false, element.searchValue)"
+                                            placeholder="Search LG" [(ngModel)]="element.searchValue"  autocomplete="off" required/>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div fxFlex="20"  >
+                                        <div [ngClass]="'pt-15'" >
+                                            <button  class="searchBtn icon-search" matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                                            (click)="fetchNewSearchList($event, paginator.pageSize * paginator.pageIndex + i, true, element.searchValue)" >
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div  fxLayout="row"  *ngIf="element.inlineSearchLoader === 'show'">
+                                    <div fxFlex="100">Searching...</div>
+                                </div>
+                        </div>
+                        <span *ngIf="!element.editing" style="pointer-events: none;">
+                            <span [ngClass]="'nonEditiableField'">
+                                <span *ngFor="let item of element.locatorGroupList" >
+                                    <span *ngIf="item.value === element.locLgId " >{{item.label}}</span>
+                                </span>
+                            </span>
+                        </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="locCode" [sticky]="true">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[2].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[2].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[2].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'stickyColumn3'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'stockLocatorName'">
+                                <input pattern="^$|^([a-zA-Z0-9]{1,20}\.[a-zA-Z0-9]{1,20}\.[a-zA-Z0-9]{1,20})?" autocomplete="off" matInput placeholder="Required" [(ngModel)]="element.locCode" (keypress)="commonService.isAlphanumericWithDot($event)" required>
+                                <mat-hint>Hint: (AA.01.04)</mat-hint>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">{{element.locCode}}</span>
+                        </div>
+                    </td>
+
+                </ng-container>
+                <ng-container matColumnDef="slAliasName">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[3].field" (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[3].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[3].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'locCodeField'">
+                                <input autocomplete="off" matInput [(ngModel)]="element.slAliasName">
+                            </mat-form-field>
+                        </div>
+                        <span *ngIf="!element.editing">{{element.slAliasName ? element.slAliasName : '-'}}</span>
+                    </td>
+
+                </ng-container>
+
+                <ng-container matColumnDef="locSiType">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[4].field" (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[4].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[4].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'locCodeField'">
+                                <input matInput [disabled]="true" class='text-black' [(ngModel)]="element.locSiType">
+                            </mat-form-field>
+                        </div>
+                        <span *ngIf="!element.editing">{{element.locSiType ? element.locSiType : '-'}}</span>
+                    </td>
+
+                </ng-container>
+                <ng-container matColumnDef="locDescription">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[5].field" (mousedown)="commonService.onResizeColumn($event, 5, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[5].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[5].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'customDescriptionField'">
+                                <input autocomplete="off" matInput [(ngModel)]="element.locDescription">
+                            </mat-form-field>
+                        </div>
+                        <span *ngIf="!element.editing">{{element.locDescription ? element.locDescription : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locPickingOrder">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[6].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[6].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[6].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="number"
+                                (keypress)="commonService.isNaturalNumber($event)"
+                                [(ngModel)]="element.locPickingOrder">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locPickingOrder ? element.locPickingOrder : '-'}}
+                            </span>
+                        </div>
+
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locDroppingOrder">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[7].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[7].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[7].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="number"
+                                (keypress)="commonService.isNaturalNumber($event)"
+                                [(ngModel)]="element.locDroppingOrder">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locDroppingOrder ? element.locDroppingOrder : '-'}}
+                            </span>
+                        </div>
+
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locMaterialStatus">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[8].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[8].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[8].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+            
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputWidthClass'">
+                                <mat-select [(ngModel)]="element.materialStatusId" [ngClass]="'customWidth100  text-black-disabled '">
+                                    <mat-option
+                                        *ngFor="let item of materialStatusLovList" [value]="item.value">
+                                        {{item.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField width170'">
+                                <mat-select [(ngModel)]="element.materialStatusId"
+                                    [ngClass]="'pointerEventnone selectArrowHide'">
+                                    <mat-option
+                                        *ngFor="let item of materialStatusLovList" [value]="item.value">
+                                        {{item.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="locPickUomCode">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth95'"> Pick UOM Code </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput [(ngModel)]="element.locPickUomCode">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">{{element.locPickUomCode}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locStatus">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'"> Status </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'customWidth80 grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput [(ngModel)]="element.locStatus">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">{{element.locStatus}}</span>
+                        </div>
+                    </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="locMaxUnits">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto border-left mat-header-column-'+columns[9].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[9].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[9].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element"  [ngClass]="'grayBg'" >
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text"
+                                    (keypress)="commonService.isDecimal($event)"
+                                    [(ngModel)]="element.locMaxUnits">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locMaxUnits ? element.locMaxUnits : '-'}}
+                            </span>
+                        </div>
+
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locCurrentUnits">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[10].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[10].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[10].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text" [disabled]="true"
+                                    (keypress)="commonService.isDecimal($event)"
+                                    [(ngModel)]="element.locCurrentUnits">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locCurrentUnits ? element.locCurrentUnits : '-'}}
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locSuggestedUnits">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'unitTab cursor-auto mat-header-column-'+columns[11].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[11].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[11].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text" [disabled]="true"
+                                    (keypress)="commonService.isDecimal($event)"
+                                    [(ngModel)]="element.locSuggestedUnits">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locSuggestedUnits ? element.locSuggestedUnits : '-'}}
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locAvailableUnits">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto border-right mat-header-column-'+columns[12].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[12].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[12].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text" [disabled]="true"
+                                    (keypress)="commonService.isDecimal($event)"
+                                    [(ngModel)]="element.locAvailableUnits">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locAvailableUnits ? element.locAvailableUnits : '-'}}
+                            </span>
+                        </div>
+
+                        </td>
+                </ng-container>
+
+                <ng-container matColumnDef="locMaxCubicArea">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[13].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[13].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[13].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text"
+                                    (keypress)="commonService.isDecimal($event)"
+                                    [(ngModel)]="element.locMaxCubicArea">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locMaxCubicArea ? element.locMaxCubicArea : '-'}}
+                            </span>
+                        </div>
+
+                    </td>
+
+                </ng-container>
+                <ng-container matColumnDef="locCurrentCubicArea">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[14].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[14].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[14].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text" [disabled]="true"
+                                    (keypress)="commonService.isDecimal($event)"
+                                    [(ngModel)]="element.locCurrentCubicArea">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locCurrentCubicArea ? element.locCurrentCubicArea : '-'}}
+                            </span>
+                        </div>
+                    </td>
+
+                </ng-container>
+                <ng-container matColumnDef="locSuggestedCubicArea">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'volumnTab cursor-auto mat-header-column-'+columns[15].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[15].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[15].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text" [disabled]="true"
+                                    (keypress)="commonService.isDecimal($event)"
+                                    [(ngModel)]="element.locSuggestedCubicArea">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locSuggestedCubicArea ? element.locSuggestedCubicArea : '-'}}
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locAvailableCubicArea">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto border-right mat-header-column-'+columns[16].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[16].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[16].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text" [disabled]="true"
+                                    (keypress)="commonService.isDecimal($event)"
+                                    [(ngModel)]="element.locAvailableCubicArea">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locAvailableCubicArea ? element.locAvailableCubicArea : '-'}}
+                            </span>
+                        </div>
+
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="locMaxWeight">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[17].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[17].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[17].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text"
+                                    (keypress)="commonService.isDecimal($event)"
+                                    [(ngModel)]="element.locMaxWeight">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locMaxWeight ? element.locMaxWeight : '-'}}
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locCurrentWeight">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[18].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[18].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[18].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text" [disabled]="true"
+                                    (keypress)="commonService.isDecimal($event)"
+                                    [(ngModel)]="element.locCurrentWeight">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locCurrentWeight ? element.locCurrentWeight : '-'}}
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locSuggestedWeight">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'weightTab cursor-auto mat-header-column-'+columns[19].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[19].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[19].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text" [disabled]="true"
+                                    (keypress)="commonService.isDecimal($event)"
+                                    [(ngModel)]="element.locSuggestedWeight">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locSuggestedWeight ? element.locSuggestedWeight : '-'}}
+                            </span>
+                        </div>
+
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locAvailableWeight">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto border-right mat-header-column-'+columns[20].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[20].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[20].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text" [disabled]="true"
+                                    (keypress)="commonService.isDecimal($event)"
+                                    [(ngModel)]="element.locAvailableWeight">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locAvailableWeight ? element.locAvailableWeight : '-'}}
+                            </span>
+                        </div>
+                    </td>
+
+                </ng-container>
+
+                <ng-container matColumnDef="locLength">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[21].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[21].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[21].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text"
+                                    (keypress)="commonService.isDecimal($event)" [(ngModel)]="element.locLength">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locLength ? element.locLength : '-'}}
+                            </span>
+                        </div>
+
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locWidth">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'dimensionTab cursor-auto mat-header-column-'+columns[22].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[22].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[22].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text"
+                                    (keypress)="commonService.isDecimal($event)" [(ngModel)]="element.locWidth">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locWidth ? element.locWidth : '-'}}
+                            </span>
+                        </div>
+
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locHeight">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto border-right mat-header-column-'+columns[23].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[23].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[23].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text"
+                                    (keypress)="commonService.isDecimal($event)" [(ngModel)]="element.locHeight">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locHeight ? element.locHeight : '-'}}
+                            </span>
+                        </div>
+
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="locXCoordinate">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[24].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[24].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[24].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text"
+                                    (keypress)="commonService.isDecimalAndNegative($event)"
+                                    [(ngModel)]="element.locXCoordinate">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locXCoordinate ? element.locXCoordinate : '-'}}
+                            </span>
+                        </div>
+
+                    </td>
+
+                </ng-container>
+                <ng-container matColumnDef="locYCoordinate">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[25].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[25].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[25].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text"
+                                    (keypress)="commonService.isDecimalAndNegative($event)"
+                                    [(ngModel)]="element.locYCoordinate">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locYCoordinate ? element.locYCoordinate : '-'}}
+                            </span>
+                        </div>
+
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locZCoordinate">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[26].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[26].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[26].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <input autocomplete="off" matInput type="text"
+                                    (keypress)="commonService.isDecimalAndNegative($event)"
+                                    [(ngModel)]="element.locZCoordinate">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                              {{element.locZCoordinate ? element.locZCoordinate : '-'}}
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locDisableDate">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[27].field">
+                        <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[27].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[27].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <div *ngIf="element.editing">
+                            <mat-form-field floatLabel='never' [hideRequiredMarker]="true" [ngClass]="'dateField'">
+                                <input autocomplete="off" matInput [matDatepicker]="picker" placeholder="--/--/--"
+                                    [(ngModel)]="element.locDisableDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">{{(element.locDisableDate !== null && element.locDisableDate !=='') ? (element.locDisableDate | date) : '-'}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="locEnabledFlag">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto mat-header-column-'+columns[28].field">
+                        {{ columns[28].name }}
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'grayBg'">
+                        <span *ngIf="element.editing" matTooltip="Enable Flag" [matTooltipPosition]="tooltipPosition"
+                            [ngClass]="'padding0'">
+                            <mat-checkbox fxLayout="row" fxLayoutAlign="center center"
+                                [(ngModel)]="element.locEnabledFlag">
+                                <mat-icon>{{element.locEnabledFlag}}</mat-icon>
+                            </mat-checkbox>
+                        </span>
+                        <span *ngIf="!element.editing" matTooltip="Enable Flag" [matTooltipPosition]="tooltipPosition"
+                            [ngClass]="'padding0'">
+                            <mat-checkbox class="locEnabledFlag" fxLayout="row" fxLayoutAlign="center center"
+                                [(ngModel)]="element.locEnabledFlag" disabled>
+                                <mat-icon>{{element.locEnabledFlag}}</mat-icon>
+                            </mat-checkbox>
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="action" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto actionColumn mat-header-column-'+columns[29].field">
+                       {{ columns[29].name }}
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'">
+                        <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center">
+                            <span *ngIf="!element.addNewRecord && element.locatorId" class="icon-edit" (click)="beginEdit(element,$event, paginator.pageSize * paginator.pageIndex + i )"
+                                matRipple matTooltip="Edit" [matTooltipPosition]="tooltipPosition"
+                                [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                [matRippleRadius]="false"></span>
+                            <span *ngIf="!element.addNewRecord && element.editing" [ngClass]="'padding0'">
+                                <span class="icon-clear" (click)="disableEdit(element, paginator.pageSize * paginator.pageIndex + i)" matRipple
+                                    matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                    [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                    [matRippleRadius]="false"></span>
+                            </span>
+                            <span *ngIf="element.addNewRecord" [ngClass]="'padding0'">
+                                <span class="icon-clear" (click)="deleteRow(element, i)" matRipple matTooltip="Cancel"
+                                    [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                    [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                
+                <tr mat-header-row  *matHeaderRowDef="parameterDisplayedColumns; sticky: true" ></tr>
+                <tr mat-row [ngClass]="{'highlightRowError': selectedRowIndex == paginator.pageSize * paginator.pageIndex + i}" 
+                *matRowDef="let row; let i= index; columns: parameterDisplayedColumns;" style="height: 62px !important"></tr>
+            </table>
+            <ng-container *ngIf="listProgress">
+                <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+            </ng-container>
+
+            <ng-container *ngIf="
+                    !parameterDataSource.data.length && !listProgress ">
+                <div [ngClass]="''">
+                    <div [ngClass]="'noDataFound'"><small>{{locMessage}}</small></div>
+                </div>
+            </ng-container>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div [ngClass]="(isAdd || isEdit) ? 'formContainer' : ''">
+                <button *ngIf="isAdd" mat-flat-button 
+                [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton  mr10': 'formButton saveButton  mr10'"
+                (click)="onSubmit('save')">
+                    Save
+                </button>
+                <button *ngIf="isEdit" mat-flat-button
+                [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton  mr10': 'formButton saveButton  mr10'"
+                  (click)="onSubmit('update')">
+                    Update
+                </button>
+            </div>
+            <mat-paginator #paginator (page)="commonService.setPaginationSize($event)"  showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+            </mat-paginator>
+        </div>
+    </div>
+</div>

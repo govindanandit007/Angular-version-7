@@ -1,0 +1,548 @@
+
+   
+    <div class="contentBorder marginT20">
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">
+                    {{formTitle}}</span>
+            </div>
+            <div fxLayoutAlign="end">
+                <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                    Add Attribute
+                </button>
+            </div>
+        </div>
+
+        <div fxLayout="row">
+            <mat-divider fxFlex="100"></mat-divider>
+        </div>
+
+        <div class="container" class="formContainer">
+            <form [formGroup]="receiptForm">
+                <div class="container" fxLayout="column">
+                    <div fxLayout="row" fxLayoutGap="20px">
+                        <div fxFlex="50" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="30">
+                                        <input matInput placeholder="Receipt Number" formControlName="receiptNum" [disabled]="true"
+                                           >
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" fxFlex="40">
+                                        <input matInput placeholder="Receipt Shipment Number" formControlName="intShipmentNo" required
+                                        (blur)="receiptLogValidationErrors()">
+                                        <mat-error *ngIf="receiptFormErrors.intShipmentNo">{{receiptFormErrors.intShipmentNo}}</mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" fxFlex="30">
+                                    <mat-select formControlName="receiptIU" placeholder="IU" required>
+                                        <mat-option *ngFor="let element of headeriuList" [value]="element.value"
+                                        (onSelectionChange)="headerIUchanged($event,element.value)" >
+                                            {{ element.label }}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="receiptFormErrors.receiptIU">{{receiptFormErrors.receiptIU}}</mat-error>
+                                </mat-form-field>
+                        </div>
+                        <div fxFlex="50" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="50">
+                                    <mat-select formControlName="tradingPartner" placeholder="Trading Partner" required>
+                                        <mat-option *ngFor="let element of tradingPartnerList" [value]="element.value"
+                                        (onSelectionChange)="supplierSelectionChanged($event,element.value)">
+                                            {{ element.label }}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="receiptFormErrors.tradingPartner">{{receiptFormErrors.tradingPartner}}</mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" fxFlex="50">
+                                    <mat-select formControlName="tradingPartnerSite" placeholder="Trading Partner Site" required>
+                                        <mat-option *ngFor="let element of tradingPartnerSiteList" [value]="element.value"
+                                            >
+                                            {{ element.label }}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="receiptFormErrors.tradingPartnerSite">{{receiptFormErrors.tradingPartnerSite}}</mat-error>
+                                </mat-form-field>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="20px">
+                            <div fxFlex="50" fxLayoutGap="20px">
+                                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                                            <input matInput placeholder="User Name" formControlName="username" required
+                                            (blur)="receiptLogValidationErrors()">
+                                            <mat-error *ngIf="receiptFormErrors.username">{{receiptFormErrors.username}}</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <mat-select formControlName="sourceCode" placeholder="Source Code" required>
+                                            <mat-option *ngFor="let element of sourceCodeList" [value]="element.value"
+                                            (onSelectionChange)="sourceCodeChanged($event,element.value)" >
+                                                {{ element.label }}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="receiptFormErrors.sourceCode">{{receiptFormErrors.sourceCode}}</mat-error>
+                                    </mat-form-field>
+                                    
+                            </div>
+                            <div fxFlex="50" fxLayoutGap="20px">
+                                    <mat-form-field class="materailFieldSize" fxFlex="33">
+                                            <input matInput placeholder="Way/Air Bill Number" formControlName="wayAirBillNo" required
+                                            (blur)="receiptLogValidationErrors()">
+                                            <mat-error *ngIf="receiptFormErrors.wayAirBillNo">{{receiptFormErrors.wayAirBillNo}}</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="materailFieldSize" fxFlex="33">
+                                            <input matInput placeholder="Bill of Landing" formControlName="billOfLanding" required
+                                            (blur)="receiptLogValidationErrors()">
+                                            <mat-error *ngIf="receiptFormErrors.billOfLanding">{{receiptFormErrors.billOfLanding}}</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="materailFieldSize" fxFlex="34">
+                                            <input matInput placeholder="Packing Slip" formControlName="packingSlip" required
+                                            (blur)="receiptLogValidationErrors()">
+                                            <mat-error *ngIf="receiptFormErrors.packingSlip">{{receiptFormErrors.packingSlip}}</mat-error>
+                                    </mat-form-field>
+                            </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="20px">
+                        <div fxFlex="50" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="50">
+                                    <mat-select formControlName="sourceDoc" placeholder="Source Doc" required>
+                                        <mat-option *ngFor="let temp of sourceDocList" [value]="temp.value"
+                                        (onSelectionChange)="sourceDocChanged($event,temp.value)" >
+                                            {{ temp.label }}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="receiptFormErrors.sourceDoc">{{receiptFormErrors.sourceDoc}}</mat-error>
+                                </mat-form-field>
+                                
+                        </div>
+                        <div fxFlex="50" fxLayoutGap="20px">
+                             
+                        </div>
+                </div>
+                    <div [ngClass]="'marginT15'" fxLayout="row" fxLayoutGap="5px">
+                        <div fxFlex="100">
+                            <mat-label [ngClass]="'viewDialogLabel'">Weight:</mat-label>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="20px">
+                            <div fxFlex="50" fxLayoutGap="20px">
+                                    <mat-form-field class="materailFieldSize" fxFlex="22">
+                                            <input matInput placeholder="Gross" formControlName="gross" required type="number"
+                                                (blur)="receiptLogValidationErrors()" (keypress)="commonService.isDecimal($event)"  autocomplete="off">
+                                            <mat-error *ngIf="receiptFormErrors.gross">{{receiptFormErrors.gross}}</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="materailFieldSize" fxFlex="22">
+                                            <input matInput placeholder="Net" formControlName="net" required type="number"
+                                            (blur)="receiptLogValidationErrors()" (keypress)="commonService.isDecimal($event)"  autocomplete="off">
+                                            <mat-error *ngIf="receiptFormErrors.net">{{receiptFormErrors.net}}</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="materailFieldSize" fxFlex="22">
+                                            <input matInput placeholder="TAR" formControlName="tar" required type="number"
+                                            (blur)="receiptLogValidationErrors()" (keypress)="commonService.isDecimal($event)"  autocomplete="off">
+                                            <mat-error *ngIf="receiptFormErrors.tar">{{receiptFormErrors.tar}}</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="materailFieldSize" fxFlex="23">
+                                        <mat-select formControlName="uomCode" placeholder="UOM Code" required>
+                                            <mat-option *ngFor="let element of uomCodeList" [value]="element.value"
+                                                >
+                                                {{ element.label }}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="receiptFormErrors.uomCode">{{receiptFormErrors.uomCode}}</mat-error>
+                                    </mat-form-field>
+                            </div>
+                            <div fxFlex="50" fxLayoutGap="20px">
+                                    
+                            </div>
+                    </div>
+                    
+                 </div>
+            </form>
+            <div [ngClass]="'marginT15'" fxLayout="row" fxLayoutGap="5px">
+                    <div fxFlex="90">
+                        <mat-label [ngClass]="'viewDialogLabel'">Receipt Lines:</mat-label>
+                    </div>
+                    <div fxLayoutAlign="end">
+                        <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                            Add Attribute
+                        </button>
+                    </div>
+                </div>
+                <div class="container" fxLayout="column">
+                    <div [ngClass]="!parameterDataSource.data.length || listProgress ? 'customTable scrollHide' : 'customTable'">
+                        <table mat-table [dataSource]="parameterDataSource">
+                               
+                                <ng-container matColumnDef="recptLines_LineNum">
+                                    <th mat-header-cell *matHeaderCellDef class="setWith10Percent ">Line Num</th>
+                                    <td mat-cell *matCellDef="let element" class=" maxWidth">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                                <input matInput [(ngModel)]="element.recptLines_LineNum" 
+                                                    required disabled="true" />
+                                                <mat-error>Please enter Line Number</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                            <span [ngClass]="'nonEditiableField'">{{
+                                                            element.recptLines_LineNum
+                                                        }}</span>
+                                        </div>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="recptLines_QTY">
+                                    <th mat-header-cell *matHeaderCellDef class="setWith5Percent">QTY</th>
+                                    <td mat-cell *matCellDef="let element" class=" maxWidth">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                                <input matInput [(ngModel)]="element.recptLines_QTY" type="number" 
+                                                (keypress)="commonService.isDecimal($event)"  autocomplete="off" 
+                                                placeholder="Required" required />
+                                                <mat-error>Please enter Quantity</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                            <span [ngClass]="'nonEditiableField'">{{
+                                                            element.recptLines_QTY
+                                                        }}</span>
+                                        </div>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="recptLines_item">
+                                        <th mat-header-cell *matHeaderCellDef class="setWith15Percent">Item</th>
+                                        <td mat-cell *matCellDef="let element; let i=index"class=" maxWidth">
+                                            <div *ngIf="element.editing">
+                                                <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                                    <input matInput [(ngModel)]="element.recptLines_item" 
+                                                    placeholder="Required"   disabled="true" required />
+                                                    <mat-error>Please enter item</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div *ngIf="!element.editing">
+                                                <span [ngClass]="'nonEditiableField'">{{
+                                                    element.recptLines_item
+                                                            }}</span>
+                                            </div>
+
+                                        </td>
+                                </ng-container>
+                                <ng-container matColumnDef="recptLines_itemRevision">
+                                    <th mat-header-cell *matHeaderCellDef class="setWith10Percent">Item Revision</th>
+                                    <td mat-cell *matCellDef="let element" class=" maxWidth">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                                <input matInput [(ngModel)]="element.recptLines_itemRevision" 
+                                                     disabled="true"/>
+                                                <mat-error>Please enter item revision</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                            <span [ngClass]="'nonEditiableField'">{{
+                                                            element.recptLines_itemRevision
+                                                        }}</span>
+                                        </div>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="recptLines_uomCode">
+                                        <th mat-header-cell *matHeaderCellDef class="setWith10Percent">UOM Code</th>
+                                        <td mat-cell *matCellDef="let element; let i=index" class=" maxWidth">
+                                            <div *ngIf="element.editing">
+                                                <mat-form-field>
+                                                    <mat-select [(ngModel)]="element.recptLines_uomCode" name="class"
+                                                           >
+                                                        <mat-option *ngFor="let temp of uomCodeList" [value]="temp.value">
+                                                            {{temp.label}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error> Please Select Item</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div *ngIf="!element.editing">
+                                                    <span [ngClass]="'nonEditiableField'">{{
+                                                            element.recptLines_uomCode
+                                                    }}</span>
+                                            </div>
+                                        </td>
+                                </ng-container>
+                               
+                                <ng-container matColumnDef="recptLines_sourceDoc">
+                                    <th mat-header-cell *matHeaderCellDef class="setWith15Percent">Source Doc</th>
+                                    <td mat-cell *matCellDef="let element; let i=index" class=" maxWidth">
+                                        <span ng-class="[nonEditiableField, setWith10Percent]" style="font-size: 13px;" >{{
+                                            sourceDocLabel
+                                        }}</span>
+                                    </td>
+                                </ng-container>
+                                
+                                <ng-container matColumnDef="recptLines_source">
+                                    <th mat-header-cell *matHeaderCellDef class="setWith10Percent">Source</th>
+                                    <td mat-cell *matCellDef="let element; let i=index" class=" maxWidth">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field>
+                                                <mat-select [(ngModel)]="element.recptLines_source" name="class"
+                                                    placeholder="Required"
+                                                       required>
+                                                    <mat-option *ngFor="let temp of receiptLineSourceList" [value]="temp.value"
+                                                    (onSelectionChange)="sourceChanged($event,temp.value,paginator.pageSize * paginator.pageIndex + i)">
+                                                        {{temp.label}}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error> Please Select Source</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                                <span [ngClass]="'nonEditiableField'">{{
+                                                        element.recptLines_sourceValue
+                                                }}</span>
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="recptLines_sourceLine">
+                                        <th mat-header-cell *matHeaderCellDef class="setWith10Percent">Source Line</th>
+                                        <td mat-cell *matCellDef="let element; let i=index" class=" maxWidth">
+                                            <div *ngIf="element.editing">
+                                                <mat-form-field>
+                                                    <mat-select [(ngModel)]="element.recptLines_sourceLine" name="class"
+                                                        placeholder="Required"
+                                                           required>
+                                                        <mat-option *ngFor="let temp of element.recptLines_sourceLineList" [value]="temp.value"
+                                                        (onSelectionChange)="sourceLineChanged($event,temp.sourceLinedata,paginator.pageSize * paginator.pageIndex + i )" >
+                                                        <div fxLayout="row" fxLayoutGap="20px">
+                                                            <div fxFlex="33" fxLayoutGap="20px">
+                                                                <span class='setSpanWidth setelipsis'> {{temp.label}}</span>
+                                                            </div>
+                                                            <div fxFlex="33" fxLayoutGap="20px">
+                                                                <span class='setSpanWidth setelipsis'> {{temp.item}}</span>
+                                                            </div>
+                                                            <div fxFlex="34" fxLayoutGap="20px">
+                                                                 <span class='setSpanWidth setelipsis'> {{temp.quantity}}</span>
+                                                            </div>
+                                                        </div>
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error> Please Select Source Line</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div *ngIf="!element.editing">
+                                                    <span [ngClass]="'nonEditiableField'">{{
+                                                            element.recptLines_sourceLine
+                                                    }}</span>
+                                            </div>
+                                        </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="recptLines_fromIU">
+                                        <th mat-header-cell *matHeaderCellDef class="setWith10Percent">From IU</th>
+                                        <td mat-cell *matCellDef="let element; let i=index" class=" maxWidth">
+                                            <div *ngIf="element.editing">
+                                                <mat-form-field>
+                                                    <mat-select [(ngModel)]="element.recptLines_fromIU" name="class"
+                                                        
+                                                           >
+                                                        <mat-option *ngFor="let temp of fromIUList" [value]="temp.value">
+                                                            {{temp.label}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error> Please Select from IU</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div *ngIf="!element.editing">
+                                                <span [ngClass]="'nonEditiableField'" style="pointer-events: none; "
+                                                    class="maxWidthSelect ">
+                                                    <mat-select [(ngModel)]="element.recptLines_fromIU" name="class" required>
+                                                        <mat-option *ngFor="let temp of fromIUList" [value]="temp.value">
+                                                            {{temp.label}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </span>
+                                            </div>
+                                        </td>
+                                </ng-container>
+                                <ng-container matColumnDef="recptLines_toIU">
+                                        <th mat-header-cell *matHeaderCellDef class="setWith10Percent">To IU</th>
+                                        <td mat-cell *matCellDef="let element; let i=index" class=" maxWidth">
+                                            <div *ngIf="element.editing">
+                                                <mat-form-field>
+                                                    <mat-select [(ngModel)]="element.recptLines_toIU" name="class"
+                                                    [disabled]="true"
+                                                           >
+                                                        <mat-option *ngFor="let temp of toIUList" [value]="temp.value">
+                                                            {{temp.label}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error> Please Select To IU</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div *ngIf="!element.editing">
+                                                    <span [ngClass]="'nonEditiableField'">{{
+                                                            element.recptLines_toIU
+                                                    }}</span>
+                                            </div>
+                                        </td>
+                                </ng-container>
+                                <ng-container matColumnDef="recptLines_LPN">
+                                    <th mat-header-cell *matHeaderCellDef class="setWith10Percent">LPN</th>
+                                    <td mat-cell *matCellDef="let element; let i=index" class=" maxWidth">
+                                        <div *ngIf="element.editing">
+                                            <div fxLayout="row" fxLayoutGap="20px" >
+                                                <div fxFlex="80" fxLayoutGap="20px">
+                                                    <mat-form-field [ngClass]="{'hideElement': element.showLPN=='show', 'showElement':element.showLPN=='hide' }">
+                                                        <mat-select [(ngModel)]="element.recptLines_LPN" name="class"  (blur)="focusOut(paginator.pageSize * paginator.pageIndex + i)">
+                                                            <mat-option *ngFor="let temp of LPNList" [value]="temp.value"
+                                                            (onSelectionChange)="lpnChanged($event,temp.value, paginator.pageSize * paginator.pageIndex + i)">
+                                                                {{temp.label}}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                        <mat-error> Please Select LPN</mat-error>
+                                                    </mat-form-field>
+                                                    <mat-form-field [ngClass]="{'showElement': element.showLPN=='show', 'hideElement':element.showLPN=='hide' }">
+                                                        <input matInput (blur)="focusOut(paginator.pageSize * paginator.pageIndex + i)" placeholder="Enter New Value" [(ngModel)]="element.recptLines_New_LPN"  autocomplete="off" />
+                                                    </mat-form-field>
+                                                </div>
+                                                <div fxFlex="20" fxLayoutGap="20px" [ngClass]="{'showElement': element.showLPN=='show', 'hideElement':element.showLPN=='hide' }">
+                                                    <div [ngClass]="{'pt-15': element.showLPN=='show'}">
+                                                        <span class="icon-clear " matRipple
+                                                            matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                                            [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                                            [matRippleRadius]="false" >
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                            <span [ngClass]="'nonEditiableField'" style="pointer-events: none; "
+                                                class="maxWidthSelect ">
+                                                <span>
+                                                    {{element.recptLines_LPN_Name}}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="recptLines_toLG">
+                                    <th mat-header-cell *matHeaderCellDef class="setWith15Percent">To LG</th>
+                                    <td mat-cell *matCellDef="let element; let i=index" class=" maxWidth">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field>
+                                                <mat-select [(ngModel)]="element.recptLines_toLG" name="class"
+                                                    
+                                                       >
+                                                    <mat-option *ngFor="let temp of element.recptLines_toLgList" [value]="temp.value"
+                                                    (onSelectionChange)="toLGChanged($event,temp.value,paginator.pageSize * paginator.pageIndex + i,temp )" >
+                                                        {{temp.label}}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error> Please Select To LG</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                            <span [ngClass]="'nonEditiableField'" style="pointer-events: none; "
+                                                class="maxWidthSelect ">
+                                                <span>
+                                                    {{element.recptLines_toLG}}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="recptLines_toLocator">
+                                    <th mat-header-cell *matHeaderCellDef class="setWith10Percent">To Locator</th>
+                                    <td mat-cell *matCellDef="let element; let i=index" class=" maxWidth">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field>
+                                                <mat-select [(ngModel)]="element.recptLines_toLocator" name="class"
+                                                    
+                                                       >
+                                                    <mat-option *ngFor="let temp of element.recptLines_toLocatorList" [value]="temp.value">
+                                                        {{temp.label}}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error> Please Select To Locator</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                                
+                                            <span [ngClass]="'nonEditiableField'" style="pointer-events: none; "
+                                                class="maxWidthSelect ">
+                                                <span>
+                                                    {{element.recptLines_toLocator}}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </ng-container>
+                           
+                                <ng-container matColumnDef="action" stickyEnd>
+                                    <th mat-header-cell *matHeaderCellDef [ngClass]="'actionColumn'"> Action </th>
+                                    <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'" style='border-left: 1px solid #cec6c6;'>
+                                        <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center"
+                                            style="justify-content: center; ">
+                                           
+                                           
+                                            <div *ngIf="element.addNewRecord"> 
+                                                <div fxLayout="row" fxLayoutGap="10px">
+                                                    <div fxFlex="33" fxLayoutGap="10px">
+                                                        <span class="icon-clear" (click)="deleteRow(element, i)" matRipple 
+                                                            matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                                            [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                                            [matRippleRadius]="false" >
+                                                        </span>
+                                                    </div>
+                                                    <div fxFlex="33" fxLayoutGap="10px"  *ngIf="element.recptLines_itemID && element.batchControlled === 'Y'">
+                                                        <span class="icon-batch" (click)="openDialog('batch',  i, element )" matRipple
+                                                        matTooltip="Add Batch" [matTooltipPosition]="tooltipPosition"
+                                                            [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                                            [matRippleRadius]="false">
+                                                        </span>
+                                                    </div>
+                                                    <div fxFlex="34" fxLayoutGap="10px" *ngIf="element.recptLines_itemID  && element.serialControlled === 'Y'">
+                                                    <!-- <div fxFlex="34" fxLayoutGap="10px" > -->
+                                                        <span class="icon-serial" (click)="openDialog('serial', i, element)" matRipple
+                                                            matTooltip="Add Serial" [matTooltipPosition]="tooltipPosition"
+                                                            [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                                            [matRippleRadius]="false">
+                                                        </span>   
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </td>
+                                </ng-container>
+                                
+                                <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumns;"></tr>
+                        </table>
+                        <ng-container *ngIf="listProgress">
+                            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                        </ng-container>
+            
+                        <ng-container *ngIf="!parameterDataSource.data.length && !listProgress">
+                            <div [ngClass]="'positionRelative'">
+                                <div [ngClass]="'noDataFound'"><small>{{receiptLineTableMessage}}</small></div>
+                            </div>
+                        </ng-container>
+                   
+                    </div>
+                    <div class="text-align-right pr-10" style="margin-top: 10px;">  
+                            <button mat-stroke-button class="orangeButtonBorder border-radius-3 colorAttribute marginT5" color="primary"
+                                (click)="addRow()" matTooltip="Add Row" >
+                                Add Row
+                            </button>
+                        </div>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <div [ngClass]="isAdd || isEdit ? 'formContainer' : ''">
+                        <button *ngIf="!isReceiptFlag"  mat-flat-button [ngClass]="'formButton saveButton mr10'" color="primary"
+                            (click)="onSubmit()">
+                            Save
+                        </button>
+                        <button *ngIf="isEdit || isReceiptFlag" mat-flat-button [ngClass]="'formButton saveButton mr10'" color="primary"
+                            (click)="onSubmit()">
+                            Update
+                        </button>
+                        <button  mat-flat-button [ngClass]="'formButton saveButton ml10'"
+                            color="primary" (click)=gotoReceiptList() >
+                            Cancel
+                        </button>
+                    </div>
+                    <mat-paginator (page)="commonService.setPaginationSize($event)" [pageSizeOptions]="[5]" showFirstLastButtons
+                        [ngClass]="'mat-paginator-sticky'">
+                    </mat-paginator>
+                </div>
+        </div>
+    </div>
+
+    

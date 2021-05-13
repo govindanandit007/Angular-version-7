@@ -1,0 +1,31 @@
+
+
+::ng-deep .customHeader .mat-tab-labels{
+    background-color: rgba(243, 243, 243, 3);
+}
+
+::ng-deep .customHeader .mat-tab-label-active{
+    background-color: #098ccd;
+    opacity: 1;
+    color: white;
+}
+
+::ng-deep .customHeader .mat-ink-bar{
+    background-color: #098ccd !important;
+}
+
+.formHeader{
+    padding: 10px 20px;
+  }
+
+.formHeaderTitle{
+font-weight: 500;
+}
+
+.customHeader{
+    margin-top: 10px;
+}
+
+
+  
+

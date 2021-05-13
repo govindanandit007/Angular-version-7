@@ -1,0 +1,35 @@
+{
+        "type": "UOMCON",
+        "searchType": "uomCon",
+        "searchFor": "Search Item UOM",
+        "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "code",
+            "label": "Item Name",
+            "key": "itemName",
+            "value": "",
+            "list": [
+                {
+                "label": " Please Select",
+                "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "uomEnabledFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": ""
+                },
+                { "label": "Yes", "value": "Y"
+                },
+                { "label": "No", "value": "N"
+                }
+            ]
+        }
+    ]
+}

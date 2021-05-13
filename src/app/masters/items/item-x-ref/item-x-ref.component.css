@@ -1,0 +1,49 @@
+.formHeader {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+}
+.selectInputWidth {
+    width: 100px;
+    margin-right: 20px;
+}
+.stickyColumn {
+    width: 150px;
+    margin-right: 20px;
+}
+.inputMarginR {
+    margin-right: 20px;
+    width: 140px;
+}
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff;
+}
+.stickyColumn2 {
+    max-width: 140px;
+}
+.mat-header-cell,.width200 {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.width200{
+    min-width: 100px;
+    max-width: 100px;
+    
+}
+
+.scrollHide {
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+::ng-deep .mat-input-element{
+    color: rgba(0,0,0,.87) !important;
+}
+

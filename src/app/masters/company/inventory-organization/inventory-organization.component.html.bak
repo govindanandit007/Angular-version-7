@@ -1,0 +1,278 @@
+<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start">
+
+    <div *ngIf="showInventoryList" fxFlex="100" class="contentBorder">
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">Inventory / Warehouse Units List:</span>
+            </div>
+            <div fxLayoutAlign="end">
+                <button *ngIf="!searchEnableFlag" mat-mini-fab class="btn-search-bg mr10" (click)="searchComponentOpen()">
+                    <span class="headerIcon icon-search" matTooltip="Search"></span>
+                </button>
+                <button mat-stroke-button (click)="addInventoryOrg('add')" class="orangeButtonBorder colorOperatingUnit"
+                    color="primary">
+                    Add Inventory Unit
+                </button>
+            </div>
+        </div>
+
+        <div fxLayout="row">
+            <mat-divider fxFlex="100"></mat-divider>
+        </div>
+        <div class="container">
+            <div [ngClass]=" !inventoryOrgDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'"
+            [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+                <table mat-table [dataSource]="inventoryOrgDataSource" matSort class="resize-table">
+                    <!-- No Column -->
+                    <ng-container matColumnDef="iuCode">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[0].field" (mousedown)="commonService.onResizeColumn($event, 0, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[0].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.iuCode }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="iuName">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[1].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.iuName }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="iuAddress1">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[2].field" (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[2].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.iuAddress1 }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="iuPersonName">
+                        <th mat-header-cell *matHeaderCellDef  >
+                            Person Name
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.iuPersonName }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="creationDate">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[3].field">
+                            <span mat-sort-header>{{ columns[3].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.creationDate | date}}
+                        </td>
+                    </ng-container>
+                    <!-- Enabled Flag Column -->
+                    <ng-container matColumnDef="iuEnabledFlag">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto text-center mat-header-column-'+columns[4].field">
+                            {{ columns[4].name }}
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center">
+                            <mat-checkbox [(ngModel)]="element.iuEnabledFlag" value="element.iuEnabledFlag"
+                                disabled="true">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto actionColumn mat-header-column-'+columns[5].field">
+                            {{ columns[5].name }}
+                        </th>
+                        <td mat-cell *matCellDef="let element" [ngClass]="'actionIcons'">
+                            <span (click)="editInventoryOrg(element.iuId,element.iuName,'view')" matRipple
+                                matTooltip="View" [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                [matRippleCentered]="true" [matRippleRadius]="false">
+                                <mat-icon>remove_red_eye</mat-icon>
+                            </span>
+                            <span (click)="editInventoryOrg(element.iuId, element.iuName)" matRipple matTooltip="Edit"
+                                [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                [matRippleCentered]="true" [matRippleRadius]="false">
+                                <mat-icon>edit</mat-icon>
+                            </span>
+
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                </table>
+
+
+                <ng-container *ngIf="listProgress">
+                    <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </ng-container>
+                <ng-container *ngIf="!inventoryOrgDataSource.data.length && !listProgress">
+                    <div [ngClass]="'noDataFound'"><small>{{iuMessage}}</small></div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!showInventoryList" fxFlex="100" class="contentBorder">
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">{{ isEdit ? shoeIUName : 'Define Inventory / Warehouse Unit :'}}</span>
+            </div>
+            <div fxLayoutAlign="end">
+                <!-- <button mat-stroke-button (click)="addInventoryOrg('back')"
+                    class="orangeButtonBorder colorOperatingUnit mr10" color="primary">
+                    List Page
+                </button> -->
+                <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                    Add Attribute
+                </button>
+            </div>
+        </div>
+
+        <div fxLayout="row">
+            <mat-divider fxFlex="100"></mat-divider>
+        </div>
+
+        <div class="container" class="formContainer">
+            <form [formGroup]="InventoryOrganizationForm" autocomplete="off">
+                <div class="container" fxLayout="column">
+                    <div fxLayout="row" fxLayoutGap="20px">
+                        <mat-form-field class="materailFieldSize" fxFlex="25">
+                            <input matInput placeholder="Code" formControlName="iuCode" [readonly]="isEdit" required maxlength="10"
+                                (blur)="logValidationErrors()">
+                            <mat-error *ngIf="formErrors.iuCode">{{formErrors.iuCode}}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="materailFieldSize" fxFlex="25">
+                            <input matInput placeholder="Name" formControlName="iuName" required (blur)="logValidationErrors()">
+                            <mat-error *ngIf="formErrors.iuName">{{formErrors.iuName}}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="25">
+                            <mat-label placeholder="OU Code" class="materailFieldSize">OU Code</mat-label>
+                            <mat-select *ngIf="isEdit" [disabled]="inputDisabled" formControlName="iuOuId" required
+                                (blur)="logValidationErrors()">
+                                <mat-option *ngFor="let ouCode of ouCodeList" [value]="ouCode.key">
+                                    {{ ouCode.value }}</mat-option>
+                            </mat-select>
+                            <mat-select *ngIf="!isEdit" [disabled]="inputDisabled" formControlName="iuOuId" required
+                                (blur)="logValidationErrors()">
+                                <mat-option *ngFor="let ouCode of ouEnabledCodeList" [value]="ouCode.key">
+                                    {{ ouCode.value }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="formErrors.iuOuId">{{formErrors.iuOuId}}</mat-error>
+                        </mat-form-field>
+                        <div fxFlex="25">
+                            <mat-checkbox class="materailFieldSize" [ngStyle]="{'margin-top': '7px','display':'flex'}" formControlName="iuEnabledFlag" >Enabled
+                                Flag
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="20px">
+                        <mat-form-field class="materailFieldSize" fxFlex="25">
+                            <input matInput placeholder="Address1" formControlName="iuAddress1" required (blur)="logValidationErrors()">
+                            <mat-error *ngIf="formErrors.iuAddress1">{{formErrors.iuAddress1}}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="materailFieldSize" fxFlex="25">
+                            <input matInput placeholder="Address2" formControlName="iuAddress2">
+                        </mat-form-field>
+                        <mat-form-field class="materailFieldSize" fxFlex="25">
+                            <input matInput placeholder="Address3" formControlName="iuAddress3">
+                        </mat-form-field>
+                        <div fxFlex="25">
+                            <mat-checkbox class="materailFieldSize" [ngStyle]="{'margin-top': '7px','display':'flex'}" formControlName="iuWmsFlag" style="margin-top: 15px">WMS Enabled
+                                Flag
+                            </mat-checkbox>
+                        </div>
+                    </div>
+
+                    <div fxLayout="row" fxLayoutGap="20px">
+                        <mat-form-field class="materailFieldSize" fxFlex="25">
+                            <mat-select formControlName="iuCountry" placeholder="Country" required (blur)="logValidationErrors()">
+                                <mat-option *ngFor="let element of countryList" [value]="element.value"
+                                    (onSelectionChange)="lookupSelectionChanged($event,'State',element.id, element)">
+                                    {{ element.label }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="formErrors.iuCountry">{{formErrors.iuCountry}}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="materailFieldSize" fxFlex="25">
+                            <mat-select formControlName="iuStateCounty" placeholder="State/County" required (blur)="logValidationErrors()">
+                                <mat-option *ngFor="let element of stateFilterList" [value]="element.name"
+                                    (onSelectionChange)="lookupSelectionChanged($event,'City',element.id, element)">
+                                    {{ element.name }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="formErrors.iuStateCounty">{{formErrors.iuStateCounty}}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="materailFieldSize" fxFlex="25">
+                            <mat-select formControlName="iuCity" placeholder="City" required (blur)="logValidationErrors()">
+                                <mat-option *ngFor="let element of cityFilterList" [value]="element.name">
+                                    {{ element.name }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="formErrors.iuCity">{{formErrors.iuCity}}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="materailFieldSize" fxFlex="25">
+                            <input matInput placeholder="Postal Code" formControlName="iuPincode" required maxlength="10" max
+                                (blur)="logValidationErrors()">
+                            <mat-error *ngIf="formErrors.iuPincode">{{formErrors.iuPincode}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="20px">
+                        <mat-form-field class="materailFieldSize" fxFlex="23.8">
+                            <input matInput placeholder="Phone Number" formControlName="iuPhone" required
+                               maxlength="15" (blur)="logValidationErrors()" (keypress)="commonService.isWholeNumber($event)">
+                            <mat-error *ngIf="formErrors.iuPhone">{{formErrors.iuPhone}}</mat-error>
+                            <!-- <mat-hint>Note: Only number, space and plus (+ sign) allowed</mat-hint> -->
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="5px" class="marginT15">
+                        <div fxFlex="100">
+                            <mat-label>Inventory / Warehouse Contact :</mat-label>
+                        </div>
+                    </div>
+
+                    <div fxLayout="row" fxLayoutGap="20px">
+                        <mat-form-field fxFlex="23.8" class="materailFieldSize">
+                            <input matInput placeholder="Person Name" formControlName="iuPersonName" required (blur)="logValidationErrors()" />
+                            <mat-error *ngIf="formErrors.iuPersonName">{{formErrors.iuPersonName}}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="23.8" class="materailFieldSize">
+                            <input matInput placeholder="Phone Number" formControlName="iuPersonPhoneNum" required maxlength="15"
+                                (blur)="logValidationErrors()" (keypress)="commonService.isWholeNumber($event)">
+                            <mat-error *ngIf="formErrors.iuPersonPhoneNum">
+                                {{formErrors.iuPersonPhoneNum}}</mat-error>
+                            <!-- <mat-hint>Note: Only number, space and plus (+ sign) allowed</mat-hint> -->
+                        </mat-form-field>
+                        <mat-form-field fxFlex="52.4" class="materailFieldSize">
+                            <input oninput="this.value = this.value.toLowerCase()" matInput placeholder="Email Address"
+                                formControlName="iuPersonEmail" required (blur)="logValidationErrors()">
+                            <mat-error *ngIf="formErrors.iuPersonEmail">{{formErrors.iuPersonEmail}}</mat-error>
+                        </mat-form-field>
+
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="5px" class="marginT15">
+                        <div fxFlex="100">
+                            <mat-label>LPN :</mat-label>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="20px">
+                        <div fxFlex="25" fxLayoutGap="18px">
+                            <mat-form-field class="materailFieldSize" fxFlex="45" fxLayoutGap="5">
+                                <input matInput placeholder="Prefix" formControlName="lpnPrefix" >
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="45" fxLayoutGap="5">
+                                <input matInput placeholder="Start Number" formControlName="lpnStartNum"
+                                     (keypress)="commonService.isCharacterNumberOnly($event)">
+                            </mat-form-field>
+
+                        </div>
+                        <div fxFlex="75" fxLayoutGap="20px">
+
+                        </div>
+                    </div>
+                    <div fxLayout="row wrap" fxFlex="2 0 0" fxLayoutGap="15px" class="marginT15">
+                        <button (click)="onSubmit()" mat-flat-button [ngClass]="'formButton saveButton'"
+                            color="primary">
+                            Save
+                        </button>
+                        <button (click)="openConfirmationDialog('inventory unit','inventryUnit')" mat-flat-button [ngClass]="'formButton saveButton'"
+                            color="primary">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

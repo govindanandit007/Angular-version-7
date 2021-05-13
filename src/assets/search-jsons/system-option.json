@@ -1,0 +1,48 @@
+{
+       
+    "type": "SYSTEM-OPTION",
+    "searchType": "systemoption",
+    "searchFor": "Search System Option : OU",
+        "companyKey": "",
+        "searchArray": [
+            {
+                "type": "LOV",
+                "lovType": "ouCode",
+                "label": "OU",
+                "key": "ouId",
+                "value": "",
+                "list": [
+                    {
+                        "label": " Please Select",
+                        "value": ""
+                    }
+                ]
+            },
+            {
+                "type": "LOV",
+                "lovType": "sysOptionName",
+                "label": "System Option Name",
+                "key": "sysOptionId",
+                "value": "",
+                "list": [
+                    {
+                        "label": " Please Select",
+                        "value": ""
+                    }
+                ]
+            },
+            {
+                "type": "LOV",
+                "lovType": "IuCode",
+                "label": "IU",
+                "key": "iuId",
+                "value": "",
+                "list": [
+                    {
+                        "label": " Please Select",
+                        "value": ""
+                    }
+                ]
+            }
+        ]
+    }

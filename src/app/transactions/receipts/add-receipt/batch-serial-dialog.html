@@ -1,0 +1,338 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle">{{formTitle}}</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button  >
+            <mat-icon class="viewDialogCloseIcon" (click)="onCloseClick()" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'">
+    <div *ngIf="isBatch">
+            <div class="container" fxLayout="column">
+                    
+                    <div [ngClass]="'customTable '" [ngStyle]="{ 'min-width': 'auto' }">
+                        <table mat-table [dataSource]="parameterDataSourceBatch" >
+                                         
+                         
+                            <ng-container matColumnDef="batch_id">
+                                <th mat-header-cell *matHeaderCellDef class="setWith15Percent">Batch</th>
+                                <td mat-cell *matCellDef="let element; let i=index" class=" maxWidth" 
+                                 >
+                                    <div *ngIf="element.editing">
+                                        <div fxLayout="row" fxLayoutGap="20px" >
+                                            <div fxFlex="80" fxLayoutGap="20px">
+                                                <mat-form-field *ngIf="element.showBatch === 'hide'">
+                                                    <mat-select [(ngModel)]="element.batch_id" name="class"  (blur)="focusOut($event, i)">
+                                                        <mat-option *ngFor="let temp of batchList" [value]="temp.value"
+                                                        (onSelectionChange)="batchChanged($event,temp.value,  i)">
+                                                            {{temp.label}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error> Please Select Batch</mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field *ngIf="element.showBatch === 'show'">
+                                                    <input matInput (blur)="focusOut($event, i)" (focus)="onbatchFocusIn($event, i)" placeholder="Enter New Value" [(ngModel)]="element.batch_NEW_id"  autocomplete="off" />
+                                                </mat-form-field>
+                                            </div>
+                                            <div fxFlex="20" fxLayoutGap="20px" [ngClass]="{'showElement': element.showBatch=='show', 'hideElement':element.showBatch=='hide' }">
+                                                <div [ngClass]="{'pt-15': element.showBatch=='show'}">
+                                                    <span class="icon-clear " (click)="resetbatchLov(i)" matRipple
+                                                        matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                                        [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                                        [matRippleRadius]="false" >
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    
+                                </td>
+                            </ng-container>
+                             
+                            <ng-container matColumnDef="batch_QTY">
+                                <th mat-header-cell *matHeaderCellDef [ngClass]="'setWith15Percent'">Quantity</th>
+                                <td mat-cell *matCellDef="let element" class=" maxWidth">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                                <input matInput [(ngModel)]="element.batch_QTY"type="number"
+                                                 (keypress)="commonService.isDecimal($event)"  autocomplete="off" 
+                                                 />
+                                                <mat-error>Please enter Quantity</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                            <span [ngClass]="'nonEditiableField'">{{
+                                                            element.batch_QTY
+                                                        }}</span>
+                                        </div>
+                                    </td>
+                            </ng-container>
+            
+                            <ng-container matColumnDef="batch_OrgDate">
+                                <th mat-header-cell *matHeaderCellDef [ngClass]="'setWith15Percent'">Organisation Date</th>
+                                <td mat-cell *matCellDef="let element">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field floatLabel='never' [hideRequiredMarker]="true" [ngClass]="'dateField'">
+                                                <input autocomplete="off" matInput [matDatepicker]="picker" placeholder=""
+                                                    required [(ngModel)]="element.batch_OrgDate" disabled>
+                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker disabled="false"></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                            <span [ngClass]="'nonEditiableField'">{{element.batch_OrgDate  | date}}</span>
+                                        </div>
+                                    </td>
+                            </ng-container>
+                             
+                            <ng-container matColumnDef="batch_ExpDate">
+                                <th mat-header-cell *matHeaderCellDef [ngClass]="'setWith15Percent'">Expiration Date</th>
+                                <td mat-cell *matCellDef="let element">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field floatLabel='never' [hideRequiredMarker]="true" [ngClass]="'dateField'">
+                                                <input autocomplete="off" matInput [matDatepicker]="picker" placeholder=""
+                                                    required [(ngModel)]="element.batch_ExpDate" disabled>
+                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker disabled="false"></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                            <span [ngClass]="'nonEditiableField'">{{element.batch_ExpDate  | date}}</span>
+                                        </div>
+                                    </td>
+                            </ng-container>
+                             
+                            <ng-container matColumnDef="action" stickyEnd>
+                                    <th mat-header-cell *matHeaderCellDef [ngClass]="'actionColumn'"> Action </th>
+                                    <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'">
+                                        <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center"
+                                            style="justify-content: center;">
+                                            <span *ngIf="!element.addNewRecord" class="icon-edit"
+                                                (click)="beginEdit(element,$event)" matRipple matTooltip="Edit"
+                                                [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                                [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                                            <span *ngIf="element.addNewRecord" [ngClass]="'padding0'">
+                                                <span class="icon-clear" (click)="deleteRow(element, i)" matRipple
+                                                    matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                                    [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                                    [matRippleRadius]="false" ></span>
+                                            </span>
+                                           
+                                        </div>
+                                    </td>
+                            </ng-container>
+                             
+                            <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsBatch"></tr>
+                            <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumnsBatch"></tr>
+                        </table>
+                        <ng-container *ngIf="listProgress">
+                            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                        </ng-container>
+            
+                        <ng-container *ngIf="!parameterDataSourceBatch.data.length && !listProgress">
+                            <div [ngClass]="'positionRelative'">
+                                <div [ngClass]="'noDataFound'"><small>{{batchTableMessage}}</small></div>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="text-align-right pr-10" style="margin-top: 10px;">
+                            <div fxLayout="row" >  
+                                    <div fxFlex="60" fxLayoutGap="20px"></div>
+                                    <div fxFlex="25" fxLayoutGap="20px" *ngIf="isBatchGenerated === 'Y'">
+                                        <button mat-stroke-button class="orangeButtonBorder border-radius-3 colorAttribute " color="primary"
+                                            (click)="generateBatchID()" matTooltip="Add Row" [disabled]="isEdit">
+                                            Generate Batch ID
+                                        </button>
+                                    </div>
+                                    <div fxFlex="15" fxLayoutGap="20px">
+                                        <button mat-stroke-button class="orangeButtonBorder border-radius-3 colorAttribute " color="primary"
+                                            (click)="addRow()" matTooltip="Add Row" [disabled]="isEdit">
+                                            Add Row
+                                        </button>
+                                    </div>
+                            </div>
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <div [ngClass]="isAdd || isEdit ? 'formContainer' : ''">
+                        <span (click)="onBatchSubmit()" >
+                            <button   mat-flat-button [ngClass]="'formButton saveButton mr10 mb10'" color="primary"
+                             >
+                            Done
+                            </button>
+                       </span>
+                    </div>
+                   
+                </div>
+
+    </div>
+    <div *ngIf="!isBatch">
+            <div class="container" fxLayout="column">
+                    <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"  [(ngModel)]="serialGenerationValue">
+                        <mat-radio-button class="example-radio-button" class="pr-20"
+                        (change)="radioChange($event)"
+                        *ngFor="let generateType of serialGenerationOptions" [value]="generateType">
+                        {{generateType}}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                    
+                    <div [ngClass]="'customTable'" [ngStyle]="{ 'min-width': 'auto' }" *ngIf=" mode === 'individual'">
+                        <table mat-table [dataSource]="parameterDataSourceSerial">
+                                         
+                            <ng-container matColumnDef="serial_id">
+                                    <th mat-header-cell *matHeaderCellDef class="setWith15Percent">Serial</th>
+                                    <td mat-cell *matCellDef="let element; let i=index" class=" maxWidth" 
+                                     >
+                                        <div *ngIf="element.editing">
+                                            <div fxLayout="row" fxLayoutGap="20px" >
+                                                <div fxFlex="80" fxLayoutGap="20px">
+                                                    <mat-form-field *ngIf="element.showSerial === 'hide'">
+                                                        <mat-select [(ngModel)]="element.serial_id" name="class"  (blur)="serialFocusOut($event, i)">
+                                                            <mat-option *ngFor="let temp of serialList" [value]="temp.value"
+                                                            (onSelectionChange)="serialChanged($event,temp.value,  i)">
+                                                                {{temp.label}}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                        <mat-error> Please Select Batch</mat-error>
+                                                    </mat-form-field>
+                                                    <mat-form-field *ngIf="element.showSerial === 'show'">
+                                                        <input matInput (blur)="serialFocusOut($event, i)" (focus)="onSerialFocusIn($event, i)" placeholder="Enter New Value" [(ngModel)]="element.serial_NEW_id"  autocomplete="off" />
+                                                    </mat-form-field>
+                                                </div>
+                                                <div fxFlex="20" fxLayoutGap="20px" [ngClass]="{'showElement': element.showSerial=='show', 'hideElement':element.showSerial=='hide' }">
+                                                    <div [ngClass]="{'pt-15': element.showSerial=='show'}">
+                                                        <span class="icon-clear " (click)="resetSerialLov(i)" matRipple
+                                                            matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                                            [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                                            [matRippleRadius]="false" >
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+                                        </div>
+                                        
+                                    </td>
+                            </ng-container>
+                             
+                            <ng-container matColumnDef="serial_QTY">
+                                    <th mat-header-cell *matHeaderCellDef [ngClass]="'setWith15Percent'">Quantity</th>
+                                    <td mat-cell *matCellDef="let element" class=" maxWidth">
+                                            <div *ngIf="element.editing">
+                                                <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                                    <input matInput [(ngModel)]="element.serial_QTY"type="number"
+                                                        (keypress)="commonService.isDecimal($event)"  autocomplete="off" 
+                                                        [disabled]='true' />
+                                                    <mat-error>Please enter Quantity</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div *ngIf="!element.editing">
+                                                <span [ngClass]="'nonEditiableField'">{{
+                                                    element.serial_QTY
+                                                }}</span>
+                                            </div>
+                                        </td>
+                            </ng-container>
+            
+                                                      
+                            <ng-container matColumnDef="action" stickyEnd>
+                                    <th mat-header-cell *matHeaderCellDef [ngClass]="'actionColumn'"> Action </th>
+                                    <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'">
+                                        <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center"
+                                            style="justify-content: center;">
+                                            <span *ngIf="element.addNewRecord" [ngClass]="'padding0'">
+                                                <span class="icon-clear" (click)="deleteRowSerial(element, i)" matRipple
+                                                    matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                                    [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                                    [matRippleRadius]="false" ></span>
+                                            </span>
+                                           
+                                        </div>
+                                    </td>
+                                </ng-container>
+                                
+                            
+            
+                             
+                            <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsSerial"></tr>
+                            <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumnsSerial"></tr>
+                        </table>
+                        <ng-container *ngIf="listProgress">
+                            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                        </ng-container>
+            
+                        <ng-container *ngIf="!parameterDataSourceSerial.data.length && !listProgress">
+                            <div [ngClass]="'positionRelative'">
+                                <div [ngClass]="'noDataFound'"><small>{{serialTableMessage}}</small></div>
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <div [ngClass]="'pt-20 pb-40 '"  *ngIf=" mode === 'range'">
+                            <div fxLayout="row" class='setRangeTopBoreder'>
+                                <div fxFlex="30" fxLayoutGap="20px">
+                                    <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                    <input matInput [(ngModel)]="rangeQuantity" type="number" placeholder="Quantity"
+                                        (keypress)="commonService.isDecimal($event)"  autocomplete="off" 
+                                        />
+                                    </mat-form-field>
+                                </div>
+                                <div fxFlex="70" fxLayoutGap="20px" style=" padding-top: 15px;">
+                                    <button mat-stroke-button class="orangeButtonBorder border-radius-3 colorAttribute " color="primary"
+                                        (click)="generateSerialID()" matTooltip="Add Row" >
+                                        Generate Serial
+                                    </button>
+                                </div>
+                            </div>
+                            <div fxLayout="row" >  
+                                <div fxFlex="30" fxLayoutGap="20px">
+                                        <div fxLayout="column">
+                                            <span class='setLabelHeaderFont'>From Serial</span>
+                                            <span class='setLabelDataFont' >{{fromSerial ? fromSerial : '-'}}</span>
+                                        </div>
+                                </div>
+                                <div fxFlex="30" fxLayoutGap="20px">
+                                    <div fxLayout="column">
+                                        <span class='setLabelHeaderFont'>To Serial</span>
+                                        <span class='setLabelDataFont' >{{toSerial ? toSerial : '-'}}</span>
+                                    </div>
+                                </div>
+                                <div fxFlex="40" fxLayoutGap="20px">
+                                   
+                                    
+                                </div>
+                            </div>
+                    </div>
+
+                    <div class="text-align-right pr-10" style="margin-top: 10px;" *ngIf=" mode === 'individual'">  
+                            <div fxLayout="row" style="margin-top: 30px;">  
+                                    <div fxFlex="25" fxLayoutGap="20px"></div>
+                                    <div fxFlex="50" fxLayoutGap="20px">
+                                       
+                                    </div>
+                                    <div fxFlex="25" fxLayoutGap="20px">
+                                            <button mat-stroke-button class="orangeButtonBorder border-radius-3 pt15 colorAttribute " color="primary"
+                                            (click)="addRowSerial()" matTooltip="Add Row" [disabled]="isEdit">
+                                            Add Row
+                                        </button>
+                                    </div>
+                            </div>
+                        
+                    </div>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="space-between center" >
+                <div [ngClass]="isAdd || isEdit ? 'formContainer pb15' : 'pb15'">
+                    <button   mat-flat-button [ngClass]="'formButton saveButton mr10'" color="primary"
+                        (click)="onSerialSubmit()">
+                        Done
+                    </button>
+                </div>
+               
+            </div>
+    </div>
+
+    
+   
+</div>

@@ -1,0 +1,48 @@
+.selectInputWidth {
+    width: 100px;
+    margin-right: 20px;
+}
+.stickyColumn {
+    width: 200px;
+    margin-right: 20px;
+}
+.inputMarginR {
+    margin-right: 20px;
+    width: 140px;
+}
+.stickyColumn2 {
+    max-width: 140px;
+}
+td.mat-cell:first-of-type,
+td.mat-footer-cell:first-of-type,
+th.mat-header-cell:first-of-type {
+    padding-left: 20px !important;
+}
+
+.disablePointer{
+    pointer-events: none;
+}
+
+
+::ng-deep .disablePointer .mat-datepicker-toggle{
+    pointer-events: all;
+}
+
+::ng-deep .disablePointer .mat-form-field-infix{
+    pointer-events: none !important ;
+}
+
+.mat-column-itemCode .nonEditiableField,
+.mat-column-revsnReason .nonEditiableField{
+    overflow: hidden;
+    width:150px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.customTable {
+    overflow-x: auto;
+}
+
+::ng-deep .setMandatoryColor .mat-form-field-label-wrapper .mat-form-field-label span{
+    color: red !important;
+}

@@ -1,0 +1,55 @@
+<div fxLayout="column" fxLayoutAlign="space-between stretch" fxFlex="100" >
+  <div fxLayout="column" style="padding-bottom: 70px;">
+      <div class="search-header" fxLayout="row">
+          <div class="search-title" fxLayout="column" fxFlex="5 0 0">
+              {{ searchLabel }}
+          </div>
+          <div class="search-header-right" (click)="hideSearchContainer()">
+              <span class="searchBarIcon icon-close"></span>
+          </div>
+      </div>
+      <div *ngFor="let fieldsInfo of searchFieldData">
+        <!-- For Cycle Count -->
+        <div *ngIf="fieldsInfo.lovType === 'cycle-count-name'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+          <ng-container >
+              <mat-form-field class="materailFieldSize" fxFlex="100">
+                  <mat-label>Cycle Count Name</mat-label>
+                  <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="cycleCount" autocomplete="off">
+              </mat-form-field>
+          </ng-container>
+        </div>
+        <!-- For IU -->
+        <!-- <div *ngIf="fieldsInfo.lovType === 'cycle-count-IU'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+          <ng-container >
+              <mat-form-field class="materailFieldSize" fxFlex="100">
+                  <mat-label>{{ fieldsInfo.label }}</mat-label>
+                  <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="cycleCountIU" class='text-black-disabled' disabled>
+                      <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value" autocomplete="off">{{ listItem.label }}</mat-option>
+                  </mat-select>
+              </mat-form-field>
+          </ng-container>
+        </div> -->
+        <!-- For Locator Group -->
+        <div *ngIf="fieldsInfo.lovType === 'cycle-count-LG'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+          <ng-container >
+            <mat-form-field class="materailFieldSize" fxFlex="100">
+                <mat-label>Locator Group</mat-label>
+                <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="cycleCountLG" autocomplete="off">
+            </mat-form-field>
+        </ng-container>
+        </div>
+      </div>
+
+
+  </div>
+  <!-- Search Footer -->
+  <div class="search-footer" style="position: fixed; bottom: 0px; width: 100%;">
+      <button mat-flat-button [ngClass]="'formButton saveButton'" (click)="getSearhInfo()">
+          Search
+      </button>
+      <button mat-flat-button [ngClass]="'formButton cancelButton ml-15'" (click)="clearSearchFields()">
+          Clear
+      </button>
+  </div>
+</div>
+

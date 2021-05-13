@@ -1,0 +1,244 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle">Sales Order</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" tabindex="0" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'">
+    <div class="container" fxLayout="column" *ngIf="!dataProgress">
+        <div [ngClass]="'mb10'" fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex>
+                <div fxLayout="row" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex="17">
+                        <span [ngClass]="'viewDialogDataTitle'">SO Number</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].soNumber ? data[0].soNumber : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="17">
+                        <span [ngClass]="'viewDialogDataTitle'">OU</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].ouCode ? data[0].ouCode : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="17">
+                        <span [ngClass]="'viewDialogDataTitle'">Type</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].typeName ? data[0].typeName : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="17">
+                        <span [ngClass]="'viewDialogDataTitle'">Status</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].statusName ? data[0].statusName : '-' }}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="17">
+                        <span [ngClass]="'viewDialogDataTitle'">Date</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].soDate ? (data[0].soDate | date) : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viewDialogDataTitle'">Priority</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].priorityName ? (data[0].priorityName) : '-'}}</span>
+                    </div>
+                </div>
+                <div fxLayout="row" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex="17">
+                        <span [ngClass]="'viewDialogDataTitle'">Customer</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].customerName ? data[0].customerName : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="17">
+                        <span [ngClass]="'viewDialogDataTitle'">Customer Site</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].customerSiteName ? data[0].customerSiteName : '-'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+       <div [ngClass]="'marginT15'" fxLayout="row" fxLayoutGap="5px">
+            <div fxFlex="100" [ngClass]="'viewDialogLabelBar'">
+                <mat-label [ngClass]="'viewDialogLabel'">Sales Order Lines :</mat-label>
+            </div>
+        </div>
+        <div [ngClass]="'customTable'" [ngStyle]="{ 'min-width': 'auto', 'max-height': '240px' }">
+            <table mat-table [dataSource]="parameterDataSource" style="min-width: 2500px;">
+                <ng-container matColumnDef="soLineId">
+                    <th mat-header-cell *matHeaderCellDef>#</th>
+                    <td mat-cell *matCellDef="let element; let i=index">
+                        <span>{{i+1}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soIuId">
+                    <th mat-header-cell *matHeaderCellDef>IU</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.iuName ? element.iuName : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soLineNumber">
+                    <th mat-header-cell *matHeaderCellDef>Line #</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soLineNumber ? element.soLineNumber : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soItemId">
+                    <th mat-header-cell *matHeaderCellDef>Item</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.itemName ? element.itemName : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soItemRevisionId">
+                    <th mat-header-cell *matHeaderCellDef>Item Revision</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.revsnNumber !== null ? element.revsnNumber : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="crossDockEnabled">
+                    <th mat-header-cell *matHeaderCellDef class="text-center">Cross Dock Enabled</th>
+                    <td mat-cell *matCellDef="let element"  class="text-center">
+                        <mat-checkbox [(ngModel)]="element.crossDockEnabled" value="element.crossDockEnabled" [disabled]="true">
+                            <mat-icon>{{element.crossDockEnabled}}</mat-icon>
+                        </mat-checkbox>
+                         
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soUomCode">
+                    <th mat-header-cell *matHeaderCellDef>UOM</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.UOM ? element.UOM : '-'
+                        }}</span>
+                        <!-- <span [ngClass]="'nonEditiableField'">
+                            <mat-select [(ngModel)]="element.soUomCode" [ngClass]="'pointerEventnone selectArrowHide'">
+                            <mat-option *ngFor="let uom of element.UOMList" [value]="uom.value">
+                                {{uom.label}}
+                            </mat-option>
+                            </mat-select>
+                        </span> -->
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="soLineQuantity">
+                    <th mat-header-cell *matHeaderCellDef>Qty</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soLineQuantity ? element.soLineQuantity : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+               
+                <ng-container matColumnDef="soShippedQuantity">
+                    <th mat-header-cell *matHeaderCellDef>Shipped Qty</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soShippedQuantity !==null ? element.soShippedQuantity : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soReservedQuantity">
+                    <th mat-header-cell *matHeaderCellDef>Reserved Qty</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soReservedQuantity !==null ? element.soReservedQuantity : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soAllocatedQuantity">
+                    <th mat-header-cell *matHeaderCellDef>Allocated Qty</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soAllocatedQuantity !==null ? element.soAllocatedQuantity : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soLineStatus">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soLineStatus ? (element.soLineStatusName | titlecase) : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soLinePriority">
+                    <th mat-header-cell *matHeaderCellDef>Priority</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soLinePriorityName ? (element.soLinePriorityName) : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soShipmentPlannedDate">
+                    <th mat-header-cell *matHeaderCellDef>Planned Ship Date</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                             element.soShipmentPlannedDate ? (element.soShipmentPlannedDate | date) : '-'
+
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soShipmentActualDate">
+                    <th mat-header-cell *matHeaderCellDef>Planned Delivery Date</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                             element.soDeliveryPlannedDate ? (element.soDeliveryPlannedDate | date) : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+               
+                <ng-container matColumnDef="soNetWeight">
+                    <th mat-header-cell *matHeaderCellDef>Net Weight</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">
+                            {{ element.soNetWeight !==null ? element.soNetWeight : '-' }}
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soGrossWeight">
+                    <th mat-header-cell *matHeaderCellDef>Gross Weight</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{ element.soGrossWeight !==null ? element.soGrossWeight : '-' }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soWeightUomCode">
+                    <th mat-header-cell *matHeaderCellDef>Weight UOM</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.weightUOM ? element.weightUOM : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soVolume">
+                    <th mat-header-cell *matHeaderCellDef>Volume</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{ element.soVolume !==null ? element.soVolume : '-' }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soVolumeUomCode">
+                    <th mat-header-cell *matHeaderCellDef>Volume UOM</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{ element.volumeUOM ? element.volumeUOM : '-' }}</span>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="soViewdColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: soViewdColumns"></tr>
+            </table>
+            <!-- <ng-container *ngIf=" !parameterDataSource.filteredData.soLineDetails.length">
+                <div [ngClass]="'noDataFound'"><small>No Sales Order Lines Defined</small></div>
+            </ng-container> -->
+        </div>
+    </div>
+    <div class="container" fxLayout="column" *ngIf="dataProgress">
+        <ng-container>
+            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+        </ng-container>
+    </div>
+</div>
+<div mat-dialog-actions [ngClass]="'viewActionFooter'" *ngIf="!isServerError">
+    <button mat-flat-button *ngIf="data[0].soHostId === null && data[0].soStatus !== 'SHIPPED' && data[0].soStatus !== 'PARTIAL_SHIPPED' && data[0].soStatus !== 'PICKED' && data[0].soStatus !== 'CLOSED' && data[0].soStatus !== 'RELEASED'" [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data[0]"
+        cdkFocusInitial>Edit</button>
+    <button mat-flat-button *ngIf="data[0].soStatus === 'SHIPPED'" [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data[0]"
+        cdkFocusInitial>Create RMA</button>
+</div>
+
+<!-- && data[0].soStatus !== 'PART_RESERVED'  -->

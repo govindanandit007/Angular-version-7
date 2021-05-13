@@ -1,0 +1,111 @@
+{
+    "type": "TASK",
+    "searchType": "taskDetail",
+    "searchFor": "Search Task",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "taskNumber",
+            "label": "Task Number",
+            "key": "taskId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "taskStatus",
+            "label": "Task Status",
+            "key": "taskStatus",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "itemName",
+            "label": "Item",
+            "key": "itemName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "revisionNumber",
+            "label": "Revision",
+            "key": "revisionNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "employee",
+            "label": "Employee",
+            "key": "userName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "tasktype",
+            "label": "Task Type",
+            "key": "taskType",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "replenishmentNum",
+            "label": "Replenishment Number",
+            "key": "replenishmentNum",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "iuCode",
+            "label": "IU",
+            "key": "iuId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

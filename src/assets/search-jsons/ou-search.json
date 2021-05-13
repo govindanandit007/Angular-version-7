@@ -1,0 +1,46 @@
+{
+    "type": "OU",
+    "searchType": "operatingUnit",
+    "searchFor": "Search Operating Units",
+    "companyKey": "ouCompanyId",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "code",
+            "label": "Operating Unit Code",
+            "key": "ouId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "name",
+            "label": "Operating Unit Name",
+            "key": "ouId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "ouEnabledFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": "" },
+                { "label": "Yes", "value": "Y" },
+                { "label": "No", "value": "N" }
+            ]
+        }
+    ]
+}

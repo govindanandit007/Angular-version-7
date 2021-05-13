@@ -1,0 +1,49 @@
+.customTable{
+    overflow: auto;
+}
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff !important;
+}
+
+.mat-dialog-title{
+    margin-bottom: 0px !important;
+}
+
+.mat-dialog-content{
+    padding: 0px !important;
+    min-height: 250px;
+ 
+}
+.mat-dialog-content table.mat-table{
+    margin-bottom: 0px !important;
+}
+/* 
+.dateField {
+    margin-right: 10px;
+    max-width: 110px;
+} */
+.width10{
+    width: 10%;
+    min-width: 50px;
+}
+
+.width15{
+    width: 11%;
+    min-width: 120px;
+}
+
+.setPadding{
+    padding-right: 10px;
+}
+
+::ng-deep .mat-select-disabled .mat-select-value {
+    color: black !important;
+}
+.mat-form-field-type-mat-native-select.mat-form-field-disabled
+    .mat-form-field-infix::after,
+.mat-input-element:disabled {
+    color: #000000;
+}
+::ng-deep .nonEditiableField{
+    color: black !important;
+}

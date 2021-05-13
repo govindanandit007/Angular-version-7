@@ -1,0 +1,65 @@
+.formHeader{
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc
+}
+.formHeaderTitle{
+    font-weight: 500;
+}
+.roleSearchBox{
+    background-color:#f2f2f4;
+    padding:10px 10px 10px 20px;
+    position: relative;
+}
+.searchBoxLabel{
+    font-size:14px;
+}
+.searchInput{
+    border:1px solid #ccc;
+    padding: 5px 10px;
+    margin: 0 10px;
+}
+.roleSearchBox .mat-flat-button.formButton{
+    height:28px;
+    line-height: 28px;
+}
+.actionColumn {
+    min-width: 60px;
+}
+.screenTitle, .content .contentTitle{
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom:10px;
+}
+.content{
+    border:1px solid #ccc;
+    border-radius: 3px;
+    padding:10px;
+}
+.content .mat-checkbox{
+    margin-bottom:10px;
+}
+.mat-checkbox-label{
+    font-size:14px;
+}
+.roleSearchBox .mat-error{
+    display: block;
+    font-size:11px;
+    padding-left:10px;
+    position: absolute;
+    bottom: -4px;
+}
+.no-screen-found{
+    font-size:11px;
+    padding-bottom:10px;
+}
+::ng-deep .searchBoxLabel .mat-checkbox-label {
+    color: #000;
+    width: 165px !important;
+    word-break: break-word;
+    display: block;
+    white-space: normal;
+    line-height: 17px;
+}
+.min200 {
+    min-width: 200px;
+}

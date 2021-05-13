@@ -1,0 +1,35 @@
+{
+    "type": "ONHAND-DETAIL",
+    "searchType": "ONHAND-DETAIL",
+    "searchFor": "Search Detail",
+    "companyKey": "",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "stockLocatorCode",
+            "label": "Stock Locator",
+            "formType": "ONHANDSTOCK",
+            "key": "locatorId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "LPNDetail",
+            "label": "LPN",
+            "key": "lpnId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

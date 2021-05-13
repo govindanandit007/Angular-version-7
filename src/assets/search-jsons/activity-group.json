@@ -1,0 +1,47 @@
+{
+    "type": "ACTIVITYGROup",
+    "searchType": "activitygroup",
+    "searchFor": "Search Activity Group",
+    "companyKey": "",
+    "searchArray": [
+       
+        {
+            "type": "LOV",
+            "lovType": "activityGroupName",
+            "label": "Activity Group name",
+            "key": "activityGroupName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "activityGroupCode",
+            "label": "Activity Group Code",
+            "key": "activityGroupCode",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "enableFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": ""  },
+                { "label": "Yes", "value": "Y" },
+                { "label": "No" , "value": "N" }
+            ]
+        }
+    ]
+}

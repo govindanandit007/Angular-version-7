@@ -1,0 +1,311 @@
+<div fxFlex="100" class="contentBorder marginT15">
+    <div [ngClass]="'formHeader'" fxLayout="row">
+        <div fxFlex fxLayoutAlign="start">
+            <span class="formHeaderTitle"><app-breadcrumb></app-breadcrumb> </span>
+        </div>
+    </div>
+    <div fxLayout="row">
+        <mat-divider fxFlex="100"></mat-divider>
+    </div>
+
+    <!-- <div class="padding15"> -->
+        <div class="formContainer" fxLayout="column">
+            <form #shipmentForm="ngForm" id="ngForm" [formGroup]="EligibleShipmentForm" autocomplete="off"
+                (ngSubmit)="onSubmit($event, shipmentForm)">
+                <div class="container" fxLayout="column">
+                    <div fxLayout="row" fxLayoutGap="20px" >
+                        <div class="item-head" fxFlex="28" style="padding-right:20px;">Sales Order</div>
+                        <div class="item-head" fxFlex="36" style="padding-right:20px;">Customer</div>
+                        <div class="item-head" fxFlex="32" style="padding-right:20px;">Date</div>
+                    </div>
+
+                    <div fxLayout="row" fxLayoutGap="20px">
+                        <div fxFlex="28" fxLayoutGap="20px" >
+                            <div *ngIf="inlineSOSearchLoader === 'hide'" fxFlex="100">
+                                <mat-form-field class="materailFieldSize" *ngIf="showSOLov === 'show'" fxFlex="90"
+                                    autofocus>
+                                    <mat-select formControlName="shipmentSoId" [ngClass]="''" placeholder="Select SO">
+                                        <mat-option *ngFor="let element of soList" [value]="element.value"
+                                        (onSelectionChange)="soChanged($event, element)" >
+                                            {{ element.label }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" *ngIf="showSOLov === 'hide'" fxFlex="90">
+                                    <input matInput (keydown)="fetchNewSearchListForSO($event, null, false)"
+                                        (blur)="fetchNewSearchListForSO($event, null, false)"
+                                        placeholder="{{soSearchPlaceholder}}" formControlName="SOSearchValue"
+                                        autocomplete="off" />
+                                </mat-form-field>
+                                <div [ngClass]="'pt-15'" fxFlex="10">
+                                    <div class="icon-search" style="width: 0px;
+                                                                                                padding-left: 10px;"
+                                        matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                                        (click)="fetchNewSearchListForSO($event, null, true)">
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="inlineSOSearchLoader === 'show'" fxFlex="100"
+                                style="padding-top: 15px; padding-left: 60px;">
+                                <div fxFlex="100">Searching...</div>
+                            </div>
+                            <!-- <mat-form-field class="materailFieldSize" fxFlex="50">
+                                <mat-select formControlName="shipmentIuId" placeholder="IU" required
+                                    (blur)="eligibleShipmentLogValidationErrors()" class='text-black-disabled' disabled>
+                                    <mat-option *ngFor="let element of iuCodeList" [value]="element.value"
+                                        (onSelectionChange)="iuIdChanged()">
+                                        {{element.label}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="asnFormErrors.shipmentIuId">{{asnFormErrors.shipmentIuId}}</mat-error>
+                            </mat-form-field> -->
+                        </div>
+
+
+                        <div fxFlex="36" fxLayoutGap="20px" style="padding-right:20px;">
+                            <div *ngIf="inlineCustomerSearchLoader === 'hide'" fxFlex="50">
+                                <mat-form-field class="materailFieldSize" *ngIf="showCustomerLov === 'show'" fxFlex="80"
+                                    autofocus>
+                                    <mat-select formControlName="shipmentCustomerId" [ngClass]="''"
+                                        placeholder="Customer *">
+                                        <mat-option *ngFor="let element of customerList" [value]="element.value"
+                                            (onSelectionChange)="customerSelectionChanged($event,element.value)">
+                                            {{ element.label }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" *ngIf="showCustomerLov === 'hide'"
+                                    fxFlex="80">
+                                    <input matInput [disabled]="isCustomerDisabled ? 'disabled': ''" (keydown)="fetchNewSearchListForCustomer($event, null, false)"
+                                        (blur)="fetchNewSearchListForCustomer($event, null, false)"
+                                        placeholder="Search Customer *" formControlName="customerSearchValue"
+                                        autocomplete="off"  />
+                                </mat-form-field>
+
+                                <div [ngClass]="'pt-15'" fxFlex="20">
+                                    <div *ngIf="!isEdit" class="icon-search" style="width: 0px;
+                                                            padding-left: 10px;" matTooltip="Search"
+                                        [matTooltipPosition]="tooltipPosition" [ngClass]="isCustomerDisabled ? 'hideSerach' : 'showSearch' "
+                                        (click)="fetchNewSearchListForCustomer($event, null, true)">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div *ngIf="inlineCustomerSearchLoader === 'show'" fxFlex="50"
+                                style="padding-top: 15px; padding-left: 60px;">
+                                <div fxFlex="100">Searching...</div>
+                            </div>
+                            <mat-form-field class="materailFieldSize" fxFlex="50">
+                                <mat-select formControlName="shipmentCustomerSiteId" placeholder="Customer Site *"
+                                    [ngClass]="isEdit ? 'pointerEventnone selectArrowHide':''" [disabled]="isCustomerSiteDisabled">
+                                    <mat-option *ngFor="let element of customerSiteList" [value]="element.value">
+                                        {{ element.label }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div fxFlex="32" fxLayoutGap="20px" style="padding-right:20px;">
+                            <mat-form-field fxFlex="50">
+                                <input matInput [matDatepicker]="fromDate" (click)="fromDate.open()"
+                                    placeholder="Planned Ship From" formControlName="plannedFromShipDate"
+                                    (ngModelChange)="onStartDateChanged($event)" 
+                                    (click)="this.commonService.disableInput($event)"  on-focus="this.commonService.disableInput($event)" />
+                                    <button mat-button *ngIf="EligibleShipmentForm.controls.plannedFromShipDate.value" matSuffix mat-icon-button aria-label="Clear" (click)="this.EligibleShipmentForm.patchValue({ plannedFromShipDate: null })">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+                                <mat-datepicker #fromDate></mat-datepicker>
+                            </mat-form-field>
+
+                            <mat-form-field fxFlex="50">
+                                <input matInput [matDatepicker]="toDate" (click)="toDate.open()"
+                                    placeholder="Planned Ship To" formControlName="plannedToShipDate"
+                                    [min]="varPlannedFromShipDate" [disabled]='isEndDateDisabled'
+                                    (click)="this.commonService.disableInput($event)"  on-focus="this.commonService.disableInput($event)" />
+                                    <button mat-button *ngIf="EligibleShipmentForm.controls.plannedToShipDate.value" matSuffix mat-icon-button aria-label="Clear" (click)="this.EligibleShipmentForm.patchValue({ plannedToShipDate: null })">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+                                <mat-datepicker #toDate></mat-datepicker>
+                            </mat-form-field>
+
+                             
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <div>
+                        <!-- <button *ngIf="!isEdit && EligibleShipmentForm.value.criteriaName !==''" mat-flat-button
+                            [ngClass]="'formButton saveButton mr10'" (click)="asnForm.ngSubmit.emit()" form="ngForm">
+                            Save Criteria
+                        </button> -->
+                        <!-- <button *ngIf="isEdit" mat-flat-button [ngClass]="'formButton saveButton mr10'"
+                            (click)="onSubmit($event, asnForm)">
+                            Update
+                        </button> -->
+                        <button mat-flat-button [ngClass]="'formButton saveButton mr10'" (click)="showLinesClick()">
+                            Show Lines
+                        </button>
+                        <button mat-flat-button [ngClass]="'formButton saveButton mr10'" (click)="clearFields()">
+                            Clear
+                        </button>
+                        <!-- <button mat-flat-button [ngClass]="'formButton saveButton mr10'" (click)="schedulingClick()"
+                            disabled>
+                            Scheduling
+                        </button> -->
+                    </div>
+                </div>
+        </div>
+    <!-- </div> -->
+
+    <div #customTable
+        [ngClass]="!shipmentLineDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable mb15'"
+        [ngStyle]="{'min-width': 'auto', 'max-height': commonService.screenMaxHeight }">
+        <table mat-table [dataSource]="shipmentLineDataSource" matSort class="resize-table" style="min-width: 1200px;"    >
+            <ng-container matColumnDef="rowSelect">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'width100 cursor-auto mat-header-column-'+columns[0].field">
+                    <mat-checkbox [(ngModel)]="selectAllRow" (change)="selectAll()">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let element; let j = index">
+                    <mat-checkbox [(ngModel)]="element.rowSelect"
+                        [disabled]="element.isDefault" (change)="rowSelectionChange()">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="No">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'width50 cursor-auto mat-header-column-'+columns[1].field">
+                    {{ columns[1].name }}
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index;" >
+                    <div>
+                        <span [ngClass]="'nonEditiableField'">
+                            {{ i + 1 }} </span>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="salesOrder">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[2].field"
+                    (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[2].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element ; let i=index">
+                    <div>
+                        <span [ngClass]="'nonEditiableField'" style="pointer-events: none;"
+                            class="maxWidthSelect setWidth">
+                            <span>{{element.salesOrder ? element.salesOrder : '-'}}</span>
+                        </span>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="soLine">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[3].field"
+                    (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[3].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element; let i=index">
+                    <div>
+                        <span [ngClass]="'nonEditiableField'" style="pointer-events: none;"
+                            class="maxWidthSelect setWidth">
+                            <span>{{element.soLineNumber ? element.soLineNumber : '-'}}</span>
+                        </span>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="item">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[4].field"
+                    (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[4].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <div>
+                        <span [ngClass]="'nonEditiableField'">{{element.itemName ? element.itemName : '-'}}</span>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="itemRevision">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'width200 mat-header-column-'+columns[5].field"
+                    (mousedown)="commonService.onResizeColumn($event, 5, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[5].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <div>
+                        <span [ngClass]="'nonEditiableField'">{{element.revsnNumber ? element.revsnNumber : '-'}}</span>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="soLinePriority">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[6].field"
+                    (mousedown)="commonService.onResizeColumn($event, 6, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[6].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span>{{element.soLinePriority ? element.soLinePriority : '-'}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="Qty">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[7].field"
+                    (mousedown)="commonService.onResizeColumn($event, 7, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[7].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <div>
+                        <!-- <mat-form-field [ngClass]="'inputMarginClass'">
+                            <input  matInput [disabled]='!element.rowSelect' [(ngModel)]="element.shipmentQty" (keypress)="commonService.isDecimal($event)" autocomplete="off" >
+                        </mat-form-field> -->
+                        <span [ngClass]="'nonEditiableField'">{{element.shipmentQty}}</span>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="UOM">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[8].field"
+                    (mousedown)="commonService.onResizeColumn($event, 8, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[8].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <div>
+                        <span [ngClass]="'nonEditiableField'">{{element.UOM ? element.UOM : '-'}}</span>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="soShipmentPlannedDate">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'width220 mat-header-column-'+columns[9].field"
+                    (mousedown)="commonService.onResizeColumn($event, 9, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[9].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <div>
+                        <span [ngClass]="'nonEditiableField'">{{element.soDeliveryPlannedDate ? (element.soDeliveryPlannedDate | date) : '-'}}</span>
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="shipmentLineDisplayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: shipmentLineDisplayedColumns;"></tr>
+        </table>
+
+        <ng-container *ngIf="listProgress">
+            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+        </ng-container>
+        <ng-container *ngIf="!shipmentLineDataSource.data.length && !listProgress">
+            <div [ngClass]="'noDataFound'">
+                <small>{{ lineTableMessage }}</small>
+            </div>
+        </ng-container>
+    </div>
+    <!-- <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons
+        [ngClass]="'mat-paginator-sticky'">
+    </mat-paginator> -->
+
+    <div *ngIf='showLinesFlag' fxLayout="row" class="mb10 ml15" fxLayoutAlign="space-between center">
+        <div>
+            <button *ngIf="shipmentLineDataSource.data.length && showGenerateShipmentBtn" mat-flat-button
+            [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10' : 'formButton saveButton mr10'"
+                (click)="createShipment($event)">
+                Generate Shipment
+            </button>
+        </div>
+    </div>
+</div>

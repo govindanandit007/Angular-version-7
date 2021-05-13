@@ -1,0 +1,62 @@
+{
+    
+        "type": "UOM",
+        "searchType": "uom",
+        "searchFor": "Search Unit Of Measure",
+        "searchArray": [
+            {
+            "type": "LOV",
+            "lovType": "code",
+            "label": "UOM Code",
+            "key": "uomId",
+            "value": "",
+            "list": [
+                    {
+                "label": " Please Select",
+                "value": ""
+                    }
+                ]
+            },
+            {
+            "type": "LOV",
+            "lovType": "name",
+            "label": "Unit of Measure",
+            "key": "uomId",
+            "value": "",
+            "list": [
+                    {
+                "label": " Please Select",
+                "value": ""
+                    }
+                ]
+            },
+            {
+            "type": "LOV",
+            "lovType": "uomClass",
+            "label": "Class Description",
+            "key": "uomClass",
+            "value": "",
+            "list": [
+                    {
+                "label": " Please Select",
+                "value": ""
+                    }
+                ]
+            },
+            {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "uomEnabledFlag",
+            "value": "",
+            "list": [
+                    { "label": "All", "value": ""
+                    },
+                    { "label": "Yes", "value": "Y"
+                    },
+                    { "label": "No", "value": "N"
+                    }
+                ]
+            }
+        ]
+    }

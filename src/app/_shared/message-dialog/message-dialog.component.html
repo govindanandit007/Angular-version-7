@@ -1,0 +1,9 @@
+<h2 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle class="messageHeaderTitle">{{messageHeader}}</h2>
+
+<mat-dialog-content>
+    <p> {{messageBody}} </p>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button color="primary" (click)="close()" class="mat-flat-button formButton saveButton">Close</button>
+</mat-dialog-actions>

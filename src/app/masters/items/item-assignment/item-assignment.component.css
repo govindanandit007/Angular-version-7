@@ -1,0 +1,63 @@
+.formHeader{
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc
+}
+.formHeaderTitle{
+    font-weight: 500;
+}
+.roleSearchBox{
+    background-color:#f2f2f4;
+    padding:10px 10px 10px 20px;
+    position: relative;
+}
+.searchBoxLabel{
+    font-size:14px;
+}
+.searchInput{
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    margin: 0 10px;
+    background: #fff;
+    width: 120px;
+    font-size: 14px;
+}
+.roleSearchBox .mat-flat-button.formButton{
+    height:28px;
+    line-height: 28px;
+}
+.roleSearchBox .mat-error{
+    display: inline-block;
+    font-size:12px;
+}
+.actionColumn {
+    min-width: 60px;
+}
+th.mat-header-cell, td.mat-cell{
+    padding-right:10px;
+}
+th.mat-header-cell:last-child{
+    padding-right:0;
+}
+/* .mat-column-action{
+    border-left:1px solid red;
+} */
+.dateField{
+    max-width: fit-content;
+    display: contents;
+}
+
+.percent10{
+    width: 10%;
+}
+
+.percent20{
+    width: 22%;
+}
+
+.percent30{
+    width: 24%;
+}
+
+::ng-deep .mat-input-element{
+    color : rgba(0,0,0,.87) !important;
+}

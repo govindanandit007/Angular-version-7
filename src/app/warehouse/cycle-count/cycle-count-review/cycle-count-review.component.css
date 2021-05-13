@@ -1,0 +1,69 @@
+.formHeader{
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc
+}
+.formHeaderTitle{
+    font-weight: 500;
+}
+.roleSearchBox{
+    background-color:#f2f2f4;
+    padding:10px 10px 10px 20px;
+    position: relative;
+}
+.searchBoxLabel{
+    font-size:14px;
+}
+.searchInput{
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    margin: 0 10px;
+    background: #fff;
+    width: 120px;
+    font-size: 14px;
+}
+.roleSearchBox .mat-flat-button.formButton{
+    height:28px;
+    line-height: 28px;
+}
+.roleSearchBox .mat-error{
+    display: inline-block;
+    font-size:12px;
+}
+.actionColumn {
+    min-width: 60px;
+}
+th.mat-header-cell, td.mat-cell{
+    padding-right:10px;
+}
+th.mat-header-cell:last-child{
+    padding-right:0;
+}
+.deleteDialog .mat-dialog-content{
+    padding: 0px 14px 10px 14px;
+    font-size: 14px;
+}
+.content-wrapper1 {
+    padding: 0px;
+}
+.searchRight {
+    position: fixed;
+    right: 5px;
+}
+.content{
+    border:1px solid #ccc;
+    border-radius: 3px;
+    padding:10px;
+}
+.content .mat-checkbox{
+    margin-bottom:10px;
+}
+.searchBoxLabel{
+    font-size:13px;
+}
+.no-screen-found{
+    font-size:11px;
+    padding-bottom:10px;
+}
+.customTable {
+    overflow-x: auto;
+}

@@ -1,0 +1,765 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle">Billing Execution Details</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseDialog()">
+            <mat-icon class="viewDialogCloseIcon" tabindex="0" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="dataProgress ? 'pb20' : ''">
+    <div class="container" fxLayout="column">
+        <div fxLayout="row" fxLayoutGap="30px">
+            <mat-form-field class="materailFieldSize" fxFlex="20">
+                <mat-label>Contracts Number</mat-label>
+                <mat-select [(ngModel)]="contactId">
+                    <mat-option ngDefaultControl *ngFor="let listItem of contractList" [value]="listItem.value"
+                        autocomplete="off">
+                        {{ listItem.label }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button fxFlex=10 mat-flat-button [ngClass]="'headerButton saveButton mr10'"
+                (click)='searchForContracts("SEARCH")'>
+                search
+            </button>
+            <div fxFlex="70" fxLayoutAlign="flex-end">
+                <span [ngClass]="'viewDialogDataTitle'">
+                    <mat-icon matTooltip="Download Bulk Txn Details"
+                        [matTooltipPosition]="tooltipPosition"
+                        (click)="exportBulkTable()"
+                        [ngStyle]="{'cursor':'pointer'}">save_alt</mat-icon>
+                </span>
+            </div>
+        </div>
+
+        <!-- #docregion multi -->
+        <mat-accordion *ngIf="!dataProgress" class="example-headers-align">
+            <!-- #enddocregion multi -->
+            <mat-expansion-panel class="accordianPanel" *ngFor="let element of resultData"
+                (click)="getDataForTxnLine(element)">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span class="panelTitle">Contract Number : &nbsp;</span><span>{{element.contractCode}}</span>
+                        <span class="panelTitle pl-20">Request Number : &nbsp;</span><span>{{requestNumber}}</span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="txndetailsData">
+                    <div [ngClass]="'mb10'" fxLayout="row" fxLayoutGap="20px">
+
+                        <div fxLayout="column" fxFlex>
+                            <div fxLayout="row" [ngClass]="'mb10'">
+                                <div fxLayout="column" fxFlex="20">
+                                    <span [ngClass]="'viewDialogDataTitle'">Customer Name</span>
+                                    <span [ngClass]="'viwDialogData'">{{element.customerName ? element.customerName :
+                                        '-'}}</span>
+                                </div>
+                                <div fxLayout="column" fxFlex="20">
+                                    <span [ngClass]="'viewDialogDataTitle'">Description</span>
+                                    <span [ngClass]="'viwDialogData'">{{element.description ? element.description :
+                                        '-'}}</span>
+                                </div>
+                                <div fxLayout="column" fxFlex="20">
+                                    <span [ngClass]="'viewDialogDataTitle'">Billing Frequency</span>
+                                    <span [ngClass]="'viwDialogData'">{{element.billingFrequencyName ?
+                                        element.billingFrequencyName : '-'}}</span>
+                                </div>
+                                <div fxLayout="column" fxFlex="20">
+                                    <span [ngClass]="'viewDialogDataTitle'">Last Computation Date</span>
+                                    <span [ngClass]="'viwDialogData'">{{element.lastComputationDate ?
+                                        element.lastComputationDate : '-'}}</span>
+                                </div>
+                                <div fxLayout="column" fxFlex="18">
+                                    <span [ngClass]="'viewDialogDataTitle'">Status</span>
+                                    <span [ngClass]="'viwDialogData'">{{element.statusName ? element.statusName :
+                                        '-'}}</span>
+                                </div>
+                                <div fxLayout="column" fxFlex="2">
+                                    <span [ngClass]="'viewDialogDataTitle'">
+                                        <mat-icon matTooltip="Download Txn Details"
+                                            [matTooltipPosition]="tooltipPosition"
+                                            (click)="exportTable($event,element.contractCode)"
+                                            [ngStyle]="{'cursor':'pointer'}">save_alt</mat-icon>
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div [ngClass]="'marginT15'" fxLayout="row" fxLayoutGap="5px">
+                        <div fxFlex="100" [ngClass]="'viewDialogLabelBar'">
+                            <mat-label [ngClass]="'viewDialogLabel'">Transaction Detail Lines :</mat-label>
+                        </div>
+                    </div>
+                    <div [ngStyle]="{ 'min-width': 'auto', 'max-height': '240px', 'margin-bottom' : '5px'}"
+                        [ngClass]="!parameterDataSource.data.length ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'">
+                        <!-- -->
+                        <table [id]="'txnDetailTable'+element.contractCode" mat-table [dataSource]="parameterDataSource"
+                            matSort class="resize-table" style="min-width: 3200px;" matSortActive="name"
+                            matSortStart="asc" matSortDisableClear>
+                            <ng-container matColumnDef="txnNo">
+                                <th mat-header-cell [hidden]="true" *matHeaderCellDef
+                                    [ngClass]="'width50 textAlign cursor-auto mat-header-column-'+columns[0].field">
+                                    <span>{{ columns[0].name }} </span>
+                                </th>
+                                <td mat-cell [hidden]="true" *matCellDef="let element; let i = index;">
+                                    <div>
+                                        <span [ngClass]="'nonEditiableField'">
+                                            {{ paginator.pageSize * paginator.pageIndex + i + 1 }}
+                                        </span>
+                                    </div>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnType">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[1].field"
+                                    (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                                    <span>{{ columns[1].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.txnType ? element.txnType : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnDate">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[2].field"
+                                    (mousedown)="commonService.onResizeColumn($event, 2 , columns, matTableRef)">
+                                    <span>{{ columns[2].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ (element.txnDate | date) ? (element.txnDate | date) : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnQuantity">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'width80 mat-header-column-'+columns[3].field"
+                                    (mousedown)="commonService.onResizeColumn($event, 3 , columns, matTableRef)">
+                                    <span>{{ columns[3].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.txnQuantity ? element.txnQuantity : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnItemId">
+                                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[4].field"
+                                    (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                                    <span mat-sort-header>{{ columns[4].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.itemName ? element.itemName : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnSourceId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[5].field"
+                                    (mousedown)="commonService.onResizeColumn($event, 5 , columns, matTableRef)">
+                                    <span>{{ columns[5].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.sourceNumber ? element.sourceNumber : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="sourceLineNumber">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[6].field"
+                                    (mousedown)="commonService.onResizeColumn($event, 6, columns, matTableRef)">
+                                    <span>{{ columns[6].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.sourceLineNumber ? element.sourceLineNumber : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnSourceType">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'width130 mat-header-column-'+columns[7].field"
+                                    (mousedown)="commonService.onResizeColumn($event,7 , columns, matTableRef)">
+                                    <span>{{ columns[7].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.txnSourceType ? element.txnSourceType : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnDestinationTypeCode">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'width160 mat-header-column-'+columns[8].field"
+                                    (mousedown)="commonService.onResizeColumn($event, 8, columns, matTableRef)">
+                                    <span>{{ columns[8].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.txnDestinationTypeCode ? element.txnDestinationTypeCode : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnReceiptId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[9].field"
+                                    (mousedown)="commonService.onResizeColumn($event, 9, columns, matTableRef)">
+                                    <span>{{ columns[9].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.receiptNum ? element.receiptNum : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnReceiptLineId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[10].field"
+                                    (mousedown)="commonService.onResizeColumn($event,10 , columns, matTableRef)">
+                                    <span>{{ columns[10].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.receiptLineNum ? element.receiptLineNum : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="UOM">
+                                <th mat-header-cell *matHeaderCellDef
+                                    [ngClass]="'width80 mat-header-column-'+columns[11].field"
+                                    (mousedown)="commonService.onResizeColumn($event,11 , columns, matTableRef)">
+                                    <span mat-sort-header>{{ columns[11].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.UOM ? element.UOM : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnItemRevisionId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[12].field"
+                                    (mousedown)="commonService.onResizeColumn($event, 12, columns, matTableRef)">
+                                    <span>{{ columns[12].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.revsnNumber ? element.revsnNumber : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnTransferLpnId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[13].field"
+                                    (mousedown)="commonService.onResizeColumn($event,13, columns, matTableRef)">
+                                    <span>{{ columns[13].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.transferLpnNumber ? element.transferLpnNumber : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnLpnId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[14].field"
+                                    (mousedown)="commonService.onResizeColumn($event,14 , columns, matTableRef)">
+                                    <span>{{ columns[14].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;">
+                                    {{ element.txnLpnNumber ? element.txnLpnNumber : '-' }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="txnFromIuId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[15].field"
+                                    (mousedown)="commonService.onResizeColumn($event, 15, columns, matTableRef)">
+                                    <span>{{ columns[15].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.txnFromIuName ? element.txnFromIuName : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnToIuId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[16].field"
+                                    (mousedown)="commonService.onResizeColumn($event, 16, columns, matTableRef)">
+                                    <span>{{ columns[16].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.txnToIuName ? element.txnToIuName : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnFromLgId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[17].field"
+                                    (mousedown)="commonService.onResizeColumn($event,17 , columns, matTableRef)">
+                                    <span>{{ columns[17].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.txnFromLgCode ? element.txnFromLgCode : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnToLgId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[18].field"
+                                    (mousedown)="commonService.onResizeColumn($event, 18, columns, matTableRef)">
+                                    <span>{{ columns[18].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.txnToLgCode ? element.txnToLgCode : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnFromLocatorId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'width135 mat-header-column-'+columns[19].field"
+                                    (mousedown)="commonService.onResizeColumn($event,19 , columns, matTableRef)">
+                                    <span>{{ columns[19].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.txnFromLocatorCode ? element.txnFromLocatorCode : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnToLocatorId">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[20].field"
+                                    (mousedown)="commonService.onResizeColumn($event, 20, columns, matTableRef)">
+                                    <span>{{ columns[20].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.txnToLocatorCode ? element.txnToLocatorCode : '-' }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="rate">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'width80 mat-header-column-'+columns[21].field"
+                                    (mousedown)="commonService.onResizeColumn($event, 21, columns, matTableRef)">
+                                    <span>{{ columns[21].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.rate ? element.rate : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="locationName">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'mat-header-column-'+columns[22].field"
+                                    (mousedown)="commonService.onResizeColumn($event,22 , columns, matTableRef)">
+                                    <span>{{ columns[22].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.locationName ? element.locationName : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="userName">
+                                <th mat-header-cell *matHeaderCellDef
+                                    [ngClass]="'cursor-auto mat-header-column-'+columns[23].field">
+                                    <span class="center-align">{{ columns[23].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;">
+                                    {{ element.userName ? element.userName : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="customerName">
+                                <th mat-header-cell *matHeaderCellDef
+                                    [ngClass]="'width100 cursor-auto mat-header-column-'+columns[24].field">
+                                    <span class="center-align">{{ columns[24].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;">
+                                    {{ element.customerName ? element.customerName : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="lineAmount">
+                                <th mat-header-cell *matHeaderCellDef
+                                    [ngClass]="'width100 mat-header-column-'+columns[25].field">
+                                    <span>{{ columns[25].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;">
+                                    {{ element.lineAmount ? element.lineAmount : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnInspectionQualityCode">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'width145 mat-header-column-'+columns[26].field">
+                                    <span>{{ columns[26].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.txnInspectionQualityCode ? element.txnInspectionQualityCode : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="txnInspectionStatusCode">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'width170 mat-header-column-'+columns[27].field">
+                                    <span>{{ columns[27].name }} </span>
+                                </th>
+                                <td mat-cell *matCellDef="let element;   ">
+                                    {{ element.txnInspectionStatusCode ? element.txnInspectionStatusCode : '-' }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="contractCode">
+                                <th mat-header-cell [hidden]="true" *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'width170 mat-header-column-'+columns[28].field">
+                                    <span>{{ columns[28].name }} </span>
+                                </th>
+                                <td mat-cell [hidden]="true" *matCellDef="let element;   ">
+                                    {{ element.contractCode ? element.contractCode : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="description">
+                                <th mat-header-cell [hidden]="true" *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'width170 mat-header-column-'+columns[29].field">
+                                    <span>{{ columns[29].name }} </span>
+                                </th>
+                                <td mat-cell [hidden]="true" *matCellDef="let element;   ">
+                                    {{ element.description ? element.description : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="billingFrequencyName">
+                                <th mat-header-cell [hidden]="true" *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'width170 mat-header-column-'+columns[30].field">
+                                    <span>{{ columns[30].name }} </span>
+                                </th>
+                                <td mat-cell [hidden]="true" *matCellDef="let element;   ">
+                                    {{ element.billingFrequencyName ? element.billingFrequencyName : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="lastComputationDate">
+                                <th mat-header-cell [hidden]="true" *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'width170 mat-header-column-'+columns[31].field">
+                                    <span>{{ columns[31].name }} </span>
+                                </th>
+                                <td mat-cell [hidden]="true" *matCellDef="let element;   ">
+                                    {{ element.lastComputationDate ? element.lastComputationDate : '-' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="statusName">
+                                <th mat-header-cell [hidden]="true" *matHeaderCellDef mat-sort-header
+                                    [ngClass]="'width170 mat-header-column-'+columns[32].field">
+                                    <span>{{ columns[32].name }} </span>
+                                </th>
+                                <td mat-cell [hidden]="true" *matCellDef="let element;   ">
+                                    {{ element.statusName ? element.statusName : '-' }}
+                                </td>
+                            </ng-container>
+
+
+                            <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumns;"></tr>
+                        </table>
+                        <!--  this above block is uncommented-->
+                        <ng-container *ngIf="
+                                !parameterDataSource.data.length">
+                            <div [ngClass]="'noDataFound'"><small>{{message}}</small></div>
+                        </ng-container>
+
+                    </div>
+                    <div fxLayoutAlign="space-between center">
+                        <mat-paginator #paginatorTxnLines (page)="commonService.setPaginationSize($event)"
+                            showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+                        </mat-paginator>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <ng-container *ngIf="dataProgress">
+            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+        </ng-container>
+    </div>
+</div>
+<div [hidden]="true">
+    <table [id]="'txnDetailBulkTable'"  mat-table [dataSource]="txnDetailBulkDataSource" matSort
+        class="resize-table" style="min-width: 3200px;" matSortActive="name" matSortStart="asc" matSortDisableClear>
+        <ng-container matColumnDef="txnNo">
+            <th mat-header-cell [hidden]="true" *matHeaderCellDef
+                [ngClass]="'width50 textAlign cursor-auto mat-header-column-'+columns[0].field">
+                <span>{{ columns[0].name }} </span>
+            </th>
+            <td mat-cell [hidden]="true" *matCellDef="let element; let i = index;">
+                <div>
+                    <span [ngClass]="'nonEditiableField'">
+                        {{ paginator.pageSize * paginator.pageIndex + i + 1 }}
+                    </span>
+                </div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[1].field"
+                (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                <span>{{ columns[1].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.txnType ? element.txnType : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[2].field"
+                (mousedown)="commonService.onResizeColumn($event, 2 , columns, matTableRef)">
+                <span>{{ columns[2].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ (element.txnDate | date) ? (element.txnDate | date) : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnQuantity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'width80 mat-header-column-'+columns[3].field"
+                (mousedown)="commonService.onResizeColumn($event, 3 , columns, matTableRef)">
+                <span>{{ columns[3].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.txnQuantity ? element.txnQuantity : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnItemId">
+            <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[4].field"
+                (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                <span mat-sort-header>{{ columns[4].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.itemName ? element.itemName : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnSourceId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[5].field"
+                (mousedown)="commonService.onResizeColumn($event, 5 , columns, matTableRef)">
+                <span>{{ columns[5].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.sourceNumber ? element.sourceNumber : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="sourceLineNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[6].field"
+                (mousedown)="commonService.onResizeColumn($event, 6, columns, matTableRef)">
+                <span>{{ columns[6].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.sourceLineNumber ? element.sourceLineNumber : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnSourceType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'width130 mat-header-column-'+columns[7].field"
+                (mousedown)="commonService.onResizeColumn($event,7 , columns, matTableRef)">
+                <span>{{ columns[7].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.txnSourceType ? element.txnSourceType : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnDestinationTypeCode">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'width160 mat-header-column-'+columns[8].field"
+                (mousedown)="commonService.onResizeColumn($event, 8, columns, matTableRef)">
+                <span>{{ columns[8].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.txnDestinationTypeCode ? element.txnDestinationTypeCode : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnReceiptId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[9].field"
+                (mousedown)="commonService.onResizeColumn($event, 9, columns, matTableRef)">
+                <span>{{ columns[9].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.receiptNum ? element.receiptNum : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnReceiptLineId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[10].field"
+                (mousedown)="commonService.onResizeColumn($event,10 , columns, matTableRef)">
+                <span>{{ columns[10].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.receiptLineNum ? element.receiptLineNum : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="UOM">
+            <th mat-header-cell *matHeaderCellDef [ngClass]="'width80 mat-header-column-'+columns[11].field"
+                (mousedown)="commonService.onResizeColumn($event,11 , columns, matTableRef)">
+                <span mat-sort-header>{{ columns[11].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.UOM ? element.UOM : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnItemRevisionId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[12].field"
+                (mousedown)="commonService.onResizeColumn($event, 12, columns, matTableRef)">
+                <span>{{ columns[12].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.revsnNumber ? element.revsnNumber : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnTransferLpnId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[13].field"
+                (mousedown)="commonService.onResizeColumn($event,13, columns, matTableRef)">
+                <span>{{ columns[13].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.transferLpnNumber ? element.transferLpnNumber : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnLpnId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[14].field"
+                (mousedown)="commonService.onResizeColumn($event,14 , columns, matTableRef)">
+                <span>{{ columns[14].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;">
+                {{ element.txnLpnNumber ? element.txnLpnNumber : '-' }}
+            </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="txnFromIuId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[15].field"
+                (mousedown)="commonService.onResizeColumn($event, 15, columns, matTableRef)">
+                <span>{{ columns[15].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.txnFromIuName ? element.txnFromIuName : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnToIuId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[16].field"
+                (mousedown)="commonService.onResizeColumn($event, 16, columns, matTableRef)">
+                <span>{{ columns[16].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.txnToIuName ? element.txnToIuName : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnFromLgId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[17].field"
+                (mousedown)="commonService.onResizeColumn($event,17 , columns, matTableRef)">
+                <span>{{ columns[17].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.txnFromLgCode ? element.txnFromLgCode : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnToLgId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[18].field"
+                (mousedown)="commonService.onResizeColumn($event, 18, columns, matTableRef)">
+                <span>{{ columns[18].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.txnToLgCode ? element.txnToLgCode : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnFromLocatorId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                [ngClass]="'width135 mat-header-column-'+columns[19].field"
+                (mousedown)="commonService.onResizeColumn($event,19 , columns, matTableRef)">
+                <span>{{ columns[19].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.txnFromLocatorCode ? element.txnFromLocatorCode : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnToLocatorId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[20].field"
+                (mousedown)="commonService.onResizeColumn($event, 20, columns, matTableRef)">
+                <span>{{ columns[20].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.txnToLocatorCode ? element.txnToLocatorCode : '-' }}
+            </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="rate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'width80 mat-header-column-'+columns[21].field"
+                (mousedown)="commonService.onResizeColumn($event, 21, columns, matTableRef)">
+                <span>{{ columns[21].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.rate ? element.rate : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="locationName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'mat-header-column-'+columns[22].field"
+                (mousedown)="commonService.onResizeColumn($event,22 , columns, matTableRef)">
+                <span>{{ columns[22].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.locationName ? element.locationName : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="userName">
+            <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto mat-header-column-'+columns[23].field">
+                <span class="center-align">{{ columns[23].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;">
+                {{ element.userName ? element.userName : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="customerName">
+            <th mat-header-cell *matHeaderCellDef [ngClass]="'width100 cursor-auto mat-header-column-'+columns[24].field">
+                <span class="center-align">{{ columns[24].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;">
+                {{ element.customerName ? element.customerName : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="lineAmount">
+            <th mat-header-cell *matHeaderCellDef [ngClass]="'width100 mat-header-column-'+columns[25].field">
+                <span>{{ columns[25].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;">
+                {{ element.lineAmount ? element.lineAmount : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnInspectionQualityCode">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                [ngClass]="'width145 mat-header-column-'+columns[26].field">
+                <span>{{ columns[26].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.txnInspectionQualityCode ? element.txnInspectionQualityCode : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="txnInspectionStatusCode">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                [ngClass]="'width170 mat-header-column-'+columns[27].field">
+                <span>{{ columns[27].name }} </span>
+            </th>
+            <td mat-cell *matCellDef="let element;   ">
+                {{ element.txnInspectionStatusCode ? element.txnInspectionStatusCode : '-' }}
+            </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="contractCode">
+            <th mat-header-cell [hidden]="true" *matHeaderCellDef mat-sort-header
+                [ngClass]="'width170 mat-header-column-'+columns[28].field">
+                <span>{{ columns[28].name }} </span>
+            </th>
+            <td mat-cell [hidden]="true" *matCellDef="let element;   ">
+                {{ element.contractCode ? element.contractCode : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+            <th mat-header-cell [hidden]="true" *matHeaderCellDef mat-sort-header
+                [ngClass]="'width170 mat-header-column-'+columns[29].field">
+                <span>{{ columns[29].name }} </span>
+            </th>
+            <td mat-cell [hidden]="true" *matCellDef="let element;   ">
+                {{ element.description ? element.description : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="billingFrequencyName">
+            <th mat-header-cell [hidden]="true" *matHeaderCellDef mat-sort-header
+                [ngClass]="'width170 mat-header-column-'+columns[30].field">
+                <span>{{ columns[30].name }} </span>
+            </th>
+            <td mat-cell [hidden]="true" *matCellDef="let element;   ">
+                {{ element.billingFrequencyName ? element.billingFrequencyName : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="lastComputationDate">
+            <th mat-header-cell [hidden]="true" *matHeaderCellDef mat-sort-header
+                [ngClass]="'width170 mat-header-column-'+columns[31].field">
+                <span>{{ columns[31].name }} </span>
+            </th>
+            <td mat-cell [hidden]="true" *matCellDef="let element;   ">
+                {{ element.lastComputationDate ? element.lastComputationDate : '-' }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="statusName">
+            <th mat-header-cell [hidden]="true" *matHeaderCellDef mat-sort-header
+                [ngClass]="'width170 mat-header-column-'+columns[32].field">
+                <span>{{ columns[32].name }} </span>
+            </th>
+            <td mat-cell [hidden]="true" *matCellDef="let element;   ">
+                {{ element.statusName ? element.statusName : '-' }}
+            </td>
+        </ng-container>
+    
+    
+        <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumns;"></tr>
+    </table>
+    <div fxLayoutAlign="space-between center">
+        <mat-paginator #paginatorTxnLines (page)="commonService.setPaginationSize($event)"
+            showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+        </mat-paginator>
+    </div>
+</div>

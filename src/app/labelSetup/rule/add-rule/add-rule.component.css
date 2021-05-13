@@ -1,0 +1,154 @@
+.example-tree-progress-bar {
+  margin-left: 30px;
+}
+
+.example-tree-nested-node {
+  padding-left: 30px;
+}
+
+mat-tree {
+  margin-left: 40px;
+}
+.mat-tree-node {
+  padding: 0;
+  background-color: white;
+}
+
+.mat-nested-tree-node {
+  top: -24px;
+}
+
+ul, li { 
+  list-style: none; 
+  margin: 0; 
+  padding: 0;  
+}
+
+li.example-tree-container {
+  border-bottom: 0;
+}
+
+ul { 
+  padding-left: 40px; 
+}
+
+li { 
+  padding-left: 40px;
+  border: 1px dotted grey;
+  border-width: 0 0 1px 1px; 
+  position: relative;
+  top: -24px;
+}
+
+li.mat-tree-node,
+li div { 
+  margin: 0;
+  position: relative;
+  top: 24px; 
+}
+
+li ul {
+  border-top: 1px dotted grey;
+  margin-left: -40px;
+  padding-left: 60px;
+}
+
+.mat-nested-tree-node:last-child ul {
+  border-left: 1px solid white;
+  margin-left: -41px;
+}
+
+.mat-icon-button {
+  z-index: 100;
+}
+
+.addBtn{
+    padding: 3px 10px;
+}
+.addBtn mat-icon,.sortAddBtn mat-icon{
+    height: 16px;
+    width: 16px;
+    font-size: 16px;
+    border: solid 1px #098ccd;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.addBtn:hover mat-icon{
+    border-color:#fff;
+}
+
+tr.example-detail-row {
+    height: 0 !important;
+}
+
+
+tr.example-element-row:not(.example-expanded-row):hover {
+    background: #f2fcff;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+    background: #efefef;
+}
+
+.example-element-row td {
+    border-bottom-width: 0;
+}
+
+.example-element-detail {
+    overflow: hidden;
+    display: flex;
+}
+.expandedDetailTd{
+    padding: 0px 0px !important;
+}
+
+.actionIcons1 span {
+  width: 30px;
+  height: 30px;
+  padding: 8px 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin: 0px 0px !important;
+  box-sizing: border-box;
+  font-size: 18px;
+  padding: 0px 4px;
+  color: #9e9797;
+  user-select: none;
+}
+.actionIcons1 span:hover,
+.editIconEnable {
+    color: #52abda !important;
+    cursor: pointer;
+}
+.actionIcons1 span .material-icons {
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.actionIcons1 span {
+  font-size: 16px;
+  padding: 0px 4px;
+  color: #9e9797;
+}
+
+.actionIcons1 {
+    min-width: 80px !important;
+    padding-left: 5px !important;
+    text-align: right !important;
+    padding-right: 20px !important;
+}
+
+.actionColumn1{
+  width: 100px !important;
+  padding-left: 10px !important;
+  padding-right: 30px !important;
+  text-align: right !important;
+}
+/* .actionColumn1{
+  text-align: right !important;
+  padding-right: 22px !important;
+} */

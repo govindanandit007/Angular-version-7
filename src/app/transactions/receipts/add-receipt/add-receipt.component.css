@@ -1,0 +1,87 @@
+.formHeader {
+    padding: 10px 20px;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+.customTable{
+    overflow: auto;
+}
+
+.setWith5Percent{
+    min-width: 50px;
+}
+
+.setWith10Percent{
+    min-width : 100px;
+}
+
+.setWith25Percent{
+    min-width : 250px;
+}
+
+.setWith15Percent{
+    min-width : 150px;
+}
+
+.withForS_No{
+    min-width: 40px;
+}
+
+.generateCheckBox{
+    color: #098ccd;
+    font-size: 14px;
+}
+
+.hideElement{
+    display: none;
+}
+
+.showElement{
+    display: block;
+}
+
+::ng-deep .maxWidth .mat-form-field{
+    min-width: 150px;
+    margin-right: 20px;
+}
+
+::ng-deep .maxWidthSelect .mat-select{
+    min-width: 150px;
+}
+
+::ng-deep .maxWidth .ng-star-inserted{
+    margin-right: 20px;
+}
+
+.setSpanWidth{
+    width: 50px;
+}
+
+.setelipsis{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 90px;
+    display: block;
+
+}
+
+
+.setLabelHeaderFont{
+    font-size: 14px;
+    color: #1a71b1;
+}
+
+.setLabelDataFont{
+    font-size: 14px;
+}
+
+.setRangeTopBoreder{
+    border-top: 1px solid #c8c5c5;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+
+
+

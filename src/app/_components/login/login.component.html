@@ -1,0 +1,86 @@
+<div fxLayout="column" fxFlex="7 0 0">
+    <div fxLayout="row" >
+        <div fxFlex="65" >
+           <div class="setLoginImage" style="background-image: url(assets/images/icons/loginImage.jpg)">
+               
+           </div>
+        </div>
+        <div fxFlex="35" >
+          
+                               
+                <form fxLayout="column" class='box setpadding' [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete="off">
+                
+                    <div  class='companyLogo'>
+                        <!-- <img src="assets/images/icons/dummyIcon.png" class="setImg"> -->
+                        <img src="assets/images/icons/WMSlogo.png" class="setImg">
+                    </div>
+                    <mat-form-field class="username">
+                        <mat-label>Username</mat-label>
+                            <input matInput formControlName="username" [readonly]="loaderShow" (keypress)="loginService.isSpaceonFirstPosition($event)" appAutofocus (blur)="logValidationErrors()" />
+                            <mat-icon [ngClass]="'loginIcon'" matPrefix>person</mat-icon>
+                            <mat-error *ngIf="formErrors.username">{{formErrors.username}}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class=" username">
+                        <mat-label>Password</mat-label>
+        
+                        <input
+                            matInput
+                            formControlName="password"
+                            [type]="
+                                            passwordHide ? 'password' : 'text'
+                                        "
+                            [readonly]="loaderShow"
+                            (keypress)="loginService.isSpaceonFirstPosition($event)"
+                            (blur)="logValidationErrors()"
+                        />
+                        <mat-icon [ngClass]="'loginIcon'" matPrefix>vpn_key</mat-icon>
+                        <span mat-icon-button matSuffix (click)="passwordHide = !passwordHide" [attr.aria-label]="'Hide password'">
+                            <mat-icon [ngClass]="'showPassword'">{{ passwordHide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                        </span>
+        
+                        <mat-hint *ngIf="loginError != ''" class="text-red">{{ loginError }}</mat-hint>
+                        <mat-error *ngIf="formErrors.password">{{formErrors.password}}</mat-error>
+                    </mat-form-field>
+                    <mat-checkbox class="remember-me-text-decoration rememberMe" [(ngModel)]="rememberMe" [ngModelOptions]="{ standalone: true }">Remember Me</mat-checkbox>
+                    <div class='username'>
+                        <button mat-raised-button color="primary" class="lg-button" [disabled]="loaderShow">
+                            <span *ngIf="!loaderShow">Log In</span>
+                            <div [ngClass]="'loginLoder'" *ngIf="loaderShow">
+                                <mat-spinner [diameter]="30" [ngClass]="'loaderSpinner'"></mat-spinner>
+                            </div>
+                        </button>
+                    </div>
+                    <div class='bottomIcon' >
+                        <div fxLayout="row"  >
+                            <div fxFlex='100' fxLayoutAlign="center center"  style="color: #a8a8a8; font-size: 12px; ">
+                                <div fxLayout="column"   >
+                                    <!-- <div fxFlex='34' fxLayoutAlign="center center" >
+                                        <img src="assets/images/icons/WMSlogo.png" style="width: 170px; height: 60px;" >
+                                    </div> -->
+                                    <div fxFlex='50' fxLayoutAlign="center center"  style="color: #a8a8a8; font-size: 12px; ">
+                                        <!-- <h3 fxLayout >A Product By</h3> -->
+                                        <h3 fxLayout >Copyright</h3>
+                                    </div>
+                                    <div fxFlex='50' fxLayoutAlign="center center"  style="color: #a8a8a8; font-size: 12px; ">
+                                        <img src="assets/images/intellinum-logo.png" class="app-logo" alt="Intellinum logo" />
+                                    </div>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </form>
+                
+                
+             
+             
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

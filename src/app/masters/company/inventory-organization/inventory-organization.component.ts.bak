@@ -1,0 +1,761 @@
+import {
+    Component,
+    OnInit,
+    EventEmitter,
+    Input,
+    Output,
+    ViewChild,
+    OnDestroy,
+    Optional,
+    Inject,
+    ElementRef,
+    AfterViewInit,
+    HostListener
+} from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { InventoryOrgService } from 'src/app/_services/inventory-org.service';
+import { OperatingUnitService } from 'src/app/_services/operating-unit.service';
+import { CommonService } from 'src/app/_services/common/common.service';
+import { Router } from '@angular/router';
+import { CompanyComponent } from '../company.component';
+import {
+    MatTableDataSource,
+    TooltipPosition,
+    MatDialogRef,
+    MAT_DIALOG_DATA,
+    MatDialog,
+    MatTable,
+    MatSort
+} from '@angular/material';
+import { Observable, Observer, BehaviorSubject } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CompanyService } from 'src/app/_services/company.service';
+import { ConfirmationDialogComponent } from 'src/app/_shared/confirmation-dialog/confirmation-dialog.component';
+
+
+interface NavItem {
+    displayName: string;
+    disabled?: boolean;
+    itemCode?: string;
+    children?: NavItem[];
+    id?: number;
+}
+@Component({
+    selector: 'app-inventory-organization',
+    templateUrl: './inventory-organization.component.html',
+    styleUrls: ['./inventory-organization.component.css']
+})
+export class InventoryOrganizationComponent implements OnInit, AfterViewInit, OnDestroy {
+    tooltipPosition: TooltipPosition[] = ['below'];
+    isEdit: boolean;
+    shoeIUName: string;
+    InventoryOrganizationForm: FormGroup;
+    ioTreeChildren: any[] = [];
+    ouCodeList: any[] = [];
+    ouEnabledCodeList: any[] = [];
+    countryList: any[] = [];
+    stateFilterList: any[] = [];
+    cityFilterList: any[] = [];
+    navItems: NavItem[];
+    childId: number;
+    inputDisabled = false;
+    showInventoryList = true;
+    listProgress = false;
+    private searchInfoArrayunsubscribe: any;
+    private searchArrayunsubscribe: any;
+    iuMessage = ''
+    searchEnableFlag = false;
+    searchIconValue : any = '';
+
+    confirmationDialogRef: MatDialogRef<ConfirmationDialogComponent>;
+    // iuMessage = 'No inventory unit defined.'
+    dataForSearch: any = {
+        type: 'IU',
+        searchType: 'inventoryOrganization',
+        searchFor: 'Search Inventory Units',
+        companyKey: 'iuCompanyId',
+        searchArray: [
+            {
+                type: 'selectionChangeLOV',
+                lovType: 'iuOUCode',
+                label: 'Operating Unit Code',
+                key: 'iuOuId',
+                value: '',
+                list: [
+                    {
+                        label: ' Please Select',
+                        value: ''
+                    }
+                ]
+            },
+            {
+                type: 'LOV',
+                lovType: 'iuAndLgCode',
+                label: 'Inventory Unit Code',
+                key: 'iuId',
+                value: '',
+                list: [
+                    {
+                        label: ' Please Select',
+                        value: ''
+                    }
+                ]
+            },
+            {
+                type: 'LOV',
+                lovType: 'iuAndLgName',
+                label: 'Inventory Unit Name',
+                key: 'iuId',
+                value: '',
+                list: [
+                    {
+                        label: ' Please Select',
+                        value: ''
+                    }
+                ]
+            },
+            {
+                type: 'LOV',
+                lovType: 'enableFlag',
+                label: 'Enable Flag',
+                key: 'iuEnabledFlag',
+                value: '',
+                list: [
+                    { label: 'All', value: '' },
+                    { label: 'Yes', value: 'Y' },
+                    { label: 'No', value: 'N' }
+                ]
+            }
+        ]
+    };
+
+    public showSearch = true;
+
+    @Output() searchComponentToggle = new EventEmitter<boolean>();
+    @Input() showSearchComponent: BehaviorSubject<string>;
+
+    displayedColumns: string[] = [
+        'iuCode',
+        'iuName',
+        'iuAddress1',
+        'creationDate',
+        'iuEnabledFlag',
+        'action'
+    ];
+
+    columns: any =  [
+        {field: 'iuCode', name: 'Code', width: 75, baseWidth: 10 },
+        {field: 'iuName', name: 'Name', width: 150, baseWidth: 33 },
+        {field: 'iuAddress1', name: 'Address', width: 150, baseWidth: 25 },
+        {field: 'creationDate', name: 'Start Date', width: 100, baseWidth: 14 },
+        {field: 'iuEnabledFlag', name: 'Enabled', width: 100, baseWidth: 9 },
+        {field: 'action', name: 'Action', width: 75, baseWidth: 9 }
+    ]
+
+    inventoryOrgDataSource = new MatTableDataSource();
+    @ViewChild(MatTable, {read: ElementRef, static: false} ) matTableRef: ElementRef;
+    @ViewChild(MatSort, {static: false}) sort: MatSort;
+
+    validationMessages = {
+        iuCode: {
+            required: 'Inventory Unit Code is required.'
+        },
+        iuName: {
+            required: 'Inventory Unit Name is required.'
+        },
+        iuOuId: {
+            required: 'Operating Unit Code is required.'
+        },
+        iuAddress1: {
+            required: 'Address1 is required.'
+        },
+        iuCountry: {
+            required: 'Country is required.'
+        },
+        iuStateCounty: {
+            required: 'State/County is required.'
+        },
+        iuCity: {
+            required: 'City is required.'
+        },
+        iuPincode: {
+            required: 'Postal Code is required.',
+            pattern: 'Please Enter Numeric value.',
+            maxlength: 'Maximum 10 character allowed'
+        },
+        iuPhone: {
+            required: 'Phone Number is required.',
+            pattern: 'Please Enter Numeric value.',
+            maxlength: 'Maximum 15 character allowed'
+        },
+        iuPersonName: {
+            required: 'Person Name is required.'
+        },
+        iuPersonPhoneNum: {
+            required: 'Phone Number is required.',
+            pattern: 'Please Enter Numeric value.',
+            maxlength: 'Maximum 15 character allowed'
+        },
+        iuPersonEmail: {
+            required: 'Email is required.',
+            pattern: 'Please enter a valid email address.'
+        }
+    };
+
+    formErrors = {
+        iuCode: '',
+        iuName: '',
+        iuOuId: '',
+        iuAddress1: '',
+        iuCountry: '',
+        iuStateCounty: '',
+        iuCity: '',
+        iuPincode: '',
+        iuPhone: '',
+        iuPersonName: '',
+        iuPersonPhoneNum: '',
+        iuPersonEmail: ''
+    };
+
+    constructor(
+        private fb: FormBuilder,
+        private inventoryOrgService: InventoryOrgService,
+        private operatingUnitService: OperatingUnitService,
+        public commonService: CommonService,
+        private companycomponent: CompanyComponent,
+        private router: Router,
+        private dialog: MatDialog,
+        private snackBar: MatSnackBar,
+        private companyService: CompanyService
+    ) {
+        this.InventoryOrganizationFeedForm();
+    }
+
+    ngOnInit() {
+        this.isEdit = false;
+        this.searchInvertoryOrg();
+        this.searhForIO();
+        this.getCountryList();
+        this.commonService.getScreenSize(-25);
+        this.searchIconValue = this.companyService.searchIconValue.subscribe((searchEnableFlag: any) => {
+            this.searchEnableFlag = searchEnableFlag;
+        });
+    }
+
+    logValidationErrors(
+        group: FormGroup = this.InventoryOrganizationForm
+    ): void {
+        Object.keys(group.controls).forEach((key: string) => {
+            const abstractControl = group.get(key);
+            if (abstractControl instanceof FormGroup) {
+                this.logValidationErrors(abstractControl);
+            } else {
+                this.formErrors[key] = '';
+                if (
+                    abstractControl &&
+                    !abstractControl.valid &&
+                    (abstractControl.touched || abstractControl.dirty)
+                ) {
+                    const messages = this.validationMessages[key];
+                    for (const errorKey in abstractControl.errors) {
+                        if (errorKey) {
+                            this.formErrors[key] += messages[errorKey] + ' ';
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    getCountryList() {
+        this.commonService.getCountryLov().subscribe((data: any) => {
+            this.countryList = [];
+            for (const items of data.countries) {
+                this.countryList.push({
+                    value: items.name,
+                    id: items.id,
+                    label: items.name
+                });
+            }
+        });
+    }
+
+    // handle on change events
+    lookupSelectionChanged(event: any, lovType: string, Id: number, element:any) {
+        this.cityFilterList = [];
+        if (lovType === 'State' && event.source.selected) {
+            this.resetCountryValues(element);
+            this.stateFilterList = [];
+            this.commonService.getStateList().subscribe((stateData: any) => {
+                const stateList = stateData.states;
+                stateList.filter(item => {
+                    if (item.country_id === String(Id)) {
+                        this.stateFilterList.push(item);
+                    }
+                });
+            });
+        }
+        if (lovType === 'City' && event.source.selected) {
+            this.commonService.getCityList().subscribe((cityData: any) => {
+                const cityList = cityData.cities;
+                cityList.filter(item => {
+                    if (item.state_id === String(Id)) {
+                        this.cityFilterList.push(item);
+                    }
+                });
+            });
+        }
+    }
+
+    resetCountryValues(element: any){
+      if( this.InventoryOrganizationForm.value.iuCountry !== ''
+          && this.InventoryOrganizationForm.value.iuCountry !== element.value){
+        this.InventoryOrganizationForm.patchValue({
+          iuStateCounty: ''
+        });
+        this.InventoryOrganizationForm.patchValue({
+          iuCity: ''
+        });
+      }
+    }
+
+    searhForIO() {
+        this.searchArrayunsubscribe = this.companycomponent.showSearchFlag.subscribe((data: any) => {
+            if (data === 'inventoryorganisations') {
+                this.commonService.searhForMasters(this.dataForSearch);
+                // this.searchComponentToggle.emit(this.showSearch);
+                this.companyService.displaySearchComponent(this.showSearch);
+            }
+        });
+    }
+    searchComponentOpen() {
+        this.companyService.displaySearchComponent(this.showSearch);
+        this.searchEnableFlag = true;
+
+    }
+
+    searchInvertoryOrg() {
+        this.searchInfoArrayunsubscribe = this.commonService.searchInfoArray.subscribe((ouSearchInfo: any) => {
+            // This code is used for not loading the search result when module loads 
+            if(ouSearchInfo.fromSearchBtnClick === true){
+                // ouSearchInfo.fromSearchBtnClick = false;
+                // this.commonService.getsearhForMasters(ouSearchInfo);
+                this.inventoryOrgDataSource = new MatTableDataSource([]);
+                this.inventoryOrgDataSource.sort = this.sort;
+                this.showInventoryList = true;
+                if (ouSearchInfo.searchType === 'inventoryOrganization') {
+                    this.listProgress = true;
+                    this.inventoryOrgService
+                        .getInventoryOrgSearch(ouSearchInfo.searchArray)
+                        .subscribe(
+                            (data: any) => {
+                                this.listProgress = false;
+                                if (data.status === 200) {
+                                    if (!data.message) {
+                                        for (const rowData of data.result) {
+                                            if (rowData.iuEnabledFlag === 'N') {
+                                                rowData.iuEnabledFlag = false;
+                                            } else {
+                                                rowData.iuEnabledFlag = true;
+                                            }
+                                        }
+                                        this.inventoryOrgDataSource = new MatTableDataSource(data.result);
+                                        this.inventoryOrgDataSource.sort = this.sort;
+    
+                                    } else {
+                                        this.iuMessage = data.message;
+                                    }
+                                } else {
+                                    // alert(data.message);
+                                    this.openSnackBar(data.message, '', 'error-snackbar');
+                                }
+                            },
+                            (error: any) => {
+                                this.listProgress = false;
+                                // alert(error.error.message);
+                                this.openSnackBar(error.error.message, '', 'error-snackbar');
+                            }
+                        );
+                }
+            }else{
+                return;
+            }
+          
+        });
+    }
+
+    InventoryOrganizationFeedForm() {
+        this.InventoryOrganizationForm = this.fb.group({
+            iuCode: ['', Validators.required],
+            iuName: ['', Validators.required],
+            iuEnabledFlag: [true],
+            iuWmsFlag: [false],
+            iuOuId: ['', Validators.required],
+            iuAddress1: ['', Validators.required],
+            iuAddress2: [''],
+            iuAddress3: [''],
+            iuCountry: ['', Validators.required],
+            iuStateCounty: ['', Validators.required],
+            iuCity: ['', Validators.required],
+            lpnPrefix : ['' ],
+            lpnStartNum: [''],
+
+            iuPincode: [
+                '',
+                [Validators.required, Validators.pattern('[0-9]*'), Validators.maxLength(10)]
+            ],
+            iuPhone: [
+                '',
+                [Validators.required, Validators.pattern('^[0-9-+()s]*$'), Validators.maxLength(15)]
+            ],
+            iuPersonName: ['', Validators.required],
+            iuPersonPhoneNum: [
+                '',
+                [Validators.required, Validators.pattern('^[0-9-+()s]*$'), Validators.maxLength(15)]
+            ],
+            iuPersonEmail: ['', [Validators.required,
+                // tslint:disable-next-line: max-line-length
+                Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
+            iuCompanyId: [
+                Number(
+                    JSON.parse(localStorage.getItem('userDetails')).companyId
+                )
+            ],
+            createdBy: [JSON.parse(localStorage.getItem('userDetails')).userId],
+            creationDate: [this.companycomponent.dateFormat(new Date())],
+            updatedBy: [JSON.parse(localStorage.getItem('userDetails')).userId],
+            updatedDate: [this.companycomponent.dateFormat(new Date())]
+        });
+    }
+    addInventoryOrg(type) {
+        this.stateFilterList = [];
+        this.cityFilterList = [];
+        if (type !== 'view') {
+            this.showInventoryList = !this.showInventoryList;
+            // this.searchComponentToggle.emit(false);
+            this.companyService.displaySearchComponent(false);
+        }
+        this.InventoryOrganizationFeedForm();
+        this.isEdit = false;
+        if (type === 'add') {
+            this.getOperatingUnitCode();
+            this.InventoryOrganizationFeedForm();
+        } else {
+            if (type !== 'view') {
+                this.searchInvertoryOrg();
+                this.searhForIO();
+            }
+        }
+    }
+    get credentials() {
+        return this.InventoryOrganizationForm.controls;
+    }
+    editInventoryOrg(id: number, name: string, type?: string) {
+        type === 'view'
+            ? this.addInventoryOrg('view')
+            : this.addInventoryOrg('add');
+        this.isEdit = true;
+
+        this.inventoryOrgService.getInventoryOrgById(id).subscribe(
+            (data: any) => {
+                if (data.status === 200) {
+                    if (type === 'view') {
+                        const dataResult = data.result[0];
+                        // this.OperatingUnitForm.patchValue(data);
+                        dataResult.iuEnabledFlag =
+                            dataResult.iuEnabledFlag === 'Y' ? true : false;
+                        dataResult.iuWmsFlag =
+                            dataResult.iuWmsFlag === 'Y' ? true : false;
+                        dataResult.companyCode = JSON.parse(
+                            localStorage.getItem('userDetails')
+                        ).companyCode;
+                        // tslint:disable-next-line: no-use-before-declare
+                        const dialogRef = this.dialog.open(
+                            // tslint:disable-next-line: no-use-before-declare
+                            InventoryUnitsViewDialogComponent,
+                            {
+                                width: '70vw',
+                                data: dataResult
+                            }
+                        );
+
+                        dialogRef.afterClosed().subscribe(response => {
+                            console.log('The dialog was closed');
+                            if (response !== undefined) {
+                                this.editInventoryOrg(response, '');
+                            }
+                        });
+                    } else {
+                        this.shoeIUName =
+                            'Edit Inventory / Warehouse Unit : ' + name;
+                        this.childId = data.result[0].iuId;
+                        this.InventoryOrganizationForm.patchValue(
+                            data.result[0]
+                        );
+                        this.InventoryOrganizationForm.controls.iuEnabledFlag.patchValue(
+                            data.result[0].iuEnabledFlag === 'Y' ? true : false
+                        );
+                        this.InventoryOrganizationForm.controls.iuWmsFlag.patchValue(
+                            data.result[0].iuWmsFlag === 'Y' ? true : false
+                        );
+                        this.InventoryOrganizationForm.controls.updatedBy.patchValue(
+                            JSON.parse(localStorage.getItem('userDetails'))
+                                .userId
+                        );
+                        this.InventoryOrganizationForm.controls.updatedDate.patchValue(
+                            this.companycomponent.dateFormat(new Date())
+                        );
+                    }
+                }
+            },
+            (error: any) => {
+                console.log(error.error.message);
+            }
+        );
+    }
+    onSubmit() {
+        if (this.InventoryOrganizationForm.value.iuEnabledFlag === true) {
+            this.InventoryOrganizationForm.value.iuEnabledFlag = 'Y'
+        }
+        if (
+            this.InventoryOrganizationForm.value.iuEnabledFlag === false ||
+            this.InventoryOrganizationForm.value.iuEnabledFlag == null
+        ) {
+            this.InventoryOrganizationForm.value.iuEnabledFlag = 'N'
+        }
+        if (this.InventoryOrganizationForm.value.iuWmsFlag === true) {
+            this.InventoryOrganizationForm.value.iuWmsFlag = 'Y'
+        }
+        if (
+            this.InventoryOrganizationForm.value.iuWmsFlag === false ||
+            this.InventoryOrganizationForm.value.iuWmsFlag == null
+        ) {
+            this.InventoryOrganizationForm.value.iuWmsFlag = 'N'
+        }
+
+        const lpnPrefix      = this.InventoryOrganizationForm.value.lpnPrefix
+          ? this.InventoryOrganizationForm.value.lpnPrefix.trim()   : this.InventoryOrganizationForm.value.lpnPrefix;
+        const lpnStartNumber = this.InventoryOrganizationForm.value.lpnStartNum
+          ? this.InventoryOrganizationForm.value.lpnStartNum.trim() : this.InventoryOrganizationForm.value.lpnStartNum;
+
+        if( lpnPrefix === '' && lpnStartNumber !== ''){
+           this.openSnackBar(' Please Select the LPN prefix', '', 'default-snackbar');
+           return;
+        }
+        if( lpnPrefix !== '' && lpnStartNumber === ''){
+           this.openSnackBar(' Please Select the LPN start number', '', 'default-snackbar');
+           return;
+        }
+
+
+
+        if (this.isEdit) {
+            if (this.InventoryOrganizationForm.valid) {
+                this.inventoryOrgService
+                    .updateInventoryOrg(
+                        this.childId,
+                        this.InventoryOrganizationForm.value
+                    )
+                    .subscribe(
+                        data => {
+                            if (data.status === 200) {
+                                // this.companycomponent.openDialog(
+                                //     'Success',
+                                //     data.message
+                                // );
+                                this.openSnackBar(data.message, '', 'success-snackbar');
+                                this.getInventoryOrg();
+                                this.showInventoryList = true;
+                                this.searhForIO();
+                                this.searchInvertoryOrg();
+                            } else {
+                                // alert(data.message);
+                                this.openSnackBar(data.message, '', 'error-snackbar');
+
+                            }
+                        },
+                        (error: any) => {
+                            // alert(error.error.message);
+                            this.openSnackBar(error.error.message, '', 'error-snackbar');
+
+                        }
+                    );
+            }
+        } else {
+            if (this.InventoryOrganizationForm.valid) {
+                this.inventoryOrgService
+                    .createInventoryOrg(this.InventoryOrganizationForm.value)
+                    // .pipe(first())
+                    .subscribe(
+                        data => {
+                            if (data.status === 200) {
+                                // this.companycomponent.openDialog(
+                                //     'Success',
+                                //     data.message
+                                // );
+                                this.openSnackBar(data.message, '', 'success-snackbar');
+                                this.getInventoryOrg();
+                                this.InventoryOrganizationFeedForm();
+                                this.showInventoryList = true;
+                                this.searhForIO();
+                                this.inventoryOrgDataSource = new MatTableDataSource([]);
+                                this.inventoryOrgDataSource.sort = this.sort;
+                            } else {
+                                // alert(data.message);
+                                this.openSnackBar(data.message, '', 'error-snackbar');
+
+                            }
+                        },
+                        (error: any) => {
+                            // alert(error.error.message);
+                            this.openSnackBar(error.error.message, '', 'error-snackbar');
+                        }
+                    );
+            }
+        }
+    }
+    getInventoryOrg() {
+        // let temp: Array<string> =[];
+        this.inventoryOrgService
+            .getInventoryOrgList()
+            .subscribe((data: any) => {
+                this.navItems = data.result;
+            });
+    }
+
+    // Get inventory organization Id on click side tree menu
+    getSideTreeChildId($event: any) {
+        this.childId = $event;
+        if (this.childId) {
+            this.getInventoryOrganizationDetails(this.childId);
+        }
+    }
+
+    // Get Inventory Organization Detail By Id
+    getInventoryOrganizationDetails(id) {
+        this.inventoryOrgService
+            .getInventoryOrgById(id)
+            .subscribe((result: any) => {
+                if (result.status === 200) {
+                    if (result.result.length) {
+                        this.inputDisabled = true;
+                        this.isEdit = true;
+                        this.InventoryOrganizationForm.patchValue(
+                            result.result[0]
+                        );
+                        if (
+                            this.InventoryOrganizationForm.value
+                                .iuEnabledFlag === 'Y'
+                        ) {
+                            this.InventoryOrganizationForm.patchValue({
+                                iuEnabledFlag: true
+                            });
+                        }
+                        if (
+                            this.InventoryOrganizationForm.value
+                                .iuEnabledFlag === 'N'
+                        ) {
+                            this.InventoryOrganizationForm.patchValue({
+                                iuEnabledFlag: false
+                            });
+                        }
+                        if (
+                            this.InventoryOrganizationForm.value.iuWmsFlag ===
+                            'Y'
+                        ) {
+                            this.InventoryOrganizationForm.patchValue({
+                                iuWmsFlag: true
+                            });
+                        }
+                        if (
+                            this.InventoryOrganizationForm.value.iuWmsFlag ===
+                            'N'
+                        ) {
+                            this.InventoryOrganizationForm.patchValue({
+                                iuWmsFlag: false
+                            });
+                        }
+                    }
+                }
+            });
+    }
+
+    // Get Operating Unit LOV
+    getOperatingUnitCode() {
+        this.ouCodeList = [];
+        this.ouEnabledCodeList = [];
+        this.operatingUnitService
+            .getOperatingUnitList()
+            .subscribe((data: any) => {
+                for (let i = 0; i < data.result.length; i++) {
+                    if(data.result[i].ouEnabledFlag == 'Y'){
+                        this.ouEnabledCodeList.push({
+                            key: data.result[i].ouId,
+                            value: data.result[i].ouCode
+                        });
+                    }
+                            this.ouCodeList.push({
+                                key: data.result[i].ouId,
+                                value: data.result[i].ouCode
+                            });
+                }
+            });
+    }
+
+    openConfirmationDialog(pageName: string, url: any) {
+        const  confirmationDialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: { pageName: pageName, url: url },
+            width: '30vw'
+        });
+        confirmationDialogRef.afterClosed().subscribe(response => {
+            if (response !== undefined && response.url === 'inventryUnitCancel') {
+                this.addInventoryOrg('back');
+                setTimeout(() => {
+                    this.commonService.setTableResize(this.matTableRef.nativeElement.clientWidth, this.columns);
+                }, 500);
+            }
+        });
+    }
+
+    openSnackBar(message: string, action: string, typeClass: string) {
+        this.snackBar.open(message, action, {
+             duration: 3500,
+            panelClass: [typeClass]
+        });
+    }
+    ngOnDestroy() {
+        this.searchInfoArrayunsubscribe ? this.searchInfoArrayunsubscribe.unsubscribe() : '';
+        this.searchArrayunsubscribe ? this.searchArrayunsubscribe.unsubscribe() : '';
+        this.searchIconValue ? this.searchIconValue.unsubscribe() : '';
+        this.commonService.getsearhForMasters([]);
+    }
+
+    ngAfterViewInit() {
+        this.inventoryOrgDataSource.sort = this.sort;
+        setTimeout(() => {
+            this.commonService.setTableResize(this.matTableRef.nativeElement.clientWidth, this.columns);
+        }, 500);
+    }
+
+    @HostListener('window:resize', ['$event'])
+        onResize(event) {
+        this.commonService.setTableResize(this.matTableRef.nativeElement.clientWidth, this.columns);
+        this.commonService.getScreenSize(-25);
+    }
+
+}
+@Component({
+    selector: 'app-inventory-organization-view-dialog',
+    templateUrl: './inventory-organization-view-dialog.html'
+    // providers: [MatDialogData]
+})
+export class InventoryUnitsViewDialogComponent {
+    constructor(
+        public dialogRef: MatDialogRef<InventoryUnitsViewDialogComponent>,
+        @Optional() @Inject(MAT_DIALOG_DATA) public data: any
+    ) { }
+
+    onCloseClick(): void {
+        this.dialogRef.close();
+    }
+}

@@ -1,0 +1,688 @@
+<div class="contentBorder marginT15">
+    <div [ngClass]="'formHeader'" fxLayout="row">
+        <div fxFlex fxLayoutAlign="start">
+            <span class="formHeaderTitle">Policy :</span>
+        </div>
+        <!-- <div fxLayoutAlign="middle">
+            <button mat-mini-fab class="btn-search-bg mr10" matTooltip="Search"
+                [matTooltipPosition]="tooltipPosition">
+                <span class="headerIcon icon-search"></span>
+            </button>
+        </div> -->
+        <div style="margin-left: 10px;" fxLayoutAlign="end">
+            <button *ngIf="!isAdd" mat-stroke-button class="orangeButtonBorder colorOperatingUnit"
+                color="primary" (click)="addPolicyDetails()" >
+                Add Policy
+            </button>
+        </div>
+    </div>
+    <div class="roleSearchBox" fxLayout="column">
+        <div fxLayout="row" fxFlex="100">
+            <div class="searchBoxLabel" fxFlex='25' fxLayoutAlign="start">Policy Type <span class='mandatory'></span>:</div>
+            <div fxLayoutAlign="start">
+                <mat-select class="searchInput iuInputWidth" required [(ngModel)]="policyType">
+                    <mat-option *ngFor="let temp of policyTypeLov" [value]="temp.value" (onSelectionChange)="policyTypeChanged($event,temp.value)">
+                        {{temp.label}}
+                    </mat-option>
+                </mat-select>
+            </div>
+            <div class="searchBoxLabel" fxFlex='25' fxLayoutAlign="center">IU<span class='mandatory'>*</span>:</div>
+            <div>
+                <mat-select class="searchInput iuInputWidth text-black-disabled" required [(ngModel)]="iuId" disabled>
+                    <mat-option *ngFor="let temp of iuLov" [value]="temp.value"
+                        >
+                        {{temp.name}}
+                    </mat-option>
+                </mat-select>
+            </div>
+            <div class="searchBoxLabel" fxFlex='25' fxLayoutAlign="center">Policy Name<span class='mandatory'>*</span>:</div>
+            <div>
+                <mat-select *ngIf="policyNameSelectShow" class="searchInput iuInputWidth" required [(ngModel)]='policyId'>
+                    <mat-option *ngFor="let temp of routingGoToLov" [value]="temp.value" (onSelectionChange)="searchPutawayPolicyRules($event,temp.value)">
+                        {{temp.label}}
+                    </mat-option>
+                </mat-select>
+                <input matInput autocomplete="off"  *ngIf="!policyNameSelectShow" class="searchInput iuInputWidth" [(ngModel)]='policyName'>
+            </div>
+            <div class="searchBoxLabel" fxFlex='25' fxLayoutAlign="center">Description<span class='mandatory'>*</span>:</div>
+            <div>
+                <input matInput autocomplete="off" [ngClass]="'searchInput'"   [(ngModel)]='policyDetailDes' required>
+            </div>
+           
+        </div>
+        <!-- [ngClass]="readonlyEnable ? 'searchInput pointerNone' : 'searchInput'" -->
+        <!-- [ngClass]="readonlyEnable ? 'searchBoxLabel pointerNone' : 'searchBoxLabel'" -->
+        <div fxLayout="row" fxFlex="100" [ngClass]="'marginT10'">
+            <!-- <div> -->
+            <mat-checkbox fxFlex="18" *ngIf="policyType === 'PICKING'" [(ngModel)]='allocateLpnOnly'>Full LPN Allocation Only</mat-checkbox>
+            <!-- </div> -->
+            <mat-checkbox fxFlex="18" *ngIf="policyType === 'PUTAWAY'" [(ngModel)]='locWeightCheck'>Enforce Locator Weight</mat-checkbox>
+            <mat-checkbox fxFlex="18" *ngIf="policyType === 'PUTAWAY'" [(ngModel)]='locVolumeCheck'>Enforce Locator Volume</mat-checkbox>
+            <mat-checkbox fxFlex="18" *ngIf="policyType === 'PUTAWAY'" [(ngModel)]='locUnitCheck'>Enforce Locator Unit</mat-checkbox>
+            <mat-checkbox fxFlex="18" *ngIf="policyType === 'PUTAWAY'" [(ngModel)]='locDimensionCheck'>Enforce Locator Dimension</mat-checkbox>
+            <mat-checkbox fxFlex="18" *ngIf="policyType === 'PUTAWAY'" [(ngModel)]='partialPutaway'>Enforce Partial Putaway</mat-checkbox>
+
+            <!-- <mat-checkbox class="ml-86" fxFlex="18" *ngIf="policyType === 'PICKING'" [(ngModel)]='allocateLpnOnly'>Full LPN Allocation Only</mat-checkbox> -->
+            <!-- <mat-checkbox fxFlex="18" *ngIf="policyType === 'PICKING'" [(ngModel)]='allocateLpnAndLoose'>Allocate Lpn and Loose</mat-checkbox>
+            <mat-checkbox fxFlex="18" *ngIf="policyType === 'PICKING'" [(ngModel)]='allocateLooseOnly'>Allocate Loose Only</mat-checkbox> -->
+        </div>
+    </div>
+    <div class="container" fxLayout="column">
+        <div [ngClass]="'customTable ellipsisTable'"  [ngStyle]="{'min-width': 'auto','max-height': commonService.screenMaxHeight }">
+            <table mat-table  [dataSource]="parameterDataSource"
+                cdkDropList
+                [cdkDropListData]="parameterDataSource"
+                (cdkDropListDropped)="dropTable($event)"
+                multiTemplateDataRows
+                cellspacing="0"
+                cellpadding="0"
+                class="resize-table"
+                style="min-width: 700px;"
+            >
+
+                <ng-container matColumnDef="prioritySequenceId">
+                    <th mat-header-cell *matHeaderCellDef
+                    [ngClass]="'mat-header-column-'+columns[0].field"></th>
+                    <td mat-cell *matCellDef="let element; let i = dataIndex">
+                        <div class="example-element-row" [class.example-expanded-row]="expandedElement === element"
+                            (click)="expandedElement = expandedElement === element ? null : element" (click)="getNestedChildData(myDialog , element, paginator.pageSize * paginator.pageIndex + i,'copyRule')">
+                            <span class="vertical-align-middle">
+                                <mat-icon>{{ (expandedElement === element) ? 'expand_more' : 'chevron_right' }}</mat-icon>
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="priorityName">
+                    <th mat-header-cell *matHeaderCellDef
+                    [ngClass]="'width110 mat-header-column-'+columns[1].field">Sequence <sup class="requiredMark">*</sup></th>
+                    <td mat-cell *matCellDef="let element">
+                        <div *ngIf="element.addNewRecord">
+                            <mat-form-field>
+                                <input autocomplete="off" matInput [(ngModel)]="element.priorityName" placeholder="Priority Name">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.addNewRecord" [ngClass]="'nonClickableFiled'">
+                            <span>{{element.priorityName}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="leftBracket">
+                    <th mat-header-cell *matHeaderCellDef
+                    [ngClass]="'mat-header-column-'+columns[2].field">&nbsp;</th>
+                    <td mat-cell *matCellDef="let element"></td>
+                </ng-container>
+
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef 
+                    [ngClass]="'mat-header-column-'+columns[3].field">Operation Type <sup class="requiredMark">*</sup></th>
+                    <td mat-cell *matCellDef="let element; let i = index"></td>
+                </ng-container>
+
+                <ng-container matColumnDef="entity">
+                    <th mat-header-cell *matHeaderCellDef
+                    [ngClass]="'width250 mat-header-column-'+columns[4].field">Entity <sup class="requiredMark">*</sup></th>
+                    <td mat-cell *matCellDef="let element;"></td>
+                </ng-container>
+
+                <ng-container matColumnDef="condition">
+                    <th mat-header-cell *matHeaderCellDef
+                    [ngClass]="'mat-header-column-'+columns[5].field">Operator <sup class="requiredMark">*</sup></th>
+                    <td mat-cell *matCellDef="let element; let i = index"></td>
+                </ng-container>
+
+                <ng-container matColumnDef="entityValueType">
+                    <th mat-header-cell *matHeaderCellDef
+                    [ngClass]="'width120 mat-header-column-'+columns[6].field">Value Type <sup class="requiredMark">*</sup></th>
+                    <td mat-cell *matCellDef="let element; let i = index"></td>
+                </ng-container>
+
+                <ng-container matColumnDef="entityValue">
+                    <th mat-header-cell *matHeaderCellDef
+                    [ngClass]="'width150 mat-header-column-'+columns[7].field">Entity/Value <sup class="requiredMark">*</sup></th>
+                    <td mat-cell *matCellDef="let element; let i = index"></td>
+                </ng-container>
+
+                <ng-container matColumnDef="operator">
+                    <th mat-header-cell *matHeaderCellDef style="padding-top: 20px;"
+                    [ngClass]="'mat-header-column-'+columns[8].field">And/OR</th>
+                    <td mat-cell *matCellDef="let element; let i = index"></td>
+                </ng-container>
+
+                <ng-container matColumnDef="rightBracket">
+                    <th mat-header-cell *matHeaderCellDef 
+                    [ngClass]="'mat-header-column-'+columns[9].field">&nbsp;</th>
+                    <td mat-cell *matCellDef="let element"></td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef style="padding-top: 20px;"
+                    [ngClass]="'actionColumn mat-header-column-'+columns[10].field"> Action </th>
+                    <td mat-cell *matCellDef="let element; let i = dataIndex" [ngClass]="'actionIcons'">
+                        <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center"
+                            style="justify-content: center;">
+                            <span matRipple
+                                matTooltip="Add Rule" [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                [matRippleCentered]="true" [matRippleRadius]="false" (click)="addRules(myDialog,element, i)">
+                                <mat-icon>add</mat-icon>
+                            </span>
+                            <span class="icon-sort" matRipple matTooltip="Sort" (click)="openSortDialog(myDialog,element, i,'addRule')">
+                            </span>
+                            <span *ngIf="element.addNewRecord" class="icon-Copy" (click)="copyFrom(copyFromDialog,paginator.pageSize * paginator.pageIndex + i )" matRipple matTooltip="Copy From">
+                            </span>
+                            <span class="icon-Group" matRipple matTooltip="Group" (click)="groupUngroupRules(element,'GROUP')">
+                            </span>
+                            <span class="icon-ungroup" matRipple matTooltip="Ungroup" (click)="groupUngroupRules(element,'UNGROUP')">
+                            </span>
+                            <span *ngIf="element.addNewRecord" class="icon-clear" matRipple matTooltip="Cancel" (click)="deleteRow(element, i,'priority')"  [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                    [matRippleRadius]="false"></span>
+                            <span *ngIf="!element.addNewRecord" matRipple matTooltip="Delete" (click)="deleteRow(element, i,'priority',deleteDialog)" [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                [matRippleCentered]="true" [matRippleRadius]="false">
+                                <mat-icon>delete</mat-icon>
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element;" [attr.colspan]="parameterDisplayedColumns.length" style="padding-right:0;padding-left: 0px;">
+                    <div class="example-element-detail customTable ellipsisTable" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'" [ngStyle]="{ 'min-width': 'auto' }">
+                        <table mat-table [dataSource]="nestedParameterDataSource" class="child-site-table resize-table" cellspacing="0" cellpadding="0">
+
+                            <!--- Note that these columns can be defined in any order.
+                                The actual rendered columns are set as a property on the row definition" -->
+
+                            <ng-container matColumnDef="rowSelect">
+                                <th mat-header-cell *matHeaderCellDef
+                                [ngClass]="'mat-header-column-'+nestedColumns[0].field">&nbsp;</th>
+                                <td mat-cell *matCellDef="let element; let j = index">
+                                    <mat-checkbox [(ngModel)]="element.rowSelect" [ngClass]="'searchBoxLabel'" (change)="rowSelectChange()"
+                                    [disabled]="rowDisabled && element.rowSelect === false">
+                                    </mat-checkbox>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ruleSequenceId">
+                                <th mat-header-cell *matHeaderCellDef
+                                [ngClass]="'width100 mat-header-column-'+nestedColumns[1].field">&nbsp;</th>
+                                <td mat-cell *matCellDef="let element; let j = index">
+                                    <div *ngIf="element.editing">
+                                        <mat-form-field>
+                                            <input matInput autocomplete="off" [(ngModel)]="element.ruleSequenceId" (keypress)="commonService.isNaturalNumber($event)"
+                                             required />
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="!element.editing">
+                                        <span [ngClass]="'nonEditiableField'">{{element.ruleSequenceId ? element.ruleSequenceId : '-'}}</span>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="leftBracket">
+                                <th mat-header-cell *matHeaderCellDef
+                                [ngClass]="'mat-header-column-'+nestedColumns[2].field">&nbsp;</th>
+                                <td mat-cell *matCellDef="let element">{{element.leftBracket}}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ruleType">
+                                <th mat-header-cell *matHeaderCellDef
+                                [ngClass]="'mat-header-column-'+nestedColumns[3].field">&nbsp;</th>
+                                <td mat-cell *matCellDef="let element; let j = index">
+                                <div *ngIf="element.editing">
+                                    <mat-form-field>
+                                        <mat-select [(ngModel)]="element.ruleType"
+                                             required>
+                                            <mat-option
+                                                (onSelectionChange)="ruleTypeChange($event,paginator.pageSize * paginator.pageIndex + j,item.value,element)"
+                                                *ngFor="let item of ruleTypeList" [value]="item.value">
+                                                {{item.label}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="!element.editing">
+                                    <span [ngClass]="'nonEditiableField'">{{element.ruleType ? (element.ruleType | titlecase) : '-'}}</span>
+                                </div>
+
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="entity">
+                                <th mat-header-cell *matHeaderCellDef
+                                [ngClass]="'width250 mat-header-column-'+nestedColumns[4].field">&nbsp;</th>
+                                <td mat-cell *matCellDef="let element; let j = index" class="width250">
+                                <div *ngIf="element.editing && element.fieldsDisable && element.entityValueField === 'EXPRESSION'">
+                                    <mat-form-field>
+                                        <mat-select [ngClass]="'requiredField'" [(ngModel)]="element.entity" name="class" required>
+                                            <mat-option *ngFor="let temp of entityLov" [value]="temp.value"
+                                                (onSelectionChange)="routingLogicChanged($event, temp.dataType, temp.value, paginator.pageSize * paginator.pageIndex + j)">
+                                                {{temp.label}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error> Please Select Entity</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="element.editing && element.entityValueField === 'ALGORITHM' && element.fieldsDisable">
+                                  <mat-form-field>
+                                      <mat-select [(ngModel)]="element.entity" matTooltip="{{commonService.getToolTip(algorithmList,element.entityValue)}}"
+                                          [ngClass]="'requiredField'" required>
+                                          <mat-option *ngFor="let item of algorithmList" [value]="item.value"
+                                          (onSelectionChange)="routingLogicChanged($event, item.dataType, item.value, paginator.pageSize * paginator.pageIndex + j)">
+                                              {{item.label}}
+                                          </mat-option>
+                                      </mat-select>
+                                      <mat-error> Please Select Entity</mat-error>
+                                  </mat-form-field>
+                              </div>
+                                <span *ngIf="!element.editing">{{ (element.entityName && (element.ruleType ==='EXPRESSION' || element.ruleType ==='ALGORITHM')) ? element.entityName : '-'}}</span>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="condition">
+                                <th mat-header-cell *matHeaderCellDef
+                                [ngClass]="'mat-header-column-'+nestedColumns[5].field">&nbsp;</th>
+                                <td mat-cell *matCellDef="let element; let j = index">
+                                    <div *ngIf="element.editing && element.fieldsDisable">
+                                        <mat-form-field>
+                                            <mat-select [(ngModel)]="element.condition" name="class" [placeholder]="element.entityValueType !=='' ? 'Required' : ''" [required]="element.entityValueType !==''">
+                                                <mat-option *ngFor="let temp of element.operatorLov" [value]="temp.value"
+                                                    (onSelectionChange)="routingOperatorChanged($event, temp.value, paginator.pageSize * paginator.pageIndex + j,element)">
+                                                    {{temp.label}}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error> Please Select operator</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="!element.editing">
+                                        <mat-form-field style='display: none;'>
+                                            <mat-select [(ngModel)]="element.condition" name="class" placeholder="Required" required>
+                                                <mat-option *ngFor="let temp of element.operatorLov" [value]="temp.value"
+                                                    (onSelectionChange)="routingOperatorChanged($event, temp.value, paginator.pageSize * paginator.pageIndex + j,element)">
+                                                    {{temp.label}}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error> Please Select operator</mat-error>
+                                        </mat-form-field>
+                                        <span [ngClass]="'nonEditiableField'">{{ (element.condition && (element.ruleType ==='EXPRESSION' || element.ruleType ==='ALGORITHM')) ? element.condition : '-'}}</span>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="entityValueType">
+                                <th mat-header-cell *matHeaderCellDef
+                                [ngClass]="'mat-header-column-'+nestedColumns[6].field">&nbsp;</th>
+                                <td mat-cell *matCellDef="let element; let j = index">
+                                    <div *ngIf="element.editing && element.fieldsDisable && element.valueTypeLOV">
+                                        <mat-form-field>
+                                            <mat-select [(ngModel)]="element.entityValueType"
+                                                [ngClass]="'customWidth100 requiredField'" [placeholder]="element.condition !=='' ? 'Required' : ''" [required]="element.condition !==''">
+                                                <mat-option
+                                                    (onSelectionChange)="valueTypeChange($event,paginator.pageSize * paginator.pageIndex + j,item.value,element)"
+                                                    *ngFor="let item of valueTypeList" [value]="item.value">
+                                                    {{item.label}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="element.editing && element.fieldsDisable && !element.valueTypeLOV">
+                                        <span [ngClass]="'nonEditiableField'">{{element.entityValueType ? (element.entityValueType | titlecase) : '-'}}</span>
+
+                                    </div>
+                                    <div *ngIf="!element.editing">
+                                        <span [ngClass]="'nonEditiableField'">{{ (element.entityValueType && (element.ruleType ==='EXPRESSION' || element.ruleType ==='ALGORITHM')) ? (element.entityValueType | titlecase) : '-'}}</span>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="entityValue">
+                                <th mat-header-cell *matHeaderCellDef
+                                [ngClass]="'width150 mat-header-column-'+nestedColumns[7].field">Entity/Value</th>
+                                <td mat-cell *matCellDef="let element; let j = index">
+                                    <div *ngIf="element.editing && element.fieldsDisable">
+                                        <mat-form-field *ngIf="element.isRoutingValue !=='DATE' && !element.valueTypeLOVChange && element.entityValueField !== 'SQL'">
+                                            <input matInput [(ngModel)]="element.entityValue" autocomplete="off" (keypress)="isNumeric ? commonService.isDecimal($event) : ''"
+                                            [placeholder]="element.condition !=='' ? 'Required' : ''" [required]="element.condition !==''" />
+                                            <mat-error>Please enter entity value</mat-error>
+                                            <mat-hint
+                                                *ngIf="(!element.showHint && element.condition === 'IN') || (!element.showHint && element.condition ==='NOT IN')">
+                                                Hint: ('abc','def','ab1')</mat-hint>
+                                            <mat-hint
+                                                *ngIf="(element.showHint && element.condition === 'IN') || (element.showHint && element.condition ==='NOT IN')">
+                                                Hint: (123,456,789)</mat-hint>
+                                        </mat-form-field>
+                                        <mat-form-field floatLabel="never" [hideRequiredMarker]="true" [ngClass]="'dateField mt8'"
+                                            *ngIf="element.isRoutingValue==='DATE' && !element.valueTypeLOVChange">
+                                            <input matInput [matDatepicker]="picker" autocomplete="off" (click)="picker.open()"
+                                                [(ngModel)]="element.entityValue" disabled placeholder="Required" required />
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker disabled="false"></mat-datepicker>
+                                            <mat-error>Please enter entity value</mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field *ngIf="element.valueTypeLOVChange && element.entityValueField === 'EXPRESSION'">
+                                            <mat-select [(ngModel)]="element.entityValue" matTooltip="{{commonService.getToolTip(entityLov,element.entityValue)}}" name="class"
+                                            [placeholder]="element.condition !=='' ? 'Required' : ''" [required]="element.condition !==''">
+                                                <mat-option *ngFor="let temp of entityLov" [value]="temp.value">
+                                                    {{temp.label}}
+                                                </mat-option>
+                                            </mat-select>
+                                            <!-- <mat-error> Please Select Entity</mat-error> -->
+                                        </mat-form-field>
+
+                                    </div>
+
+
+
+                                    <div *ngIf="element.editing && element.entityValueField === 'SQL' ">
+                                        <mat-form-field>
+                                            <input matInput [(ngModel)]="element.entityValue" autocomplete="off"
+                                                (click)="dialogForSQL($event,j,element,sqlDialog)" readonly placeholder="Required" required  />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div *ngIf="element.editing && element.entityValueField === 'ALGORITHM' && element.valueTypeLOVChange">
+                                        <mat-form-field>
+                                            <mat-select [(ngModel)]="element.entityValue" matTooltip="{{commonService.getToolTip(algorithmList,element.entityValue)}}" [ngClass]="'customWidth100 requiredField'" placeholder="Required" required>
+                                                <mat-option *ngFor="let item of algorithmList" [value]="item.value">
+                                                    {{item.label}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <span *ngIf="!element.editing && element.isRoutingValue !=='DATE'">{{ ((element.ruleType !== 'SQL' && element.entityValueType === 'ENTITY') ) ? (element.entityValueName ? element.entityValueName  : '-') : (element.entityValue ? element.entityValue : '-') }}</span>
+                                    <span *ngIf="!element.editing && element.isRoutingValue ==='DATE'">{{ ((element.ruleType !== 'SQL' && element.entityValueType === 'ENTITY') ) ? (element.entityValueName | date) : element.entityValue}}</span>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="operator">
+                                <th mat-header-cell *matHeaderCellDef
+                                [ngClass]="'mat-header-column-'+nestedColumns[8].field">&nbsp;</th>
+                                <td mat-cell *matCellDef="let element; let j = index">
+                                    <div *ngIf="nestedParameterDataSource.data.length !== (j+1)">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field>
+                                                <mat-select [(ngModel)]="element.operator" placeholder="Required" required
+                                                    [ngClass]="'customWidth100 requiredField'">
+                                                    <mat-option
+                                                        *ngFor="let item of andOrList" [value]="item.value">
+                                                        {{item.label}}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error>Please select And/OR value</mat-error>
+                                            </mat-form-field>
+                                        </div>
+
+                                    </div>
+
+                                    <div *ngIf="!element.editing">
+                                        <span [ngClass]="'nonEditiableField'">{{element.operator ? (element.operator | titlecase) : '-'}}</span>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="rightBracket">
+                                <th mat-header-cell *matHeaderCellDef
+                                [ngClass]="'mat-header-column-'+nestedColumns[9].field"></th>
+                                <td mat-cell *matCellDef="let element">{{element.rightBracket}}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="action" >
+                                <th mat-header-cell *matHeaderCellDef
+                                [ngClass]="'actionColumn mat-header-column-'+nestedColumns[10].field"> Action </th>
+                                <td mat-cell *matCellDef="let element;let j = index" [ngClass]="'actionIcons'">
+                                    <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="end end">
+                                        <span *ngIf="!element.addNewRecord" class="icon-edit" matRipple
+                                            matTooltip="Edit" [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                            [matRippleCentered]="true" [matRippleRadius]="false" (click)="beginRuleEdit(element,$event)"></span>
+
+                                        <span *ngIf="!element.editing" matRipple matTooltip="Delete"
+                                        [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                        [matRippleRadius]="false" (click)="deleteRow(element, j ,'rule',deleteDialog)">
+                                        <mat-icon>delete</mat-icon>
+                                        </span>
+                                        <span *ngIf="element.editing" class="icon-clear" matRipple matTooltip="Cancel" (click)="disableEdit(element, j)"
+                                                [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true" [matRippleRadius]="false">
+                                        </span>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="nestedParameterDisplayedColumns" style="visibility: collapse;">
+                            </tr>
+                            <tr mat-row *matRowDef="let element; columns: nestedParameterDisplayedColumns;"></tr>
+
+                        </table>
+                    </div>
+                </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns"></tr>
+                <tr mat-row *matRowDef="let element; columns: parameterDisplayedColumns" cdkDrag [cdkDragData]='element'></tr>
+                <tr mat-row *matRowDef="let element; columns: ['expandedDetail']; let i = renderIndex" class="example-detail-row" [ngClass]="{'highlightRowExtendError': selectedExtendRowIndex == paginator.pageSize * paginator.pageIndex + i}"></tr>
+            </table>
+            <!-- <ng-container *ngIf="listProgress">
+                <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+            </ng-container> -->
+            <ng-container *ngIf="!parameterDataSource.data.length && !listProgress">
+                <div [ngClass]="'noDataFound'"><small>{{routingTableMessage}}</small></div>
+            </ng-container>
+        </div>
+        <div class="text-align-right pr-10 mt7">
+            <button mat-stroke-button class="orangeButtonBorder border-radius-3 colorAttribute addBtn"
+                color="primary" (click)="addRow()">
+                <mat-icon>add</mat-icon>
+                Add Priority
+            </button>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div [ngClass]="(isAdd || isEdit) ? 'formContainer' : ''">
+                <button *ngIf="isAdd" mat-flat-button [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10': 'formButton saveButton mr10'" color="primary"
+                    (click)="onSubmit('save')">
+                    Save
+                </button>
+                <button *ngIf="isEdit" mat-flat-button [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10': 'formButton saveButton mr10'" color="primary"
+                    (click)="onSubmit('update')">
+                    Update
+                </button>
+                <button *ngIf="isCancel" mat-flat-button [ngClass]="'formButton saveButton mr10 ml10'" color="primary"
+                    (click)="openConfirmationDialog('Policy','policy')">
+                    Cancel
+                </button>
+            </div>
+            <mat-paginator (page)="commonService.setPaginationSize($event)" showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+            </mat-paginator>
+        </div>
+    </div>
+</div>
+
+<ng-template #myDialog let-data>
+    <div [ngClass]="'sortingDialog'">
+        <h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+            <div fxLayout="row" fxLayoutGap="10px">
+                <div fxFlex="60" fxLayoutGap="10px"><span class="viewDialogTitle">Sorting : {{sortDialogTitle}}</span></div>
+                <div fxFlex="40" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end center">
+                    <button matRipple matTooltip="Add Sort" [matTooltipPosition]="tooltipPosition" class="orangeButtonBorder border-radius-3 colorAttribute sortAddBtn"
+                    (click)="addSortingRow()"><mat-icon>add</mat-icon>
+                    </button>
+                    <button mat-icon-button matDialogClose>
+                        <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </h1>
+        <div mat-dialog-content [ngClass]="'pb-24'">
+            <div fxLayout="column" fxLayoutGap="10px">
+                <table mat-table [dataSource]="sortParameterDataSource">
+                    <ng-container matColumnDef="sequenceId">
+                        <th mat-header-cell *matHeaderCellDef class="padding0 sequenceTd">Seq.</th>
+                        <td mat-cell *matCellDef="let element; let i = index" class="sequenceTd">
+                            <div *ngIf="element.editing" class="mr10">
+                                <mat-form-field >
+                                    <input matInput [(ngModel)]="element.sequenceId" (keypress)="commonService.isDecimal($event)" autocomplete="off" required>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing" class="mr10">
+                                <span [ngClass]="'nonEditiableField'">{{element.sequenceId}}</span>
+                            </div>
+
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="algorithmId">
+                        <th mat-header-cell *matHeaderCellDef class="algoWidth">Value</th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing" class="mr10">
+                                <mat-form-field>
+                                    <mat-select [(ngModel)]="element.algorithmId" [ngClass]="'requiredField'" required>
+                                        <mat-option
+                                            *ngFor="let item of sortingValueList" [value]="item.value">
+                                            {{item.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing" class="mr10">
+                                <span [ngClass]="'nonEditiableField'">{{element.algorithmName ? element.algorithmName : '-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="orderBy">
+                        <th mat-header-cell *matHeaderCellDef class="padding0">Order</th>
+                        <td mat-cell *matCellDef="let element; let i = index" class="opType">
+                            <div *ngIf="element.editing" class="mr10">
+                                <mat-form-field>
+                                    <mat-select [(ngModel)]="element.orderBy" [ngClass]="'requiredField'" required>
+                                        <mat-option
+                                            *ngFor="let item of sortingOrderList" [value]="item.value">
+                                            {{item.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="!element.editing" class="mr10">
+                                <span [ngClass]="'nonEditiableField'">{{element.orderBy ? element.orderBy : '-'}}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'actionColumn'"> Action </th>
+                        <td mat-cell *matCellDef="let element; let i = index" [ngClass]="'actionIcons'">
+                            <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center" style="justify-content: center;">
+                                <span *ngIf="!element.addNewRecord" class="icon-edit" matRipple matTooltip="Edit" [matTooltipPosition]="tooltipPosition"
+                                    [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true" [matRippleRadius]="false" (click)="beginSortEdit(element,$event)"></span>
+                                <span *ngIf="element.editing" class="icon-clear" matRipple matTooltip="Cancel"
+                                    (click)="disableEdit(element, i, 'sort')" [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                    [matRippleRadius]="false"></span>
+                                <span *ngIf="!element.editing" matRipple matTooltip="Delete" (click)="deleteRow(element, i, 'sort',deleteDialog)"
+                                    [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                    [matRippleRadius]="false">
+                                    <mat-icon>delete</mat-icon>
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="sortParameterDisplayedColumns"></tr>
+                    <tr mat-row *matRowDef="let element; columns: sortParameterDisplayedColumns"></tr>
+                </table>
+                <ng-container *ngIf="!sortParameterDataSource.data.length">
+                  <div [ngClass]="'noDataFound'"><small>No Record Found</small></div>
+                </ng-container>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <button *ngIf="isAdd" mat-flat-button matDialogClose [ngClass]="'formButton sortSaveButton mr10'" color="primary"
+                    (click)="onSubmit('save','sort', data)">
+                    Save
+                </button>
+                <button *ngIf="isEdit && sortParameterDataSource.data.length" mat-flat-button matDialogClose [ngClass]="'formButton sortSaveButton mr10'" color="primary"
+                    (click)="onSubmit('update','sort', data)">
+                    Update
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #copyFromDialog>
+    <h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+        <div fxLayout="row" fxLayoutGap="10px">
+            <div fxFlex="60" fxLayoutGap="10px"><span class="viewDialogTitle">Copy From</span></div>
+            <div fxFlex="40" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end center">
+                <button mat-icon-button matDialogClose>
+                    <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </h1>
+    <div mat-dialog-content [ngClass]="'pb-24'">
+        <div *ngIf="allPriority.length" fxLayout="column" fxLayoutGap="10px" [ngClass]="'innerContent'">
+            <ul [ngClass]="'copyFromList'">
+                <li class="list-group-item" [ngClass]="{'active': selectedItem == priorityItem}" (click)="copyFromSelection($event,priorityItem)"
+                    *ngFor="let priorityItem of allPriority">
+                    {{ priorityItem.priorityName }}
+                </li>
+            </ul>
+        </div>
+        <div *ngIf="!allPriority.length" fxLayout="column" fxLayoutAlign="center center" [ngClass]="'innerContent'">
+            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+        </div>
+        <div *ngIf="allPriority.length" fxLayout="column" fxLayoutGap="10px" [ngClass]="'padding14'">
+            <button mat-flat-button matDialogClose [ngClass]="'formButton saveButton copySaveBtn marginT5'" color="primary"
+                (click)="copyPriorityDone(myDialog)">
+                Done
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #deleteDialog let-data>
+    <div [ngClass]="'deleteDialog'">
+        <h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+            <div fxLayout="row" fxLayoutGap="10px">
+                <div fxFlex="60" fxLayoutGap="10px"><span class="viewDialogTitle">Confirmation</span></div>
+            </div>
+        </h1>
+        <div mat-dialog-content [ngClass]="'padding10'">
+            <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center" [ngClass]="'minH70'">
+                <span>Are you sure you want to delete ?</span>
+            </div>
+            <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start">
+                <button mat-flat-button [ngClass]="'formButton saveButton deleteBtn'" color="primary" [mat-dialog-close]="data">
+                    Yes
+                </button>
+                <button mat-flat-button matDialogClose [ngClass]="'formButton saveButton cancelBtn'" color="primary">
+                    No
+                </button>
+
+
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #sqlDialog let-data>
+    <div [ngClass]="'deleteDialog'">
+        <h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+            <div fxLayout="row" fxLayoutGap="10px">
+                <div fxFlex="60" fxLayoutGap="10px"><span class="viewDialogTitle">SQL Query</span></div>
+            </div>
+        </h1>
+        <div mat-dialog-content>
+            <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center" [ngClass]="'minH70 marginT5'">
+                <mat-form-field class="example-full-width">
+                    <textarea matInput  [(ngModel)]="inputSQLQuery" cdkTextareaAutosize cdkAutosizeMinRows="10" cdkAutosizeMaxRows="10" required></textarea>
+                    <mat-error>Please Enter SQL Query.</mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start">
+                <!-- <button mat-flat-button [ngClass]="'formButton saveButton deleteBtn'" color="primary" [mat-dialog-close]="data">
+                    Done
+                </button> -->
+                <button mat-flat-button [ngClass]="'formButton saveButton copySaveBtn marginT0'" color="primary" [mat-dialog-close]="data">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>

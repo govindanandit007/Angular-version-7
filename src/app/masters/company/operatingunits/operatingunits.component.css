@@ -1,0 +1,43 @@
+
+/* .mat-header-cell {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    border-left: 1px solid #ccc;
+    cursor: col-resize;
+    padding:12px;
+    box-sizing: border-box;
+}
+.mat-header-cell:first-child{
+    border-left: none;
+}
+.mat-header-cell:last-child{
+    padding-left: 0;
+}
+td.mat-cell{
+    padding-left:12px;
+}
+td.mat-cell:last-child{
+    padding-left:0px;
+} */
+/* .mat-column-ouCode {
+    flex: 0 0 15% !important;
+    width: 15% !important;
+}
+.mat-column-ouAddr1,
+.mat-column-ouName {
+    flex: 0 0 25% !important;
+    width: 25% !important;
+}
+.mat-column-action {
+    width: 65px;
+}
+.mat-column-ouEnabledFlag {
+    width: 100px;
+} */

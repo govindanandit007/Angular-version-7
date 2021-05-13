@@ -1,0 +1,213 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+        <mat-toolbar role="toolbar" class="task-header">
+            <span class="viewDialogTitle">Receipt View</span>
+            <span class="fx-spacer"></span>
+            <button mat-icon-button (click)="onCloseClick()">
+                <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+            </button>
+        </mat-toolbar>
+    </h1>
+    <div mat-dialog-content [ngClass]="'pb-24'">
+        <div class="container" fxLayout="column">
+            <div fxLayout="row" fxLayoutGap="20px" [ngClass]="'mb10'">
+                    <div fxFlex="20" fxLayout="column">
+                        <span [ngClass]="'viewDialogDataTitle'">Receipt Number</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].receiptNum ? data[0].receiptNum : '-'}}</span>
+                    </div>
+                    <div fxFlex="20" fxLayout="column">
+                        <span [ngClass]="'viewDialogDataTitle'">Internal Shipment Number</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].intShipmentNum ? data[0].intShipmentNum : '-'}}</span>
+                    </div>
+                    <div fxFlex="20" fxLayout="column">
+                        <span [ngClass]="'viewDialogDataTitle'">IU</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].iuCode ? data[0].iuCode : '-'}}</span>
+                    </div>
+                    <div fxFlex="20" fxLayout="column">
+                        <span [ngClass]="'viewDialogDataTitle'">Trading Partner</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].tpName ? data[0].tpName : '-'}}</span>
+                    </div>
+                    <div fxFlex="20" fxLayout="column">
+                        <span [ngClass]="'viewDialogDataTitle'">Tarding Partner Site</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].tpSiteName ? data[0].tpSiteName : '-'}}</span>
+                    </div>
+            </div>
+            <div fxLayout="row" fxLayoutGap="20px" [ngClass]="'mb10'">
+                    <div fxFlex="20" fxLayout="column">
+                        <span [ngClass]="'viewDialogDataTitle'">User Name</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].employeeName ? data[0].employeeName : '-'}}</span>
+                    </div>
+                    <div fxFlex="20" fxLayout="column">
+                        <span [ngClass]="'viewDialogDataTitle'">Source Code</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].receiptSourceCode ? data[0].receiptSourceCode : '-'}}</span>
+                    </div>
+                    <div fxFlex="20" fxLayout="column">
+                        <span [ngClass]="'viewDialogDataTitle'">Way/Air Bill Number</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].wayAirBillNum ? data[0].wayAirBillNum : '-'}}</span>
+                    </div>
+                    <div fxFlex="20" fxLayout="column">
+                        <span [ngClass]="'viewDialogDataTitle'">Bill of Landing</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].billOfLading ? data[0].billOfLading : '-'}}</span>
+                    </div>
+                    <div fxFlex="20" fxLayout="column">
+                        <span [ngClass]="'viewDialogDataTitle'">Packing Slip</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].packingSlip ? data[0].packingSlip : '-'}}</span>
+                    </div>
+            </div>
+            <div  fxLayout="row" fxLayoutGap="20px" [ngClass]="'mb10'">
+                    <div fxFlex="15" fxLayout="column">
+                        <span [ngClass]="'viewDialogDataTitle'">Source Doc</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].sourceDoc ? data[0].sourceDoc : '-'}}</span>
+                    </div>
+                    <div fxFlex="85" fxLayout="column">
+                   </div>
+                       
+                   
+            </div>
+
+            <div [ngClass]="'marginT15'" fxLayout="row" fxLayoutGap="5px">
+                <div fxFlex="100" [ngClass]="'viewDialogLabelBar'">
+                    <mat-label [ngClass]="'viewDialogLabel'">Weight:</mat-label>
+                </div>
+            </div>
+
+            <div  fxLayout="row" fxLayoutGap="20px" [ngClass]="'mb10'">
+                <div fxFlex="15" fxLayout="column">
+                    <span [ngClass]="'viewDialogDataTitle'">Gross</span>
+                    <span [ngClass]="'viwDialogData'">{{data[0].grossWeight ? data[0].grossWeight : '-'}}</span>
+                </div>
+                <div fxFlex="15" fxLayout="column">
+                    <span [ngClass]="'viewDialogDataTitle'">Net</span>
+                    <span [ngClass]="'viwDialogData'">{{data[0].netWeight ? data[0].netWeight : '-'}}</span>
+                </div>
+                <div fxFlex="70" fxLayout="column">
+                    <span [ngClass]="'viewDialogDataTitle'">TAR</span>
+                    <span [ngClass]="'viwDialogData'">{{data[0].tarWeight ? data[0].tarWeight : '-'}}</span>
+                </div>
+            </div>
+
+           
+
+            <div [ngClass]="'marginT40'" fxLayout="row" fxLayoutGap="5px">
+                <div fxFlex="100" [ngClass]="'viewDialogLabelBar'">
+                    <mat-label [ngClass]="'viewDialogLabel'">Receipt Lines:</mat-label>
+                </div>
+            </div>
+
+            <div [ngClass]="'customTable'" [ngStyle]="{ 'min-width': 'auto' }">
+                <table mat-table [dataSource]="parameterDataSource">
+                                 
+                    <ng-container matColumnDef="rcptLineNum">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'">Line Num </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [ngClass]="'nonEditiableField'">{{ element.rcptLineNum }}</span>
+                        </td>
+                    </ng-container>
+                     
+                    <ng-container matColumnDef="rcptQuantity">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'"> QTY</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [ngClass]="'nonEditiableField'">{{ element.rcptQuantity }}</span>
+                        </td>
+                    </ng-container>
+
+                     
+                    <ng-container matColumnDef="itemName">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'"> Item</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [ngClass]="'nonEditiableField'">{{ element.itemName }}</span>
+                        </td>
+                    </ng-container>
+
+                     
+                    <ng-container matColumnDef="rcptItemRevision">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'"> Item Revision</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [ngClass]="'nonEditiableField'">{{ element.rcptItemRevision }}</span>
+                        </td>
+                    </ng-container>
+
+                     
+                    <ng-container matColumnDef="unitOfMeasure">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'"> UOM Code</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [ngClass]="'nonEditiableField'">{{ element.unitOfMeasure }}</span>
+                        </td>
+                    </ng-container>
+
+                     
+                    <ng-container matColumnDef="sourceDocName">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'">Source Doc </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [ngClass]="'nonEditiableField'">{{ element.sourceDocName }}</span>
+                        </td>
+                    </ng-container>
+
+                     
+                    <ng-container matColumnDef="sourceNum">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'">Source</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [ngClass]="'nonEditiableField'">{{ element.sourceNum }}</span>
+                        </td>
+                    </ng-container>
+
+                     
+                    <ng-container matColumnDef="sourceLineNum">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'"> Source Line </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [ngClass]="'nonEditiableField'">{{ element.sourceLineNum }}</span>
+                        </td>
+                    </ng-container>
+
+                     
+                    <ng-container matColumnDef="fromIuCode">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'">From IU </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [ngClass]="'nonEditiableField'">{{ element.fromIuCode }}</span>
+                        </td>
+                    </ng-container>
+
+                     
+                    <ng-container matColumnDef="toIuCode">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'">To IU</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [ngClass]="'nonEditiableField'">{{ element.toIuCode }}</span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="lpnNum">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'"> LPN</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [ngClass]="'nonEditiableField'">{{ element.lpnNum }}</span>
+                        </td>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="toLgCode">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'">To LG</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [ngClass]="'nonEditiableField'">{{ element.toLgCode }}</span>
+                        </td>
+                    </ng-container>
+                     
+                                         
+                    <ng-container matColumnDef="toLocCode">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'">To Locator </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [ngClass]="'nonEditiableField'">{{ element.toLocCode }}</span>
+                        </td>
+                    </ng-container>
+
+
+                    <tr mat-header-row *matHeaderRowDef="receiptViewdColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: receiptViewdColumns"></tr>
+                </table>
+                <ng-container *ngIf="
+                        !parameterDataSource.data.length">
+                    <div [ngClass]="'noDataFound'"><small>No Receipt Lines Defined</small></div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+    <div mat-dialog-actions [ngClass]="'viewActionFooter'">
+        <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data[0].receiptId"
+            cdkFocusInitial>Edit</button>
+    </div>

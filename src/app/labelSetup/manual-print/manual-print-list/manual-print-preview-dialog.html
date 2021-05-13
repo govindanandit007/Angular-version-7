@@ -1,0 +1,22 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle"> Barcode</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+
+</h1>
+
+<div mat-dialog-content>
+    <div class="container" fxLayout="column">
+     
+        <img [src]="data" alt="Image Source">
+       
+    </div>
+</div>
+<!-- <div mat-dialog-actions>
+    <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data.iuId"
+        cdkFocusInitial>Edit</button>
+</div> -->

@@ -1,0 +1,161 @@
+<div [ngClass]="searchEnable ? 'sideContent' : ''">
+<div class="contentBorder marginT15" [ngClass]="searchEnable ? 'content-wrapper1' : ''">
+    <div [ngClass]="'formHeader'" fxLayout="row">
+        <div fxFlex fxLayoutAlign="start">
+            <span class="formHeaderTitle"> Printer History :</span>
+        </div>
+        <div fxLayoutAlign="end">
+            <button *ngIf="!searchEnable" mat-mini-fab class="btn-search-bg mr10" (click)="searchForPrintHistory()"
+                matTooltip="Search">
+                <span class="headerIcon icon-search"></span>
+            </button>
+            <!-- <button mat-stroke-button class="orangeButtonBorder colorOperatingUnit" color="primary"
+                (click)="goFor('add')">
+                Add Printer Manager
+            </button> -->
+        </div>
+    </div>
+    <div [ngClass]="!parameterDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'"
+        [ngStyle]="{ 'min-width': 'auto', 'max-height': screenMaxHeight }" [style.overflow]="listProgress ? 'hidden': 'auto'">
+        <table mat-table [dataSource]="parameterDataSource" matSort class="resize-table" style="min-width: 1220px;" matSortDisableClear>
+        <ng-container matColumnDef="rowSelect">
+            <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[0].field">
+                <mat-checkbox [(ngModel)]="selectAllRow" (change)="selectAll()" [disabled]="!parameterDataSource.data.length">
+                </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let element; let j = index">
+                <mat-checkbox [(ngModel)]="element.rowSelect" [ngClass]="'searchBoxLabel'" [disabled]="element.isDefault"
+                    (change)="rowSelectionChange()">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[1].field"
+                    (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[1].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span [ngClass]="'nonEditiableField'">{{element.id ? element.id : '-'}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="labelName">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[2].field"
+                    (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[2].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span [ngClass]="'nonEditiableField'">{{element.labelName ? element.labelName : '-'}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="requestedBy">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[3].field"
+                    (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[3].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span [ngClass]="'nonEditiableField'">{{element.requestedBy ? element.requestedBy : '-'}}</span>
+                </td>
+            </ng-container>
+          
+
+            <ng-container matColumnDef="printerName">
+                <th mat-header-cell *matHeaderCellDef
+                    [ngClass]="'mat-header-column-'+columns[4].field"
+                    (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                    <span>{{ columns[4].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                <span [ngClass]="'nonEditiableField'">{{element.printerName ? element.printerName : '-'}}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="copies">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[5].field"
+                    (mousedown)="commonService.onResizeColumn($event, 5, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[5].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span [ngClass]="'nonEditiableField'">{{element.copies ? element.copies : '-'}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[6].field"
+                    (mousedown)="commonService.onResizeColumn($event, 6, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[6].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span [ngClass]="'nonEditiableField'">{{element.status ? element.status : '-'}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="creationDate">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[7].field"
+                    (mousedown)="commonService.onResizeColumn($event, 7, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[7].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span [ngClass]="'nonEditiableField'">{{element.creationDate ? element.creationDate : '-'}}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef
+                    [ngClass]="'cursor-auto actionColumn mat-header-column-'+columns[8].field">
+                    {{ columns[8].name }}
+                </th>
+                <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'">
+                    <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center">
+                        <span (click)="goFor('print', element)" matRipple matTooltip="Print"
+                            [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                            [matRippleCentered]="true" [matRippleRadius]="false">
+                            <mat-icon>print</mat-icon>
+                        </span>
+                        <span (click)="goFor('view', element)" matRipple matTooltip="View"
+                            [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                            [matRippleCentered]="true" [matRippleRadius]="false">
+                            <mat-icon>remove_red_eye</mat-icon>
+                        </span>
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumns"></tr>
+        </table>
+
+        <ng-container *ngIf="listProgress">
+            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+        </ng-container>
+        <ng-container *ngIf="!parameterDataSource.data.length && !listProgress">
+            <div [ngClass]="'noDataFound'">
+                <small>{{ printHistoryTableMessage }}</small>
+            </div>
+        </ng-container>
+    </div>
+    <mat-paginator  (page)="commonService.setPaginationSize($event)" showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+    </mat-paginator>
+    <div>
+        <div fxLayout="row" fxFlex="100" class="bottomDiv">
+            <div class="searchBoxLabel" fxLayout="column" fxLayoutAlign="center">Reprint with Printer :</div>
+            <div>
+                <mat-select class="searchInput iuInputWidth" required [(ngModel)]="printerName" required [disabled]="!parameterDataSource.data.length"> 
+                    <mat-option *ngFor="let temp of printerLov" [value]="temp.value"
+                        >
+                        {{temp.label}}
+                    </mat-option>
+                </mat-select>
+            </div>
+           <div>
+            <button  mat-flat-button [disabled]="!parameterDataSource.data.length"
+                [ngClass]="'formButton saveButton mr10'" (click)="printMultiple($event)">
+                Print 
+            </button>
+           </div>
+        </div>
+    </div>
+
+</div>
+<div [fxShow]="searchEnable" [ngClass]="searchEnable ? 'searchRight top-68' : ''">
+    <mat-sidenav class="rightSideNav" opened mode="side" position="end" [disableClose]="true">
+        <app-search-print-history fxLayout="row" (searchComponentToggle)="getSearchToggle($event)"></app-search-print-history>
+    </mat-sidenav>
+</div>
+</div>

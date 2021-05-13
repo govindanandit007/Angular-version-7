@@ -1,0 +1,47 @@
+{
+
+    "type": "CYCLECOUNT",
+    "searchType": "cycleCount",
+    "searchFor": "Search Cycle Count",
+    "searchArray": [
+        {
+        "type": "LOV",
+        "lovType": "cycle-count-name",
+        "label": "Cycle Count",
+        "key": "cycleCountName",
+        "value": "",
+        "list": [
+            {
+              "label": " Please Select",
+              "value": ""
+            }
+          ]
+        },
+        {
+        "type": "LOV",
+        "lovType": "cycle-count-IU",
+        "label": "IU",
+        "key": "iuId",
+        "value": "",
+        "list": [
+              {
+                "label": " Please Select",
+                "value": ""
+              }
+            ]
+        },
+        {
+        "type": "LOV",
+        "lovType": "cycle-count-LG",
+        "label": "LG",
+        "key": "lgCode",
+        "value": "",
+        "list": [
+              {
+                "label": " Please Select",
+                "value": ""
+              }
+            ]
+        }
+    ]
+}

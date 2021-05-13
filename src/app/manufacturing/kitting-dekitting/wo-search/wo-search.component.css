@@ -1,0 +1,79 @@
+.search-header {
+    height: 36px;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+    align-items: center;
+}
+.search-title {
+    font-size: 14px;
+    color: #098ccd;
+}
+.search-content {
+    padding: 10px;
+}
+.search-footer {
+    background-color: #E5E5E5;
+    padding: 10px;
+}
+.search-label {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+    display: block;
+}
+.search-input {
+    background-color: #f2f2f4;
+    border: none;
+    padding: 10px;
+    border-radius: 3px;
+    width: calc(100% - 20px);
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 15px;
+}
+.search-header-right {
+    cursor: pointer;
+    display: flex;
+}
+.mat-form-field{
+    max-height: 40px !important;
+}
+
+.mat-flat-button.formButton{
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 12px;
+    height: 30px;
+}
+
+.flexColumn{
+    display: flex;
+    flex-direction: column;
+}
+
+.flexRow{
+    display: flex;
+    flex-direction: row;
+}
+
+.marginT18{
+    margin-top: 18px;
+}
+
+.onHandTitle{
+    font-size: 12px;
+    color: #000;
+}
+::ng-deep .mat-select{
+    font-size: 13px;
+}
+
+
+::ng-deep .mat-form-field-type-mat-native-select.mat-form-field-disabled
+    .mat-form-field-infix::after,
+.mat-input-element:disabled,
+ .mat-select-disabled .mat-select-value, .inputDisable {
+    color: #000000 !important;
+}

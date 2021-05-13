@@ -1,0 +1,128 @@
+/* 
+    Component based Custom CSS For Login Screen.
+    Intellinum WMS
+    Start Date: 27 August, 2019
+*/
+
+/* Custom Class to modify login screens' background  */
+.login-screen-bg {
+    /* background: url(../../../assets/images/login/bg.svg); */
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
+
+/* Custom Class to set the size of application logo */
+.app-logo {
+    width: 130px;
+    height:50px;
+}
+
+/* Custom Class to set white backgroud */
+.bg-white {
+    background: #fafafa;
+    border-radius: 0 6px 6px 0;
+}
+
+/* Custom Class to add image file to left panel of login container */
+.laft-panel {
+    /* background: url('../../../assets/images/login/left-panel.jpg'); */
+    border-radius: 6px 0px 0px 6px;
+}
+
+/* Custom Class to increase submit button size */
+.lg-button {
+    width: 100%;
+    text-transform: uppercase;
+    border-radius: 5px;
+    background: #098ccd;
+    height: 48px;
+    font-family: inherit;
+    box-shadow: none;
+}
+
+/* Custom Class to set full screen width */
+.width-100 {
+    width: 100%;
+}
+
+/* Custom Class to apply styling to remember me text */
+.remember-me-text-decoration {
+    margin-left: 5px;
+    color: #646464;
+    font-size: 15px;
+}
+.showPassword {
+    color: #646161;
+    font-size: 20px !important;
+    cursor: pointer;
+}
+.loginIcon {
+    display: inline-flex;
+    vertical-align: text-bottom;
+    color: #646161;
+    margin: 0px 5px 0px 0px;
+}
+.mat-raised-button[disabled]{
+    background-color: #098ccd;
+}
+
+.setLoginImage{
+  
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: transparent;
+    height: 100vh;
+}
+
+.setImg{
+    width: 200px; 
+    height: 70px;
+}
+
+.box{
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.setpadding{
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.companyLogo{
+    padding-bottom: 30px;
+    display: flex;
+    align-items: flex-end;
+    height: 30vh;
+}
+
+.username{
+    padding-bottom: 10px;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    width: 90% !important;
+}
+
+.rememberMe{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 5vh;
+    width: 90% !important;
+    padding-bottom: 10px;
+}
+
+.bottomIcon{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    height: 35vh;
+    padding-bottom: 30px;
+}

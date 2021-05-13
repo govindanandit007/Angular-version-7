@@ -1,0 +1,164 @@
+<h1 class="viewDialogHeader" mat-dialog-title>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle">Material Status Setup Details</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" tabindex="0" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'">
+    <div class="" fxLayout="column">
+        <div class="container" fxLayout="column">
+                <div fxLayout="row" fxLayoutGap="20px" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Name</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].materialStatusName ? data[0].materialStatusName : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="45">
+                        <span [ngClass]="'viewDialogDataTitle'">Description</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].description ? data[0].description : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viwDialogData'">
+                            <mat-checkbox class="materailFieldSize mt10" disabled='true'
+                                [ngModel]="data[0].allowReservations === 'Y'?true:false">
+                                Allow Reservations</mat-checkbox>
+                        </span>
+                    </div>
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viwDialogData'">
+                            <mat-checkbox class="materailFieldSize mt10" disabled='true'
+                                [ngModel]="data[0].enabledFlag === 'Y'?true:false">
+                                Enabled Flag</mat-checkbox>
+                        </span>
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayoutGap="20px" class='mb10 mt15'>
+                    <label fxFlex="100">Entity :</label>
+                    </div>
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <div fxLayout="column" fxFlex="18">
+                        <span [ngClass]="'viwDialogData'">
+                            <mat-checkbox class="materailFieldSize mt10" disabled='true'
+                                [ngModel]="data[0].lgEnabled === 'Y'?true:false">
+                                Locator Group</mat-checkbox>
+                        </span>
+                    </div>
+                    <div fxLayout="column" fxFlex="18">
+                        <span [ngClass]="'viwDialogData'">
+                            <mat-checkbox class="materailFieldSize mt10" disabled='true'
+                                [ngModel]="data[0].locEnabled === 'Y'?true:false">
+                                Stock Locators</mat-checkbox>
+                        </span>
+                    </div>
+                    <div fxLayout="column" fxFlex="18">
+                        <span [ngClass]="'viwDialogData'">
+                            <mat-checkbox class="materailFieldSize mt10" disabled='true'
+                                [ngModel]="data[0].batchEnabled === 'Y'?true:false">
+                                Batch</mat-checkbox>
+                        </span>
+                    </div>
+                    <div fxLayout="column" fxFlex="18">
+                        <span [ngClass]="'viwDialogData'">
+                            <mat-checkbox class="materailFieldSize mt10" disabled='true'
+                                [ngModel]="data[0].serialEnabled === 'Y'?true:false">
+                                Serial</mat-checkbox>
+                        </span>
+                    </div>
+                    <div fxLayout="column" fxFlex="18">
+                        <span [ngClass]="'viwDialogData'">
+                            <mat-checkbox class="materailFieldSize mt10" disabled='true'
+                                [ngModel]="data[0].lpnEnabled === 'Y'?true:false">
+                                LPN</mat-checkbox>
+                        </span>
+                    </div>
+                    
+                </div>
+               
+                <div fxLayout="row" fxLayoutGap="20px" class='mb20 mt20 '>
+                <label fxFlex="100">Transaction Type :</label>
+                </div>
+        </div>
+        <div fxLayout="row wrap" [ngClass]="listProgress ? 'customTable ellipsisTable scrollHide txnTypeContainer' : 'customTable ellipsisTable txnTypeContainer'" fxLayoutGap="20px">
+            <ng-container *ngIf="listProgress">
+                <mat-spinner
+                    [diameter]="40"
+                    [ngClass]="'loaderSpinner'"
+                ></mat-spinner>
+            </ng-container>
+            <ng-container *ngIf="!listProgress">
+                
+                <section class="example-section">
+                    <span class="example-list-section">
+                        <div class="headingCheck">
+                        <strong fxFlex="100" class="typeHeading">{{columns[1].name}}</strong>
+                        </div>
+                    </span>
+                    <span class="example-list-section">
+                        <ul>
+                        <li *ngFor="let item of transactionTypeArray; let i=index">
+                            <div *ngIf="item.parentValue === 'Inbound'">
+                                <mat-checkbox class="materailFieldSize" 
+                                                fxFlex="18" 
+                                            [ngModel]="item.enableFlag" 
+                                            style="margin-top: 10px" disabled='true'>
+                                            {{item.description}}
+                                </mat-checkbox>
+                            </div>
+                        </li>
+                        </ul>
+                    </span>
+                </section>
+                <section class="example-section">
+                <span class="example-list-section">
+                    <div class="headingCheck">
+                    <strong fxFlex="100">{{columns[2].name}}</strong>
+                    </div>
+                </span>
+                <span class="example-list-section">
+                    <ul>
+                    <li *ngFor="let item of transactionTypeArray; let i=index">
+                        <div *ngIf="item.parentValue === 'Warehouse'">
+                            <mat-checkbox class="materailFieldSize" 
+                                            fxFlex="18" 
+                                        [ngModel]="item.enableFlag" 
+                                        style="margin-top: 10px" disabled='true'>
+                                        {{item.description}}
+                            </mat-checkbox>
+                        </div>
+                    </li>
+                    </ul>
+                </span>
+                </section>
+                <section class="example-section">
+                    <span class="example-list-section">
+                      <div class="headingCheck">
+                        <strong fxFlex="100">{{columns[0].name}}</strong>
+                      </div>
+                    </span>
+                    <span class="example-list-section">
+                      <ul>
+                        <li *ngFor="let item of transactionTypeArray; let i=index">
+                            <div *ngIf="item.parentValue === 'Outbound'">
+                                <mat-checkbox class="materailFieldSize" 
+                                             fxFlex="18" 
+                                            [ngModel]="item.enableFlag" 
+                                            style="margin-top: 10px" disabled='true'>
+                                            {{item.description}}
+                                </mat-checkbox>
+                            </div>
+                        </li>
+                      </ul>
+                    </span>
+                </section>
+                
+            </ng-container>
+        </div>
+
+    </div>
+</div>
+<div mat-dialog-actions [ngClass]="'viewActionFooter'">
+    <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data[0].materialStatusId"
+        cdkFocusInitial>Edit</button>
+</div>

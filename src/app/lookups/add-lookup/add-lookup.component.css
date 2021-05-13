@@ -1,0 +1,82 @@
+.formHeader {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+.customTable {
+    min-width: 1000px;
+    overflow: auto;
+}
+.customWidthClass {
+    min-width: 135px;
+}
+.lookupSearchBox {
+    background-color: #f2f2f4;
+    padding: 10px 10px 10px 20px;
+}
+.searchBoxLabel {
+    font-size: 14px;
+}
+.searchInput {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    margin: 0 10px;
+}
+.lookupSearchBox .mat-flat-button.formButton {
+    height: 28px;
+    line-height: 28px;
+}
+.actionColumn {
+    min-width: 60px;
+}
+.actionIcons span {
+    min-width: 25px;
+    padding: 8px 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0px 0px !important;
+    box-sizing: border-box;
+}
+.inputMarginClass {
+    display: block;
+}
+::ng-deep .mat-column-lookupId {
+    width: 60px;
+}
+/* .mat-column-lookupValue, .mat-column-lookupValueDesc{
+    width:15%;
+} */
+.mat-column-lookupName,
+.mat-column-lookupMainDesc {
+    width: 35%;
+}
+.mat-column-lookupValueEnabledFlag,
+.mat-column-effectiveFrom,
+.mat-column-effectiveTo {
+    min-width: 100px;
+    max-width: 100px;
+}
+.mat-column-parentValue {
+    min-width: 120px;
+    max-width: 120px;
+}
+.mat-column-parentValue,
+.mat-column-parentCode {
+    min-width: 90px;
+    max-width: 90px;
+}
+
+::ng-deep .maxWidth .mat-form-field {
+    max-width: 90%;
+}
+.width40{
+    min-width: 60px;
+    max-width: 60px;
+}
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+  color: #fff !important;
+}

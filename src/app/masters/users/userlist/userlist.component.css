@@ -1,0 +1,44 @@
+.stepperContent {
+    background-color: #fff;
+    /* padding:0 0px 20px; */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+table {
+    width: 100%;
+}
+.content-wrapper1 {
+    padding: 0px;
+   /* width:  76.5% ; */
+}
+.searchRight {
+    position: fixed;
+    right: 5px;
+}
+.formHeader {
+    padding: 10px 20px;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+
+th.mat-sort-header-sorted {
+    color: black;
+}
+
+
+.top-688  {
+    top: 68px !important;
+}
+.thumb150 img{
+    width:150px;
+    height:150px;
+    border:2px solid #ccc;
+}
+
+::ng-deep .mat-checkbox-layout .mat-checkbox-label {
+    width: 0px !important;
+}
+::ng-deep .roleviewContent .mat-checkbox-layout .mat-checkbox-label{
+    width: auto !important;
+}

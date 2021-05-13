@@ -1,0 +1,180 @@
+<div fxLayout="column" fxLayoutAlign="space-between stretch" fxFlex="100">
+    <div fxLayout="column" style="padding-bottom: 70px;">
+        <div class="search-header" fxLayout="row">
+            <div class="search-title" fxLayout="column" fxFlex="5 0 0">
+                {{ searchLabel }}
+            </div>
+            <div class="search-header-right" (click)="hideSearchContainer()">
+                <span class="searchBarIcon icon-close"></span>
+            </div>
+        </div>
+        <div *ngFor="let fieldsInfo of searchFieldData">
+            <!-- For Pick Slip Number -->
+            <div *ngIf="fieldsInfo.lovType === 'pickSlipNumber'" fxLayout="column" class="search-content"
+                fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="pickSlipNumber"
+                            autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+            <!-- For Task Number -->
+            <div *ngIf="fieldsInfo.lovType === 'taskNumber'" fxLayout="column" class="search-content"
+                fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="taskNumber" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+            <!-- For Task Status Group -->
+            <div *ngIf="fieldsInfo.lovType === 'taskStatus'" fxLayout="column" class="search-content"
+                fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="taskStatus">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value" autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select>
+                    </mat-form-field>
+                </ng-container>
+            </div>
+            <!-- For IU Group -->
+            <!-- <div *ngIf="fieldsInfo.lovType === 'iuCode'" fxLayout="column" class="search-content"
+                fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="iuCode" class='text-black-disabled' disabled>
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value" autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select>
+                    </mat-form-field>
+                </ng-container>
+            </div> -->
+
+            <!-- For Task Type -->
+            <div *ngIf="fieldsInfo.lovType === 'tasktype'" fxLayout="column" class="search-content"
+                fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="taskType">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value" autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select>
+                    </mat-form-field>
+                </ng-container>
+            </div>
+
+            <!-- For Item -->
+            <div *ngIf="fieldsInfo.lovType === 'itemName'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="itemName" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+             <!-- For Locator Group -->
+             <div *ngIf="fieldsInfo.lovType === 'taskLg'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="taskLg" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+            <!-- For Revision -->
+            <div *ngIf="fieldsInfo.lovType === 'revisionNumber'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="revisionNumber">
+                            <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value"
+                                autocomplete="off">
+                                {{ listItem.label }}</mat-option>
+                        </mat-select> -->
+                        <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="revisionNumber" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+            <!-- For Shipment -->
+            <div *ngIf="fieldsInfo.lovType === 'shipmentNumber'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="shipmentNumber" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+            <!-- For Sales Order -->
+            <div *ngIf="fieldsInfo.lovType === 'salesOrder'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="salesOrder" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+             <!-- For Work Order -->
+             <div *ngIf="fieldsInfo.lovType === 'workOrder'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="workOrder" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+            <!-- For Wave Number -->
+            <div *ngIf="fieldsInfo.lovType === 'waveNumber'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="waveNumber" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+            <!-- For Employee -->
+            <div *ngIf="fieldsInfo.lovType === 'employee'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="employee" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+            <div *ngIf="fieldsInfo.lovType === 'replenishmentNum'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="replenishmentNum" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+            <div *ngIf="fieldsInfo.lovType === 'cycleCountName'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                <ng-container>
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="cycleCountName" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+        </div>
+
+
+    </div>
+    <!-- Search Footer -->
+    <div class="search-footer" style="position: fixed; bottom: 0px; width: 100%;">
+        <button mat-flat-button [ngClass]="'formButton saveButton'" (click)="getSearhInfo()">
+            Search
+        </button>
+        <button mat-flat-button [ngClass]="'formButton cancelButton ml-15'" (click)="clearSearchFields()">
+            Clear
+        </button>
+    </div>
+</div>

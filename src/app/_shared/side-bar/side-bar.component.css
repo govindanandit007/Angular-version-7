@@ -1,0 +1,241 @@
+.side-bar-header {
+    padding: 12px 0 13px 10px;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+}
+.side-bar-header img {
+    max-width: 100px;
+    max-height: 35px;
+}
+.side-bar-header .iwms-logo {
+    color: #1a71b1;
+    font-family: Poppins-Bold;
+    font-size: 20px;
+    padding: 0 10px;
+    position: absolute;
+    top: 23px;
+    letter-spacing: 1px;
+}
+.example-tree-invisible {
+    display: none;
+}
+.example-tree {
+    font-family: 'Poppins-Regular';
+    overflow-y: auto;
+    width: 100%;
+    height: calc(100% - 67px);
+}
+.example-tree > .mat-tree-node,
+.example-tree .mat-nested-tree-node .mat-tree-node {
+    padding: 0 0 0 10px;
+    min-height: 48px;
+}
+.example-tree .mat-nested-tree-node ul {
+    margin: 0;
+    padding: 0;
+}
+.example-tree .mat-nested-tree-node mat-tree-node {
+    padding: 0 0 0 15px;
+    /* min-height:28px !important; */
+}
+.example-tree > .mat-tree-node.nodeActive {
+    background: #daf3fb;
+    border-left: 3px solid #098ccd;
+}
+.example-tree ul,
+.example-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+}
+.example-tree .mat-nested-tree-node ul .mat-tree-node {
+    min-height: 28px !important;
+}
+.example-tree .mat-nested-tree-node ul .mat-tree-node:nth-child(1) {
+    border-top: none;
+}
+.sidebar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: #098ccd;
+    width: 20px;
+    height: 20px;
+    font-size: 18px;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: transparent;
+}
+.sidebarChild-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    /* margin-left: 20px; */
+    color: #098ccd;
+    width: 20px;
+    height: 20px;
+    font-size: 18px;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: transparent;
+}
+.example-tree .mat-tree-node a {
+    text-decoration: none;
+    color:rgba(0,0,0,.87);
+    transition: all 0.25s ease;
+}
+.example-tree .mat-tree-node a:hover,
+.example-tree .mat-tree-node a:active {
+    color: #098ccd;
+    /* letter-spacing: 1px; */
+}
+.example-tree .mat-icon-button {
+    position: absolute;
+    right: 0;
+}
+.sidenav-subTitle {
+    font-size: 16px;
+    color: #232323;
+}
+.bt-1 {
+    border-top: 1px solid #e6e6e6;
+}
+.example-tree > .mat-nested-tree-node[aria-expanded='true'] li {
+    background: #daf3fb;
+}
+.example-tree
+    > .mat-nested-tree-node[aria-expanded='true']
+    > li
+    > .mat-tree-node {
+    background: #b6eafb;
+}
+.example-tree
+    > .mat-nested-tree-node[aria-expanded='true']
+    li
+    > .mat-tree-node
+    .sidebar-icon,
+.example-tree > .mat-tree-node.nodeActive .sidebar-icon {
+    /* background: #098ccd; */
+    color: #098ccd;
+}
+.example-tree > .mat-nested-tree-node > li > ul > .mat-tree-node > li{
+    padding:0;
+}
+.example-tree > .mat-nested-tree-node > li > ul > .mat-tree-node > li > a{
+    color:rgba(0,0,0,.87);
+}
+.example-tree > .mat-nested-tree-node > li > ul > .mat-tree-node > li > a.active{
+    color: #098ccd;
+}
+.example-tree > .mat-nested-tree-node li .mat-tree-node li a.active {
+    color: #098ccd;
+}
+/* .company-icon {
+    width: 37px;
+    height: 37px;
+} */
+
+/* .company-iconOpen {
+    width: 70px;
+    height: 37px;
+} */
+
+.example-tree > .mat-nested-tree-node li .nested-title, .example-tree > .mat-tree-node li:first-child a{
+    width:calc(100% - 81px);
+    cursor: pointer;
+    color:rgba(0,0,0,.87);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.openSidePanelIcon{
+    background-color:#098ccd;
+    width: 20px;
+    height: 35px;
+    position: fixed;
+    left: 0px;
+    bottom: 40px;
+    cursor: pointer;
+    border-radius: 0px 5px 5px 0px;
+}
+
+.closeSidePanelIcon{
+    background-color:#098ccd;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    position: fixed;
+    left: 10px;
+    bottom: 40px;
+    cursor: pointer;
+}
+
+.closeSidePanelIcon:hover{
+    background-color: #026b6b; 
+}
+
+.setImgArrow{
+    width: 20px;
+    height: 20px;
+}
+
+.sidePanelIcon{
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    height: 50px;
+    /* box-shadow: 0px 1px 1px 0px white; */
+}
+
+.sidePanelIcon:hover{
+    background-color:  rgb(86, 204, 240);
+}
+
+.setImg{
+    width: 35px;
+    height: 30px;
+}
+
+/* .navigationMenuCrossIcon{
+    display: flex;
+    justify-content: flex-end;
+    cursor: pointer;
+    color: white;
+    background-color: #098ccd;
+} */
+
+
+/* ::ng-deep  .navigationMenu{
+    width: 250px;
+    height: calc(100vh + 50px);
+    overflow: auto;
+    position: absolute;
+    top: -50px;
+    
+} */
+
+/* ::ng-deep .mat-menu-panel.navigationMenu{
+    height: calc(100vh);
+    max-height: calc(100vh) !important;
+    border-radius: 0px;
+} */
+
+::ng-deep .sidenav .mat-drawer-inner-container{
+    background-color: #098ccd;;
+}

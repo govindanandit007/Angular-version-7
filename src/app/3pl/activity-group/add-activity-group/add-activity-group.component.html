@@ -1,0 +1,226 @@
+<div fxFlex="100" class="contentBorder marginT15">
+    <div [ngClass]="'formHeader'" fxLayout="row">
+        <div fxFlex fxLayoutAlign="start">
+            <span class="formHeaderTitle"><app-breadcrumb></app-breadcrumb></span>
+        </div>
+        <div fxLayoutAlign="end">
+            <button
+                mat-stroke-button
+                class="orangeButtonBorder colorAttribute"
+                color="primary"
+            >
+            Add Additional Field
+            </button>
+        </div>
+    </div>
+
+    <div fxLayout="row">
+        <mat-divider fxFlex="100"></mat-divider>
+    </div>
+
+    <div class="formContainer" fxLayout="column">
+        <form #agForm="ngForm"  id="ngForm" [formGroup]="activityGroupForm"  autocomplete="off" (ngSubmit)="onSubmit($event, agForm)">
+            <div class="container" fxLayout="column">
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <mat-form-field class="materailFieldSize" fxFlex="20">
+                        <input matInput formControlName="activityGroupCode" placeholder="Group Code" disabled autocomplete="off" >
+                    </mat-form-field>
+                    <mat-form-field class="materailFieldSize" fxFlex="20">
+                        <input matInput formControlName="activityGroupName" placeholder="Group Name"  (blur)="activityGroupLogValidationErrors()" required autocomplete="off" >
+                        <mat-error *ngIf="activityGroupFormErrors.activityGroupName">{{activityGroupFormErrors.activityGroupName}}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="materailFieldSize" fxFlex="20">
+                            <input matInput [matDatepicker]="date" placeholder="Start Date"  (ngModelChange)="startDateChanged($event)" 
+                            formControlName="startDate" [min]="systemDate" (click)="this.commonService.disableInput($event)"  
+                            on-focus="this.commonService.disableInput($event)"  />
+                            <!-- <mat-error *ngIf="activityGroupFormErrors.startDate">{{activityGroupFormErrors.startDate}}
+                            </mat-error> -->
+                            <mat-datepicker-toggle matSuffix [for]="date" ></mat-datepicker-toggle>
+                            <mat-datepicker #date></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field class="materailFieldSize" fxFlex="20">
+                        <input matInput [matDatepicker]="date1" placeholder="End Date"  
+                        formControlName="endDate" [min]="minEndDate ? minEndDate : systemDate" (click)="this.commonService.disableInput($event)"  
+                        on-focus="this.commonService.disableInput($event)"  />
+                        <!-- <mat-error *ngIf="activityGroupFormErrors.endDate">{{activityGroupFormErrors.endDate}}
+                        </mat-error> -->
+                        <mat-datepicker-toggle matSuffix [for]="date1" ></mat-datepicker-toggle>
+                        <mat-datepicker #date1></mat-datepicker>
+                     </mat-form-field>
+                     <div class="item" fxFlex="20">
+                        <mat-checkbox class="materailFieldSize" formControlName="enableFlag" [ngStyle]="{'margin-top': '12px','display':'flex'}">
+                            Enable Flag
+                        </mat-checkbox>
+                    </div>
+                    
+                </div>
+            </div>
+        </form>
+        <div class="marginT15" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">Activities :</span>
+            </div>
+            
+        </div>
+        <div [id]="'customTable'" [ngClass]="'customTable ellipsisTable'" [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+            <table #poLineTable mat-table [dataSource]="parameterDataSource"  matSort class="resize-table" style="min-width: 1000px;">
+               
+                <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef style="max-width: 70px; width: 70px;" [ngClass]="'cursor-auto mat-header-column-'+columns[0].field" >
+                        <span >{{ columns[0].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i = index;" >
+                        <div>
+                            <span [ngClass]="'nonEditiableField'">
+                                {{ paginator.pageSize * paginator.pageIndex + i + 1 }} </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="activityCode">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[1].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[1].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; " >
+                        <div *ngIf="element.editing">
+                            <mat-form-field >
+                                <input matInput [(ngModel)]="element.activityCode" placeholder="" disabled autocomplete="off" >
+                            </mat-form-field>
+                        </div>
+                        <span *ngIf="!element.editing">{{element.activityCode}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="activityName">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[2].field" (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[2].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[2].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index " >
+                        <div *ngIf="element.editing">
+                            <mat-form-field>
+                                <mat-select [(ngModel)]="element.activityId" placeholder="Required" required>
+                                    <mat-option *ngFor="let temp of activityList" [value]="temp.value"
+                                    (onSelectionChange)="activityChanged($event, paginator.pageSize * paginator.pageIndex + i, temp.activityData, temp.value)">
+                                        {{temp.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <span *ngIf="!element.editing">
+                            {{ element.activityName !== null ? element.activityName : '-' }}
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="transactiontype">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[3].field" (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[3].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[3].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; " >
+                        <div *ngIf="element.editing">
+                            <mat-form-field >
+                                <input matInput [(ngModel)]="element.transactionTypeDesc" placeholder="" disabled autocomplete="off" >
+                            </mat-form-field>
+                        </div>
+                        <span *ngIf="!element.editing">{{element.transactionTypeDesc}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="subactivities">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[4].field" (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[4].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[4].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; " >
+                        <div *ngIf="element.editing">
+                            <mat-form-field >
+                                <input matInput [(ngModel)]="element.subactivityDesc" placeholder="" disabled autocomplete="off" >
+                            </mat-form-field>
+                        </div>
+                        <span *ngIf="!element.editing">{{element.subactivityDesc}}</span>
+                        
+                    </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[5].field" (mousedown)="commonService.onResizeColumn($event, 5, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[5].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[5].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; " >
+                        <div *ngIf="element.editing">
+                            <mat-form-field >
+                                <input matInput [(ngModel)]="element.description" placeholder="" disabled autocomplete="off" >
+                            </mat-form-field>
+                        </div>
+                        <span *ngIf="!element.editing">{{element.description}}</span>
+                    </td>
+                </ng-container>
+              
+                <!-- <ng-container matColumnDef="enableFlag">
+                    <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[6].field" (mousedown)="commonService.onResizeColumn($event, 6, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[6].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[6].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; " >
+                        <div>
+                            <mat-checkbox [(ngModel)]="element.enableFlag" value="element.enableFlag" disabled>
+                                <mat-icon></mat-icon>
+                            </mat-checkbox>
+                        </div>
+                    </td>
+                </ng-container> -->
+
+                
+                <ng-container matColumnDef="action" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto actionColumn mat-header-column-'+columns[6].field">
+                        <span >{{ columns[6].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'">
+                        <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center">
+                            <span *ngIf="!element.addNewRecord" class="icon-edit"
+                            (click)="beginEdit(element, $event,paginator.pageSize * paginator.pageIndex + i)" matRipple matTooltip="Edit"
+                            [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                            [matRippleRadius]="false"></span>
+                            <span *ngIf="!element.addNewRecord && element.editing" [ngClass]="'padding0'">
+                                <span class="icon-clear" (click)="disableEdit(element, paginator.pageSize * paginator.pageIndex + i)" matRipple
+                                    matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                    [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                    [matRippleRadius]="false"></span>
+                            </span>
+                        
+                            <span *ngIf="element.addNewRecord && !element.isDefault " [ngClass]="'padding0'">
+                                <span class="icon-clear" (click)="deleteRow(element, i)" matRipple matTooltip="Cancel"
+                                    [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                    [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                            </span>
+                            
+                        </div>
+                    </td>
+                </ng-container>
+               
+             
+                <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns; sticky: true"></tr>
+                <tr mat-row [ngClass]="{'highlightRowError': selectedRowIndex == paginator.pageSize * paginator.pageIndex + i}" *matRowDef="let row; let i= index; columns: parameterDisplayedColumns;"></tr>
+            </table>
+        </div>
+        <div class="text-align-right">
+            <button mat-stroke-button class="orangeButtonBorder border-radius-3 colorAttribute marginT5" color="primary"
+                (click)="addRow()" matTooltip="Add Row">
+                Add Row
+            </button>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div>
+
+                <button *ngIf="!isEdit" mat-flat-button [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10': 'formButton saveButton mr10'" (click)="agForm.ngSubmit.emit()" form="ngForm" >
+                    Save
+                </button>
+                <button *ngIf="isEdit" mat-flat-button  [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10': 'formButton saveButton mr10'" (click)="agForm.ngSubmit.emit()" form="ngForm" >
+                    Update
+                </button>
+                <button  mat-flat-button [ngClass]="'formButton saveButton mr10'"
+                 (click)="commonService.openConfirmationDialog('Activity Group','activitygroup')">
+                    Cancel
+                </button>
+            </div>
+            <mat-paginator (page)="commonService.setPaginationSize($event)" showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+            </mat-paginator>
+        </div>
+    </div>
+</div>
+
+

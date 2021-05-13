@@ -1,0 +1,362 @@
+<div fxLayout="column" fxLayoutAlign="space-between stretch" fxFlex="100" >
+    <div fxLayout="column" style="padding-bottom: 70px;">
+        <div class="search-header" fxLayout="row">
+            <div class="search-title" fxLayout="column" fxFlex="5 0 0">
+                {{ searchLabel }}
+            </div>
+            <div class="search-header-right" (click)="hideSearchContainer()">
+                <span class="searchBarIcon icon-close"></span>
+            </div>
+        </div>
+      
+        <div *ngFor="let fieldsInfo of searchFieldData">
+                <!-- For Transaction Type -->
+                <div *ngIf="fieldsInfo.lovType === 'txn-Type'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container >
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="txnTypeValue" required>
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                 [value]="listItem.value" autocomplete="off" (onSelectionChange)="txnTypeChanged($event, listItem.value, listItem)">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <span *ngIf="txnTypeError == '' " style="color: red; font-size: 12px;">Enter Transaction Type</span>
+
+                    </ng-container>
+                </div>    
+
+                <!-- For Transaction Source -->
+                <div *ngIf="fieldsInfo.lovType === 'txn-Source'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container >
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="txnSourceValue">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                    [value]="listItem.value" autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </ng-container>
+                </div> 
+
+                <!-- For Transaction Number -->
+                <div *ngIf="fieldsInfo.lovType === 'txn-Number'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container >
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <!-- <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="txnNumberValue">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                    [value]="listItem.value" autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select> -->
+                            <mat-label>Transaction Number</mat-label>
+                            <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="txnNumberValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div> 
+
+                <!-- For Item -->
+                <div *ngIf="fieldsInfo.lovType === 'txn-item'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container >
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="txnItemValue">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                    [value]="listItem.value" autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select> -->
+                            <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="txnItemValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div> 
+
+                <!-- For IU -->
+                <div *ngIf="fieldsInfo.lovType === 'txn-IU'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container >
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="txnIUValue" class='text-black-disabled' [disabled]=" iuDisabled === 'From' || iuDisabled === '' ">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                    [value]="listItem.value" autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </ng-container>
+                </div> 
+
+                <!-- For To IU -->
+                <div *ngIf="fieldsInfo.lovType === 'txn-ToIU'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container >
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="txnToIUValue" class='text-black-disabled' [disabled]="iuDisabled === 'To' || iuDisabled === '' ">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                    [value]="listItem.value" autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </ng-container>
+                </div> 
+
+                <!-- For LG -->
+                <div *ngIf="fieldsInfo.lovType === 'txn-from-LG'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container>
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="lgFromValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+                <div *ngIf="fieldsInfo.lovType === 'txn-LG'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container>
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <!-- <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="txnLGValue">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                    [value]="listItem.value" autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select> -->
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="txnLGValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+
+                <!-- For Locator -->
+                <div *ngIf="fieldsInfo.lovType === 'txn-Locator'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container >
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="txnLocatorValue">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                    [value]="listItem.value" autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select> -->
+                            <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="txnLocatorValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+                 <!-- For To Locator -->
+                 <div *ngIf="fieldsInfo.lovType === 'txn-ToLocator'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container >
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="txnLocatorValue">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                    [value]="listItem.value" autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select> -->
+                            <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="txnToLocatorValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div>  
+                <!-- For Receipt Number -->
+                <div *ngIf="fieldsInfo.lovType === 'txn-receiptNum'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container >
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="txnReceiptNumValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div> 
+                <div *ngIf="fieldsInfo.lovType === 'transferLPN'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container  >
+                        <mat-form-field class="materailFieldSize ">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="LPNToValue" [disabled]="fieldsInfo.enable">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value"
+                                    autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select> -->
+                            <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="transLPNValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+                <div *ngIf="fieldsInfo.lovType === 'LPNFrom'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container  >
+                        <mat-form-field class="materailFieldSize ">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="LPNToValue" [disabled]="fieldsInfo.enable">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value"
+                                    autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select> -->
+                            <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="LPNFromValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+                <div *ngIf="fieldsInfo.lovType === 'BatchFrom'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container  >
+                        <mat-form-field class="materailFieldSize ">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="LPNToValue" [disabled]="fieldsInfo.enable">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value"
+                                    autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select> -->
+                            <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="batchFromValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+    
+
+                
+            
+        </div>
+
+        <div fxLayout="row wrap" class="onhandDivs">
+            <div *ngFor="let fieldsInfo of searchFieldData; let i = index" [ngStyle]="{'display': (i < 14) ? 'none' : ''}" fxFlex="50">
+                <div  class="search-content">
+                    <!-- For ONHAND LPN From -->
+                    <!-- <ng-container *ngIf="fieldsInfo.lovType === 'LPNFrom'" >
+                        <div class="onHandTitle">LPN :</div>
+                        <mat-form-field class="materailFieldSize">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label> -->
+                            <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" (selectionChange)="getDependentList($event,LPNFromValue,'LPNFrom','LPNTo')" [(ngModel)]="LPNFromValue">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value"
+                                    autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select> -->
+                            <!-- <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="LPNFromValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container> -->
+                
+                    <!-- For ONHAND LPN To -->
+                    <!-- <ng-container *ngIf="fieldsInfo.lovType === 'LPNTo'" >
+                        <mat-form-field class="materailFieldSize marginT18">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label> -->
+                            <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="LPNToValue" [disabled]="fieldsInfo.enable">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value"
+                                    autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select> -->
+                            <!-- <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="LPNToValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container> -->
+
+                    <!-- For ONHAND Batch From -->
+                    <!-- <ng-container *ngIf="fieldsInfo.lovType === 'BatchFrom'">
+                        <div class="onHandTitle">Batch Number :</div>
+                        <mat-form-field class="materailFieldSize">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label> -->
+                            <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" (selectionChange)="getDependentList($event,batchFromValue,'BatchFrom','BatchTo')" [(ngModel)]="batchFromValue">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value"
+                                    autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select> -->
+                            <!-- <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="batchFromValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container> -->
+                    
+                    <!-- For ONHAND Batch To -->
+                    <!-- <ng-container *ngIf="fieldsInfo.lovType === 'BatchTo'">
+                        <mat-form-field class="materailFieldSize marginT18">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label> -->
+                            <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="batchToValue" [disabled]="fieldsInfo.enable">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value"
+                                    autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select> -->
+                            <!-- <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="batchToValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container> -->
+
+                    <!-- For ONHAND Serial From -->
+                    <ng-container *ngIf="fieldsInfo.lovType === 'SerialFrom'">
+                        <div class="onHandTitle">Serial Number :</div>
+                        <mat-form-field class="materailFieldSize">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" (selectionChange)="getDependentList($event,serialFromValue,'SerialFrom','SerialTo')" [(ngModel)]="serialFromValue">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value"
+                                    autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select> -->
+                            <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="serialFromValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                    
+                    <!-- For ONHAND Serial To -->
+                    <ng-container *ngIf="fieldsInfo.lovType === 'SerialTo'">
+                        <mat-form-field class="materailFieldSize marginT18">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <!-- <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="serialToValue" [disabled]="fieldsInfo.enable">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list" [value]="listItem.value"
+                                    autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select> -->
+                            <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="serialToValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+
+                   
+                    <!-- for From Date -->
+                    <ng-container *ngIf="fieldsInfo.lovType === 'fromDate'">
+                        <div class="onHandTitle">Date :</div>
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="picker" placeholder="From" [(ngModel)]="dateFrom"
+                            (ngModelChange)="onStartDateChanged($event)" 
+                            (click)="this.commonService.disableInput($event)"  on-focus="this.commonService.disableInput($event)" >
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </ng-container>
+                      
+                    <!-- for To Date -->
+                    <ng-container *ngIf="fieldsInfo.lovType === 'toDate'">
+                        <mat-form-field class="marginT18">
+                            <input matInput [matDatepicker]="picker1" placeholder="To" [min]='setEndDate' [(ngModel)]="dateTo" 
+                            (click)="this.commonService.disableInput($event)"  on-focus="this.commonService.disableInput($event)">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                    </ng-container>
+              
+                </div>
+            </div>
+        </div>
+
+        <!-- <div fxLayout="row" style="padding: 0px 10px 0px 10px">
+            <div class="onHandTitle">Date :</div>
+        </div> -->
+        
+        <div fxLayout="row">
+                <!-- <div  fxFlex="50" style="padding: 0px 10px 20px 10px">
+                    <ng-container >
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="picker" placeholder="From" [(ngModel)]="dateFrom" >
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                          </mat-form-field>
+                    </ng-container>
+                </div>  
+                <div  fxFlex="50"  style="padding: 0px 10px 20px 10px">
+                    <ng-container >
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="picker1" placeholder="To" [(ngModel)]="dateTo">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                          </mat-form-field>
+                    </ng-container>
+                </div> 
+            -->
+             
+
+        </div>
+
+    </div>
+
+
+  
+    <div class="search-footer" style="position: fixed; bottom: 0px; width: 100%;">
+        <button mat-flat-button [ngClass]="'formButton saveButton'" (click)="getSearhInfo()">
+            Search
+        </button>
+        <button mat-flat-button [ngClass]="'formButton cancelButton ml-15'" (click)="clearSearchFields()">
+            Clear
+        </button>
+    </div>
+
+
+
+</div>

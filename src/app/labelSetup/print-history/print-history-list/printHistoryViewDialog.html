@@ -1,0 +1,41 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle">Print History</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" tabindex="0" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'">
+    <div class="formContainer" fxLayout="column">
+        <div class="container" fxLayout="column">
+
+            <div fxLayout="row" fxLayoutGap="20px" [ngClass]="'mb10'">
+                    <!-- <div fxLayout="row"> -->
+                        <span [ngClass]="'viewDialogDataTitle'" fxFlex='20'>Parameter</span>
+                        <span
+                            [ngClass]="'viwDialogData'">{{data[0].parameter ? data[0].parameter : '-'}}</span>
+                    <!-- </div> -->
+            </div>
+
+            <div fxLayout="row" fxLayoutGap="20px" [ngClass]="'mb10'">
+                <!-- <div fxLayout="row"> -->
+                    <span [ngClass]="'viewDialogDataTitle'" fxFlex='20'>Message</span>
+                    <span [ngClass]="'viwDialogData'">{{data[0].message ? data[0].message : '-'}}</span>
+                <!-- </div> -->
+            </div>
+            <div fxLayout="row" fxLayoutGap="20px" [ngClass]="'mb10'">
+                <!-- <div fxLayout="row"> -->
+                    <span [ngClass]="'viewDialogDataTitle'" fxFlex='20'>Reprint Reference Id</span>
+                    <span [ngClass]="'viwDialogData'">{{data[0].referenceID}}</span>
+                <!-- </div> -->
+            </div>
+                    </div>
+
+    </div>
+</div>
+<!-- <div mat-dialog-actions [ngClass]="'viewActionFooter'">
+    <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary"
+        [mat-dialog-close]="dataObject.shipmentId" cdkFocusInitial>Edit</button>
+</div> -->

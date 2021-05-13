@@ -1,0 +1,204 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle">Item Details</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button  >
+            <mat-icon class="viewDialogCloseIcon" (click)="onCloseClick()" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'">
+            <div class="container" fxLayout="column">
+                    <div fxLayout="column" fxFlex style="padding: 10px 10px 0px 24px; background-color: #dddddd;">
+                        <div fxLayout="row" [ngClass]="'mb10'" fxLayoutGap="10px">
+                            <div fxLayout="row" fxFlex="30">
+                                <span [ngClass]="'viewDialogDataTitle'">Item : &nbsp;</span>
+                                <span [ngClass]="'viwDialogData'"> {{data.element.itemName}}</span>
+                            </div>
+                            <div fxLayout="row" fxFlex="10">
+                                <span [ngClass]="'viewDialogDataTitle'">Quantity : &nbsp;</span>
+                                <span [ngClass]="'viwDialogData'">{{data.element.quantity}}</span>
+                            </div>
+                            <div fxLayout="column" fxFlex="55"></div>
+                        </div>
+                    </div>
+                    <div  [ngStyle]="{'min-width': 'auto'}"
+                    [ngClass]="parameterDataSourceItemAsnLine.data.length ? 'customTable' : 'scrollHide'" >
+                        <table mat-table [dataSource]="parameterDataSourceItemAsnLine" >
+                            <ng-container matColumnDef="sno">
+                                <th mat-header-cell *matHeaderCellDef class="width10">
+                                    <span >S.No</span>
+                                </th>
+                                <td mat-cell *matCellDef="let element; let i = index;" class="width10">
+                                    <span>{{ paginator.pageSize * paginator.pageIndex + i + 1 }} </span>
+                                </td>
+                            </ng-container>   
+                            <ng-container matColumnDef="asnLpnNumber">
+                                <th mat-header-cell *matHeaderCellDef  class="width15" >LPN</th>
+                                <td mat-cell *matCellDef="let element; let i=index" class="width15 setPadding">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field [ngClass]="''">
+                                                <input matInput [(ngModel)]="element.asnLpnNumber"
+                                                autocomplete="off"  (blur)="lpnFocusOut($event, element.asnLpnNumber, paginator.pageSize * paginator.pageIndex + i )"
+                                                 />
+                                                <mat-error>Please enter Quantity</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                            <span [ngClass]="'nonEditiableField'">{{
+                                                            element.asnLpnNumber
+                                                        }}</span>
+                                        </div>
+                                    </td>
+                            </ng-container>    
+                            <ng-container matColumnDef="asnBatchNumber">
+                                <th mat-header-cell *matHeaderCellDef class="width15">Batch</th>
+                                <td mat-cell *matCellDef="let element; let i=index" class="width15 setPadding">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                                <input matInput [(ngModel)]="element.asnBatchNumber"
+                                                autocomplete="off"  (blur)="batchFocusOut($event, element.asnBatchNumber, paginator.pageSize * paginator.pageIndex + i )"
+                                                 />
+                                                <mat-error>Please enter Quantity</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                            <span [ngClass]="'nonEditiableField'">{{
+                                                            element.asnBatchNumber
+                                                        }}</span>
+                                        </div>
+                                    </td>
+                            </ng-container>  
+                            <ng-container matColumnDef="asnFromSerial">
+                                <th mat-header-cell *matHeaderCellDef class="width15">From Serial</th>
+                                <td mat-cell *matCellDef="let element" class="width15 setPadding">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                                <input matInput [(ngModel)]="element.asnFromSerial"
+                                                autocomplete="off" (keypress)='serialKeyPress($event)'  
+                                                 />
+                                                <mat-error>Please enter Quantity</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                            <span [ngClass]="'nonEditiableField'">{{
+                                                            element.asnFromSerial
+                                                        }}</span>
+                                        </div>
+                                    </td>
+                            </ng-container>  
+                            <ng-container matColumnDef="asnToSerial">
+                                <th mat-header-cell *matHeaderCellDef class="width15">To Serial</th>
+                                <td mat-cell *matCellDef="let element" class="width15 setPadding">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                                <input matInput [(ngModel)]="element.asnToSerial"
+                                                autocomplete="off"   
+                                                 />
+                                                <mat-error>Please enter Quantity</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                            <span [ngClass]="'nonEditiableField'">{{
+                                                            element.asnToSerial
+                                                        }}</span>
+                                        </div>
+                                    </td>
+                            </ng-container>  
+                            <ng-container matColumnDef="asnQuantity">
+                                <th mat-header-cell *matHeaderCellDef class="width15">Quantity</th>
+                                <td mat-cell *matCellDef="let element" class="width15 setPadding">
+                                        <div *ngIf="element.editing">
+                                            <mat-form-field [ngClass]="'inputMarginClassExtend'">
+                                                <input matInput [(ngModel)]="element.asnQuantity"type="number"
+                                                 (keypress)="commonService.isDecimal($event)"  autocomplete="off" 
+                                                 />
+                                                <mat-error>Please enter Quantity</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div *ngIf="!element.editing">
+                                            <span [ngClass]="'nonEditiableField'">{{
+                                                            element.asnQuantity
+                                                        }}</span>
+                                        </div>
+                                    </td>
+                            </ng-container>    
+                            <ng-container matColumnDef="action" stickyEnd>
+                                <th mat-header-cell *matHeaderCellDef [ngClass]="'actionColumn width15'"> Action </th>
+                                <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons width15'">
+                                    <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center"
+                                        style="justify-content: center;">
+                                        <span *ngIf="!element.addNewRecord" class="icon-edit"
+                                            (click)="beginEdit(element,$event)" matRipple matTooltip="Edit"
+                                            [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                            [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                                        <span *ngIf="element.addNewRecord" [ngClass]="'padding0'">
+                                            <span class="icon-clear" (click)="deleteRow(element, i)" matRipple
+                                                matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                                [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                                [matRippleRadius]="false" ></span>
+                                        </span>
+                                        <span *ngIf="element.editing && !element.addNewRecord" [ngClass]="'padding0'">
+                                            <span class="icon-clear"
+                                                (click)="disableEdit(element, paginator.pageSize * paginator.pageIndex + i)" matRipple
+                                                matTooltip="Cancel" [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                                [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                                        </span>
+                                        <span *ngIf="!element.addNewRecord && element.asnContentId" class="icon-delete"
+                                        matRipple matTooltip="Delete"
+                                       (click)= "deleteContentRow(paginator.pageSize * paginator.pageIndex + i)"
+                                       [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                       [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                                       
+                                    </div>
+                                </td>
+                        </ng-container>      
+                         
+                     
+                            <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsItemAsnLine"></tr>
+                            <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumnsItemAsnLine"></tr>
+                        </table>
+                        <ng-container *ngIf="listProgress">
+                            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                        </ng-container>
+            
+                        <ng-container *ngIf="!parameterDataSourceItemAsnLine.data.length && !listProgress">
+                            <div [ngClass]="'positionRelative'">
+                                <div [ngClass]="'noDataFound'"><small></small></div>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="text-align-right pr-10" >  
+                        <div fxLayout="row" style="margin-top: 40px;">  
+                                <div fxFlex="25" fxLayoutGap="20px"></div>
+                                <div fxFlex="50" fxLayoutGap="20px">
+                                   
+                                </div>
+                                <div fxFlex="25" fxLayoutGap="20px">
+                                        <button mat-stroke-button class="orangeButtonBorder border-radius-3  colorAttribute " color="primary"
+                                        (click)="addRow()" matTooltip="Add Row" [disabled]="isEdit">
+                                        Add Row
+                                    </button>
+                                </div>
+                        </div> 
+                    </div>
+                    <!-- <div fxLayout="row" fxLayoutAlign="space-between center">
+                        <div [ngClass]="isAdd || isEdit ? 'formContainer' : ''">
+                                <button   mat-flat-button [ngClass]="'formButton saveButton mr10 '" color="primary"
+                                  (click)='additemDetails()'> Done </button>
+                        </div>
+                        <mat-paginator (page)="commonService.setPaginationSize($event)"  showFirstLastButtons
+                            [ngClass]="'mat-paginator-sticky'">
+                        </mat-paginator>
+                    </div> -->
+                    <div fxLayout="row" fxLayoutAlign="space-between center">
+                        <div [ngClass]="(isAdd || isEdit) ? 'formContainer' : ''" style="padding-left: 20px !important;">
+                            <button   mat-flat-button [ngClass]="'formButton saveButton'" color="primary"
+                            (click)='additemDetails()'> Done </button>
+                        </div>
+                        <mat-paginator (page)="commonService.setPaginationSize($event)"  showFirstLastButtons [ngClass]="'mat-paginator-sticky'"></mat-paginator>
+                      
+                    </div>
+            </div>
+           
+</div>

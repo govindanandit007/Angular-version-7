@@ -1,0 +1,153 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle"> Role View</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'">
+    <div class="container" fxLayout="column">
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Role Name</span>
+                <span [ngClass]="'viwDialogData'">{{data[0].roleName}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <mat-checkbox class="materailFieldSize" fxFlex="25" style="margin-top : 10px" [disabled]='true'
+                    [(ngModel)]="data[0].roleEnableFlag">
+                    Enabled Flag</mat-checkbox>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <mat-checkbox class="materailFieldSize" fxFlex="25" style="margin-top : 10px" [disabled]='true'
+                    [(ngModel)]="data[0].roleDefaultFlag">
+                    Default Flag</mat-checkbox>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="15px" class="padding15">
+            <div fxLayout="column" fxFlex="50">
+                <div class="screenTitle">Web Screen</div>
+                <div class="content customTable" [ngStyle]="{'max-height' : screenMaxHeight }">
+                    <div fxLayout="row" fxLayoutAlign="start start">
+                        <div fxLayout="column" fxFlex="33.33">
+                            <div class="contentTitle">Master Screens :</div>
+                            <span class="no-screen-found" *ngIf="!webScreens.Master">No Screen found for Master</span>
+                            <mat-checkbox *ngFor="let masterScreen of webScreens.Master" class="searchBoxLabel"
+                                fxFlex="25" [(ngModel)]="masterScreen.screenEnabledFlag" [disabled]='true'>
+                                {{masterScreen.screenName}}
+                            </mat-checkbox>
+                        </div>
+                        <div fxLayout="column" fxFlex="33.33">
+                            <div class="contentTitle">Inbound :</div>
+                            <span class="no-screen-found" *ngIf="!webScreens.Inbound">No Screen found for Inbound</span>
+                            <mat-checkbox *ngFor="let inboundScreen of webScreens.Inbound" class="searchBoxLabel"
+                                fxFlex="25" [(ngModel)]="inboundScreen.screenEnabledFlag" [disabled]='true'>
+                                {{inboundScreen.screenName}}
+                            </mat-checkbox>
+                            <div class="contentTitle">Outbound :</div>
+                            <span class="no-screen-found" *ngIf="!webScreens.Outbound">No Screen found for
+                                Outbound</span>
+                            <mat-checkbox *ngFor="let outboundScreen of webScreens.Outbound" class="searchBoxLabel" fxFlex="25"
+                                [(ngModel)]="outboundScreen.screenEnabledFlag" [disabled]='true'>
+                                {{outboundScreen.screenName}}
+                            </mat-checkbox>
+                            <div class="contentTitle">Warehouse :</div>
+                            <span class="no-screen-found" *ngIf="!webScreens.Warehouse">No Screen found for
+                                Warehouse</span>
+                            <mat-checkbox *ngFor="let warehouseScreen of webScreens.Warehouse" class="searchBoxLabel"
+                                fxFlex="25" [(ngModel)]="warehouseScreen.screenEnabledFlag" [disabled]='true'>
+                                {{warehouseScreen.screenName}}
+                            </mat-checkbox>
+                        </div>
+                        <div fxLayout="column" fxFlex="33.33">
+                            <div class="contentTitle">Transactions :</div>
+                            <span class="no-screen-found" *ngIf="!webScreens.Transactions">No Screen found for
+                                Transactions</span>
+                            <mat-checkbox *ngFor="let transactionsScreen of webScreens.Transactions" class="searchBoxLabel" fxFlex="25"
+                                [(ngModel)]="transactionsScreen.screenEnabledFlag" [disabled]='true'>{{transactionsScreen.screenName}}
+                            </mat-checkbox>
+                            <div class="contentTitle">Settings :</div>
+                            <span class="no-screen-found" *ngIf="!webScreens.Settings">No Screen found for
+                                Settings</span>
+                            <mat-checkbox *ngFor="let settingsScreen of webScreens.Settings" class="searchBoxLabel"
+                                fxFlex="25" [(ngModel)]="settingsScreen.screenEnabledFlag" [disabled]='true'>
+                                {{settingsScreen.screenName}}
+                            </mat-checkbox>
+                        </div>
+                        <div *ngIf='isExpressEnabled' fxLayout="column" fxFlex="33.33">
+                            <div class="contentTitle">Label Setup :</div>
+                            <span class="no-screen-found" *ngIf="!webScreens.LabelSetup">No Screen found for
+                                Label Setup</span>
+                            <mat-checkbox *ngFor="let transactionsScreen of webScreens.LabelSetup" class="searchBoxLabel" fxFlex="25"
+                                [(ngModel)]="transactionsScreen.screenEnabledFlag">{{transactionsScreen.screenName}}
+                            </mat-checkbox>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div fxLayout="column" fxFlex="50">
+                <div class="screenTitle">Mobile Screen</div>
+                <div class="content customTable" [ngStyle]="{'max-height' : screenMaxHeight }">
+                    <div fxLayout="row" fxLayoutAlign="start start">
+                        <div fxLayout="column" fxFlex="33.33">
+                            <div class="contentTitle">Master Screens :</div>
+                            <span class="no-screen-found" *ngIf="!mobileScreens.Master">No Screen found for
+                                Master</span>
+                            <mat-checkbox *ngFor="let masterScreen of mobileScreens.Master" class="searchBoxLabel"
+                                fxFlex="25" [(ngModel)]="masterScreen.screenEnabledFlag" [disabled]='true'>
+                                {{masterScreen.screenName}}
+                            </mat-checkbox>
+                            <div class="contentTitle">Warehouse :</div>
+                            <span class="no-screen-found" *ngIf="!mobileScreens.Warehouse">No Screen found for
+                                Warehouse</span>
+                            <mat-checkbox *ngFor="let warehouseScreen of mobileScreens.Warehouse" class="searchBoxLabel" fxFlex="25"
+                                [(ngModel)]="warehouseScreen.screenEnabledFlag" [disabled]='true'>
+                                {{warehouseScreen.screenName}}
+                            </mat-checkbox>
+                        </div>
+                        <div fxLayout="column" fxFlex="33.33">
+                            <div class="contentTitle">Inbound :</div>
+                            <span class="no-screen-found" *ngIf="!mobileScreens.Inbound">No Screen found for
+                                Inbound</span>
+                            <mat-checkbox *ngFor="let inboundScreen of mobileScreens.Inbound" class="searchBoxLabel"
+                                fxFlex="25" [(ngModel)]="inboundScreen.screenEnabledFlag" [disabled]='true'>
+                                {{inboundScreen.screenName}}
+                            </mat-checkbox>
+                            <div class="contentTitle">Outbound :</div>
+                            <span class="no-screen-found" *ngIf="!mobileScreens.Outbound">No Screen found for
+                                Outbound</span>
+                            <mat-checkbox *ngFor="let outboundScreen of mobileScreens.Outbound" class="searchBoxLabel" fxFlex="25"
+                                [(ngModel)]="outboundScreen.screenEnabledFlag" [disabled]='true'>
+                                {{outboundScreen.screenName}}
+                            </mat-checkbox>
+                            
+                        </div>
+                        <div fxLayout="column" fxFlex="33.33">
+
+                            <div class="contentTitle">Transactions :</div>
+                            <span class="no-screen-found" *ngIf="!mobileScreens.Transactions">No Screen found for
+                                Transactions</span>
+                            <mat-checkbox *ngFor="let transactionsScreen of mobileScreens.Transactions" class="searchBoxLabel" fxFlex="25"
+                                [(ngModel)]="transactionsScreen.screenEnabledFlag" [disabled]='true'>{{transactionsScreen.screenName}}
+                            </mat-checkbox>
+                            <div class="contentTitle">Settings :</div>
+                            <span class="no-screen-found" *ngIf="!mobileScreens.Settings">No Screen found for
+                                Settings</span>
+                            <mat-checkbox *ngFor="let settingsScreen of mobileScreens.Settings" class="searchBoxLabel"
+                                fxFlex="25" [(ngModel)]="settingsScreen.screenEnabledFlag" [disabled]='true'>
+                                {{settingsScreen.screenName}}
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions [ngClass]="'viewActionFooter'">
+    <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data[0].roleId"
+        cdkFocusInitial>Edit</button>
+</div>

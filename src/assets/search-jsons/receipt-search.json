@@ -1,0 +1,47 @@
+{
+    "type": "RECEIPT",
+    "searchType": "receipt",
+    "searchFor": "Search Receipt",
+    "companyKey": "receiptCompanyId",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "receiptNum",
+            "label": "Receipt Number",
+            "key": "receiptNum",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "IuCode",
+            "label": "IU",
+            "key": "iuId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "itemCode",
+            "label": "Item Name",
+            "key": "itemName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

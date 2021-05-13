@@ -1,0 +1,73 @@
+{
+    "type": "ACTIVITYMASTER",
+    "searchType": "activitymaster",
+    "searchFor": "Search Activity",
+    "companyKey": "",
+    "searchArray": [
+       
+        {
+            "type": "LOV",
+            "lovType": "transactionType",
+            "label": "Transaction Types",
+            "key": "transactionType",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "subActivities",
+            "label": "Sub Activities",
+            "key": "subactivity",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "activityName",
+            "label": "Activity Name",
+            "key": "activityName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "activityCode",
+            "label": "Activity Code",
+            "key": "activityCode",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "enableFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": ""  },
+                { "label": "Yes", "value": "Y" },
+                { "label": "No" , "value": "N" }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,51 @@
+{
+    "type": "TP",
+    "searchType": "tpCust",
+    "searchFor": "Search Customer",
+    "companyKey": "tpCompanyId",
+    "searchArray": [
+        {
+        "type": "LOV",
+        "lovType": "code",
+        "label": "Customer Code",
+        "key": "tpId",
+        "value": "",
+        "tpType":"CUST",
+        "list": [
+                {
+            "label": " Please Select",
+            "value": ""
+                }
+            ]
+        },
+        {
+        "type": "LOV",
+        "lovType": "name",
+        "label": "Customer Name",
+        "key": "tpId",
+        "tpType":"CUST",
+        "value": "",
+        "list": [
+                {
+            "label": " Please Select",
+            "value": ""
+                }
+            ]
+        },
+        {
+        "type": "LOV",
+        "lovType": "enableFlag",
+        "label": "Enable Flag",
+        "key": "tpEnabledFlag",
+        "value": "",
+        "list": [
+                { "label": "All", "value": ""
+                },
+                { "label": "Enabled", "value": "Y"
+                },
+                { "label": "Disabled", "value": "N"
+                }
+            ]
+        }
+    ]
+}

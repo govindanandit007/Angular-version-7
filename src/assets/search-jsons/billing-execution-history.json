@@ -1,0 +1,62 @@
+{
+    
+    "type": "actBilEngExecHis",
+    "searchType": "actBilEngExecHis",
+    "searchFor": "Search Billing Execution",
+    "companyKey": "",
+    "searchArray": [
+       
+        {
+            "type": "LOV",
+            "lovType": "requestNumber",
+            "label": "Request #",
+            "key": "requestNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "status",
+            "label": "Status",
+            "key": "status",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "fromDate",
+            "label": "Start Date",
+            "key": "excecutionPeriodFrom",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "toDate",
+            "label": "End Date",
+            "key": "excecutionPeriodTo",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,630 @@
+<div fxFlex="100" class="contentBorder marginT15">
+    <div [ngClass]="'formHeader'" fxLayout="row">
+        <div fxFlex fxLayoutAlign="start">
+            <span class="formHeaderTitle"><app-breadcrumb></app-breadcrumb>  </span>
+        </div>
+        <div fxLayoutAlign="end">
+            <button
+                mat-stroke-button
+                class="orangeButtonBorder colorAttribute"
+                color="primary"
+            >
+                Attribute
+            </button>
+        </div>
+    </div>
+
+    <div fxLayout="row">
+        <mat-divider fxFlex="100"></mat-divider>
+    </div>
+
+    <div class="formContainer" fxLayout="column">
+        <form #woForm="ngForm" id="ngForm" [formGroup]="workOrderForm" autocomplete="off" (ngSubmit)="onSubmit($event, woForm)">
+            <div class="container" fxLayout="column">
+                <div fxLayout="row" fxLayoutGap="20px">
+                        <mat-form-field  *ngIf="screenType === 'DKT' || screenType === 'KT' || (isEdit && !isRefWo)" class="materailFieldSize" fxFlex="15">
+                            <input matInput placeholder="WO Number" formControlName="woNumber"  />
+                        </mat-form-field>
+                        <!-- <mat-form-field  *ngIf="screenType === 'DKT'" class="materailFieldSize" fxFlex="15">
+                            <input matInput placeholder="WO Number" formControlName="referenceWoId"  />
+                        </mat-form-field> -->
+                        <!-- <div fxFlex="15"  *ngIf="screenType === 'DKT' && (!isEdit || isRefWo) "  class="materailFieldSize">
+                            <div *ngIf="inlineWOSearchLoader === 'hide'" fxFlex="100">
+                                <mat-form-field class="materailFieldSize ml5" *ngIf="showWOLov === 'show'" fxFlex="95"
+                                    autofocus>
+                                    <mat-select class=" iuInputWidth"   formControlName="woRefNumber">
+                                        <mat-option *ngFor="let temp of refWOList; let i=index;" [value]="temp.value"
+                                            (onSelectionChange)="workOrderChanged($event,temp)">
+                                            {{temp.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" *ngIf="showWOLov === 'hide'" fxFlex="95" >
+                                    <input matInput (keydown)="fetchNewSearchListForWO($event, null, false)"
+                                        (blur)="fetchNewSearchListForWO($event, null, false)"
+                                        placeholder=" WO Number"formControlName="woSearchValue" 
+                                        autocomplete="off" />
+                                </mat-form-field>
+                                 
+                                <div  fxFlex="20" >
+                                    <div [ngClass]="'pt-15'" >
+                                        <div   class="searchBtn icon-search " matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                                        (click)="fetchNewSearchListForWO($event, null, true)" >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="inlineWOSearchLoader === 'show'" fxFlex="90"
+                                style="padding-top: 10px;padding-left: 10px;">
+                                <div fxFlex="90">Searching...</div>
+                            </div>
+                        
+                        </div>  -->
+                        <mat-form-field class="materailFieldSize" fxFlex="20">
+                            <mat-select formControlName="woType" [disabled]="isEdit" [ngClass]="isEdit ? 'pointerEventnone selectArrowHide':''" placeholder="Type" required (blur)="woLogValidationErrors()">
+                                <mat-option *ngFor="let element of typeList" [value]="element.value">
+                                <!-- [disabled]="element.value === disableType && element.value !== ''"> -->
+                                    {{element.label}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="woFormErrors.woType">{{woFormErrors.woType}}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field  *ngIf="isEdit"  class="materailFieldSize" fxFlex="20">
+                            <input matInput formControlName="woSubTypeName" placeholder="Sub Type" [disabled]="'true'"  />
+                        </mat-form-field>
+                        <mat-form-field  *ngIf="!isRefWo && !isEdit" class="materailFieldSize" fxFlex="20">
+                            <mat-select formControlName="woSubType" [disabled]="isEdit" [ngClass]="isEdit ? 'pointerEventnone selectArrowHide':''" placeholder="Sub Type" required  (blur)="woLogValidationErrors()">
+                                <mat-option *ngFor="let element of woSubTypeList  " [value]="element.value">
+                                    {{element.label}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="woFormErrors.woSubType">{{woFormErrors.woSubType}}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field  *ngIf="!isRefWo && !isEdit" class="materailFieldSize" fxFlex="20">
+                            <mat-select formControlName="woStatus"  required  placeholder="Status" [ngClass]="isEdit ? 'pointerEventnone selectArrowHide':''" (blur)="woLogValidationErrors()">
+                                <mat-option *ngFor="let element of statusList" [value]="element.value">
+                                    {{element.label}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="woFormErrors.woStatus">{{woFormErrors.woStatus}}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field  *ngIf="isEdit"  class="materailFieldSize" fxFlex="20">
+                            <input matInput formControlName="woStatusName" placeholder="Status" [disabled]="'true'" />
+                        </mat-form-field>
+                        <mat-form-field class="materailFieldSize" fxFlex="20">
+                            <mat-select formControlName="woPriority" [disabled]="isEdit" [ngClass]="isEdit ? 'pointerEventnone selectArrowHide':''" placeholder="Priority" required (blur)="woLogValidationErrors()">
+                                <mat-option *ngFor="let element of priorityList" [value]="element.value">
+                                    {{element.label}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="woFormErrors.woPriority">{{woFormErrors.woPriority}}</mat-error>
+                        </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutGap="20px">
+                   <!-- <div fxFlex="15">
+                        <div *ngIf="inlineSearchLoader === 'hide'" fxFlex="100">
+                            <mat-form-field class="materailFieldSize" *ngIf="showLov === 'show'" fxFlex="80" autofocus>
+                                <mat-select formControlName="woTpId" [ngClass]="''"
+                                placeholder="Customer" (blur)="woLogValidationErrors()"  required>
+                                    <mat-option *ngFor="let element of customerList" [value]="element.value"
+                                    (onSelectionChange)="customerSelectionChanged($event,element.value)" >
+                                        {{ element.label }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="woFormErrors.woTpId">{{woFormErrors.woTpId}}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" *ngIf="showLov === 'hide'"  fxFlex="80">
+                                <input matInput  (keydown)="fetchNewSearchListForCustomer($event, null, false)"
+                                (blur)="fetchNewSearchListForCustomer($event, null, false)"
+                                placeholder="Search Customer *" formControlName="searchValue"  autocomplete="off" />
+                            </mat-form-field>
+
+                            <div fxFlex="20" >
+                            <div [ngClass]="'pt-15'">
+                                <div *ngIf="!isEdit" class="icon-search" style="width: 0px;
+                                padding-left: 10px;" matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                                (click)="fetchNewSearchListForCustomer($event, null, true)" >
+                                </div>
+                            </div>
+                            </div>
+
+                        </div>
+                        <div *ngIf="inlineSearchLoader === 'show'" fxFlex="50" style="padding-top: 15px; padding-left: 60px;">
+                            <div fxFlex="100">Searching...</div>
+                        </div>
+                    </div>
+                
+                    <mat-form-field class="materailFieldSize" fxFlex="15">
+                        <mat-select formControlName="woTpSiteId" placeholder="Customer Site" [ngClass]="isEdit ? 'pointerEventnone selectArrowHide':''" [disabled]="isEdit" required (blur)="woLogValidationErrors()">
+                            <mat-option *ngFor="let element of customerSiteList" [value]="element.value"
+                                >
+                                {{ element.label }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="woFormErrors.woTpSiteId">{{woFormErrors.woTpSiteId}}</mat-error>
+                    </mat-form-field> -->
+                    <div fxFlex="21">
+                        <div *ngIf="inlineItemSearchLoader === 'hide'" fxFlex="100">
+                        <mat-form-field  class="materailFieldSize" *ngIf="showItemLov === 'show'" fxFlex="90"  autofocus>
+                            <mat-select formControlName="woAssmItemId" placeholder=" Assembly Item" [disabled]="isEdit" [ngClass]="''" 
+                            (blur)="woLogValidationErrors()" required >
+                            <mat-option *ngFor="let item of itemList" [value]="item.value"
+                                    (onSelectionChange)="onItemChanged($event,item)" >
+                                    {{ item.label }}
+                            </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="woFormErrors.woAssmItemId">{{woFormErrors.woAssmItemId}}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="materailFieldSize" *ngIf="showItemLov === 'hide'" fxFlex="90"  >
+                          
+                            <input matInput    (keydown)="fetchNewSearchList($event,null,false)" 
+                            (blur)="fetchNewSearchList($event,null,false)" required
+                            formControlName="searchItemValue"  [disabled]="isEdit"
+                            placeholder="Assembly Item"  autocomplete="off" />
+                        </mat-form-field>
+                                                           
+                        <div fxFlex="10"  >
+                            <div [ngClass]="'pt-15'" >
+                                <div  *ngIf="!isEdit" class="searchBtn icon-search " matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                                (click)="fetchNewSearchList($event, null, true)" >
+                                </div>
+                            </div>
+                        </div>
+                     </div>        
+                    <div   *ngIf="inlineItemSearchLoader === 'show'" fxFlex="50" style="padding-top: 15px; padding-left: 60px;">
+                        <div>Searching...</div>
+                    </div>
+                </div>
+                
+                    <mat-form-field class="materailFieldSize" fxFlex="35">
+                        <input matInput formControlName="woDescription" placeholder="Description"    />
+                    </mat-form-field> 
+                    <mat-form-field class="materailFieldSize" fxFlex="10">
+                        <input id="itemQty" matInput placeholder="Required Qty" formControlName="woReqQty" required 
+                        [disabled]='isEdit'
+                        (keypress)="commonService.isNaturalNumber($event)" 
+                        />
+                        <mat-error *ngIf="woFormErrors.woReqQty">{{woFormErrors.woReqQty}}</mat-error>
+                    </mat-form-field>
+                    
+                    <mat-form-field class="materailFieldSize" fxFlex="10">
+                        <mat-select formControlName="woUom" [disabled]="isEdit" [ngClass]="isEdit ? 'pointerEventnone selectArrowHide':''" placeholder="UOM"  (blur)="woLogValidationErrors()" required>
+                            <mat-option *ngFor="let element of uomList" [value]="element.value" (onSelectionChange)="onHeaderUOMChanged($event,element)" >
+                                {{element.label}}</mat-option>
+                        </mat-select>
+                        
+                    </mat-form-field>
+                    <mat-form-field fxFlex="12" [ngClass]="isEdit ? 'inputDisabled disableDateInput' : 'disableDateInput'">
+                        <input matInput [matDatepicker]="date" formControlName="woReqDate" [readonly]="isEdit" [ngClass]="isEdit ? 'inputDisable' : ''" [disabled]="isEdit"
+                    placeholder="Required Date" [min]="minDate" (blur)="woLogValidationErrors()" required (ngModelChange)="onRequiredDateChanged($event)"
+                    (click)="this.commonService.disableInput($event)"  on-focus="this.commonService.disableInput($event)"   />
+                        <mat-error *ngIf="woFormErrors.woReqDate">{{woFormErrors.woReqDate}}
+                        </mat-error>
+                        <mat-datepicker-toggle matSuffix [for]="date" [disabled]="isEdit"></mat-datepicker-toggle>
+                        <mat-datepicker #date></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field fxFlex="12" [ngClass]="isEdit ? 'inputDisabled disableDateInput' : 'disableDateInput'">
+                        <input matInput [matDatepicker]="date1" formControlName="woCompletionDate" [readonly]="isEdit" [ngClass]="isEdit ? 'inputDisable' : ''" [disabled]="isEdit"
+                        placeholder="Completion Date" [min]="workOrderForm.controls.woReqDate.value"  [disabled]="'isEdit'" (ngModelChange)="completionDateChange($event)" 
+                        (click)="this.commonService.disableInput($event)"   on-focus="this.commonService.disableInput($event)"/>
+                       
+                        <mat-datepicker-toggle matSuffix [for]="date1" [disabled]="isEdit"></mat-datepicker-toggle>
+                        <mat-datepicker #date1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutGap="20px">               
+                   
+                    <!-- <mat-form-field class="materailFieldSize" fxFlex="15">
+                        <input matInput placeholder="Completion Qty" formControlName="woCompletionQty"  />
+                    </mat-form-field> -->
+                </div>
+                
+            </div>
+        </form>
+        <div class="marginT15" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">Work Order Lines : </span>
+            </div>
+            <div fxLayoutAlign="end">
+                <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                    Attribute
+                </button>
+            </div>
+        </div>
+         
+        <div [id]="'customTable'" [ngClass]="'customTable'" [ngStyle]="{'min-width': 'auto', 'max-height': '240px'}">
+            <table mat-table [dataSource]="woLineDataSource"  matSort class="resize-table" style="min-width: 1050px;"
+            matSortDisableClear  (matSortChange)= "sortChanged($event)">
+                <ng-container matColumnDef="woLineNumber">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="' customWidth60 mat-header-column-'+columns[0].field" (mousedown)="commonService.onResizeColumn($event, 0, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[0].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[0].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <div *ngIf="element.editing" >
+                            <mat-form-field [ngClass]="'inputMarginClass customWidth60'">
+                                <input matInput disabled [(ngModel)]="element.woLineNumber" (keypress)="commonService.isDecimal($event)" autocomplete="off">
+                            </mat-form-field>
+                        </div>
+                        <span *ngIf="!element.editing" class="customWidth60">{{element.woLineNumber}}</span>
+                    </td>
+                </ng-container>
+                <!--<ng-container matColumnDef="woLineIuId">
+                     <th mat-header-cell *matHeaderCellDef  [ngClass]="'customWidth120 mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[12].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[1].name }}</span>
+                    </th> -->
+                    <!-- <td mat-cell *matCellDef="let element;  let i=index"> -->
+                        <!-- <div *ngIf="element.editing && element.addNewRecord && isEdit">
+                            <mat-form-field [ngClass]="'customWidth120 inputMarginClass'">
+                                <mat-select placeholder="Required" [(ngModel)]="iuSelected"  #iufield
+                                [ngClass]="((isEdit && iuSelected )|| !element.addNewRecord )  ? 'pointerEventnone selectArrowHide' : ''"
+                                [disabled]='isEdit && iuSelected'
+                                   required>
+                                    <mat-option *ngFor="let iu of iuList" [value]="iu.value" (onSelectionChange)="iuSelectionChanged($event,iu.value,paginator.pageSize * paginator.pageIndex + i)">
+                                        {{iu.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div> -->
+                        <!-- <div *ngIf="element.editing || element.addNewRecord">
+                            <mat-form-field [ngClass]="'customWidth120 inputMarginClass'">
+                                <mat-select placeholder="Required" [(ngModel)]="iuSelected"  #iufield
+                                [ngClass]="'pointerEventnone selectArrowHide' "
+                                [disabled]='true'
+                                   required>
+                                    <mat-option *ngFor="let iu of iuList" [value]="iu.value" (onSelectionChange)="iuSelectionChanged($event,iu.value,paginator.pageSize * paginator.pageIndex + i)">
+                                        {{iu.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div> -->
+                        <!-- <span *ngIf="!element.editing"> -->
+                        <!-- <span *ngIf="!element.editing">
+                            <mat-select [(ngModel)]="element.woLineIuId" [ngClass]="'pointerEventnone selectArrowHide'">
+                            <mat-option *ngFor="let iu of iuList" [value]="iu.value" >
+                                {{iu.label}}
+                            </mat-option>
+                            </mat-select>
+                        </span> -->
+                        <!-- <span *ngIf="isEdit && !element.addNewRecord && element.editing">
+                            <mat-select [(ngModel)]="element.woLineIuId" [ngClass]="'pointerEventnone selectArrowHide'">
+                            <mat-option *ngFor="let iu of iuList" [value]="iu.value" >
+                                {{iu.label}}
+                            </mat-option>
+                            </mat-select>
+                        </span> -->
+                    <!-- </td>
+                </ng-container>                            -->
+                <ng-container matColumnDef="woCmpItemId">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth180 mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[1].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[1].name }} <sup class="requiredMark">*</sup></span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" >
+                    <div *ngIf="element.editing" class="customWidth180">
+                            <div fxLayout="row"  *ngIf="element.inlineSearchLoader === 'hide'">
+                                    <div fxFlex="90" >
+                                        <mat-form-field  >
+                                            <input matInput  id='itemField' placeholder="Search Item" [(ngModel)]="element.searchValue" 
+                                            [disabled]='!element.addNewRecord'
+                                            (blur)="searchItem($event, paginator.pageSize * paginator.pageIndex + i, element.searchValue, itemListDialog)"
+                                            (focus)='itemFieldFocus()'  autocomplete="off"/>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div fxFlex="10"  >
+                                        <div [ngClass]="'pt-15'" >
+                                            <button  class="searchBtn icon-search"
+                                            [disabled]='!element.addNewRecord' matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                                            (click)="searchItem($event, paginator.pageSize * paginator.pageIndex + i, element.searchValue, itemListDialog)" >
+                                            </button>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div  fxLayout="row"  *ngIf="element.inlineSearchLoader === 'show'">
+                                <div fxFlex="100">Searching...</div>
+                            </div>
+                        </div>
+                        <div *ngIf="!element.editing" class="customWidth165">
+                            <span [ngClass]="'nonEditiableField'" style="pointer-events: none; " >
+                                    <span >{{element.itemName}}</span>
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="revisionId">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80 mat-header-column-'+columns[2].field" (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[2].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[2].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element;let i=index">
+                    <div *ngIf="element.editing" >
+                    
+                        <mat-form-field [ngClass]="'customWidth80'">
+                            <mat-select [(ngModel)]="element.revisionId"  
+                            >
+                                <mat-option *ngFor="let itemRevision of element.woItemRevisionList" [value]="itemRevision.value">
+                                    {{itemRevision.label}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <!-- <span *ngIf="!element.addNewRecord" [ngClass]="'nonEditiableField width150'">{{element.revsnNumber ? element.revsnNumber : '-'}}</span> -->
+                    </div>
+                    <span *ngIf="!element.editing" [ngClass]="' customWidth80 nonEditiableField'">{{element.revsnNumber ? element.revsnNumber : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="woCmpUom">
+                    <th mat-header-cell *matHeaderCellDef  [ngClass]="'customWidth100 mat-header-column-'+columns[3].field" (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[3].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[3].name }} <sup class="requiredMark">*</sup></span>
+                    </th>
+                    <td mat-cell *matCellDef="let element let i=index" >
+                       <div *ngIf="element.editing">
+                            <mat-form-field class="customWidth100">
+                                <mat-select [(ngModel)]="element.woCmpUom"
+                                 name="woCmpUom" required>
+                                    <mat-option *ngFor="let uom of element.UOMList" [value]="uom.value "  (onSelectionChange)="onUOMChanged($event,paginator.pageSize * paginator.pageIndex + i,uom)">
+                                        {{uom.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <span *ngIf="!element.editing" class="customWidth100"> 
+                            <mat-select [(ngModel)]="element.woCmpUom" [ngClass]="'pointerEventnone selectArrowHide'">
+                            <mat-option *ngFor="let uom of element.UOMList" [value]="uom.value" >
+                                {{uom.label}}
+                            </mat-option>
+                            </mat-select>
+                            <!-- <span *ngIf="!element.editing">{{element.UOM}}</span> -->
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="woCmpQty">
+                    <th mat-header-cell *matHeaderCellDef  [ngClass]="'mat-header-column-'+columns[4].field" (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[4].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[4].name }} <sup class="requiredMark">*</sup></span>
+                    </th>
+                    <td mat-cell *matCellDef="let element;let i=index" >
+                    <div *ngIf="element.editing; " >
+                        <mat-form-field class='width80'>
+                            <input matInput [(ngModel)]="element.woCmpQty" autocomplete="off"
+                            id="row{{paginator.pageSize * paginator.pageIndex + i}}"
+                             required
+                            (change)="woLineQuantityCheck(i,null)" (keypress)="commonService.isNaturalNumber($event)"
+                           (blur)="quantityFocusOut($event,paginator.pageSize * paginator.pageIndex + i,element.woCmpQty)">
+                            <mat-error *ngIf="element.woCmpQty === ''" >Please Enter Quantity</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <span *ngIf="!element.editing">{{element.woCmpQty}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="woCmpReqDate">
+                    <th mat-header-cell *matHeaderCellDef class="customWidth165"     [ngClass]="'mat-header-column-'+columns[5].field"
+                    (mousedown)="commonService.onResizeColumn($event,5, columns, matTableRef)" >
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[5].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[5].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index">
+                        <div *ngIf="element.editing">
+                            <mat-form-field floatLabel="never" [hideRequiredMarker]="true" [ngClass]="'dateField'">
+                                <input matInput [matDatepicker]="picker" autocomplete="off" disabled
+                                [(ngModel)]="element.woCmpReqDate" [min]="systemDate" (click)="this.commonService.disableInput($event)"  on-focus="this.commonService.disableInput($event)" />
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker ></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <span *ngIf="!element.editing">{{ element.woCmpReqDate | date }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="woCmpCompDate">
+                    <th mat-header-cell *matHeaderCellDef class="customWidth165"   [ngClass]="'mat-header-column-'+columns[6].field" (mousedown)="commonService.onResizeColumn($event,6 , columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[6].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[6].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div *ngIf="element.editing">
+                            <mat-form-field    floatLabel="never" [hideRequiredMarker]="true" [ngClass]="'dateField2'">
+                                <input matInput [matDatepicker]="picker1" placeholder="--/--/--" (click)="this.commonService.disableInput($event)"  on-focus="this.commonService.disableInput($event)"
+                                autocomplete="off" [min]="element.woCmpReqDate ? element.woCmpReqDate : minDate"
+                                    [(ngModel)]="element.woCmpCompDate" disabled />
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1 ></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <span *ngIf="!element.editing">{{ element.woCmpCompDate !== null ? (element.woCmpCompDate | date) : '-' }}</span>
+                    </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="woCmpConsumedQty">
+                    <th mat-header-cell *matHeaderCellDef  [ngClass]="'mat-header-column-'+columns[7].field" (mousedown)="commonService.onResizeColumn($event, 7, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[12].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[7].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" >
+                        <div *ngIf="element.editing">
+                            <mat-form-field  >
+                                <input matInput placeholder="required" [(ngModel)]="element.woCmpConsumedQty" autocomplete="off"
+                                 
+                                [disabled]='(element.woWaveEligibleQty === 0)&& !element.addNewRecord' required
+                               (keypress)="commonService.isNaturalNumber($event)" (blur)="quantityFocusOut($event,paginator.pageSize * paginator.pageIndex + i,element.woLineQuantity)">
+                                 
+                            </mat-form-field> 
+                        </div>                        
+                            <span *ngIf="!element.editing">{{ element.woCmpConsumedQty !== null ? (element.woCmpConsumedQty) : '-' }}</span>
+                    </td>
+                </ng-container> -->
+                
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef  [ngClass]="'cursor-auto actionColumn mat-header-column-'+columns[7].field">
+                        <span  >{{ columns[7].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons2'">
+                        <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center" >
+                            <!-- <span style="width: 30px; height: 30px;" [style.background-image]="'url(assets/images/iconsBlue/icon_ASN.png)'" >
+                                </span> -->
+                                <!-- <img src="assets/images/icons/ReportViewer.svg" class="setImg" > -->
+                            <span *ngIf="!element.addNewRecord && element.isDefault" class="icon-edit" 
+                                (click)="beginEdit(element, $event,  paginator.pageSize * paginator.pageIndex + i)" matRipple matTooltip="Edit"
+                                [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                [matRippleRadius]="false"></span>
+                           
+                            <span *ngIf="!element.addNewRecord && element.editing" [ngClass]="'padding0'">
+                                <span class="icon-clear" (click)="disableEdit(element, paginator.pageSize * paginator.pageIndex + i)" matRipple
+                                    matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                    [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                    [matRippleRadius]="false"></span>
+                            </span>  
+                            <span *ngIf="element.addNewRecord && !element.isDefault  && !disableCrossIcon" [ngClass]="'padding0'">
+                                <span class="icon-clear" (click)="deleteRow(element, paginator.pageSize * paginator.pageIndex + i)" matRipple matTooltip="Cancel"
+                                    [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'" 
+                                    [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                            </span>                         
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="woLineDisplayedColumns; sticky: true"></tr>
+                <tr mat-row [ngClass]="{'highlightRowError': selectedRowIndex == paginator.pageSize * paginator.pageIndex + i}" *matRowDef="let row; let i= index; columns: woLineDisplayedColumns;"></tr>
+            </table>
+        </div>
+        <div class="text-align-right" *ngIf="!isRefWo">
+            <button [disabled]="disableCrossIcon" mat-stroke-button class="orangeButtonBorder border-radius-3 colorAttribute marginT5" color="primary"
+                (click)="addRow()" matTooltip="Add Row">
+                Add Row
+            </button>
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div>
+                <button *ngIf="!isEdit || isRefWo" mat-flat-button [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10': 'formButton saveButton mr10'" (click)="woForm.ngSubmit.emit()" form="ngForm" >
+                    Save
+                </button>
+                <button *ngIf="isEdit && !isRefWo" mat-flat-button [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10': 'formButton saveButton mr10'" (click)="onSubmit($event, woForm)">
+                    Update
+                </button>
+                <button  mat-flat-button [ngClass]="'formButton saveButton mr10'"
+                 (click)="this.openConfirmationDialog()">
+                    Cancel
+                </button>
+            </div>
+            <mat-paginator (page)="commonService.setPaginationSize($event)"  showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+            </mat-paginator>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #myDialog let-data>
+    <h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+        <div fxLayout="row" fxLayoutGap="10px">
+            <div fxFlex="90" fxLayoutGap="10px"><span class="viewDialogTitle">Confirmation</span></div>
+            <div fxFlex="10" fxLayoutGap="10px">
+                <button mat-icon-button matDialogClose >
+                    <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </h1>
+   
+    <div mat-dialog-content>
+        <p class="pl-20">Do you want to update the reserve quantity?</p>
+    </div>
+    <div mat-dialog-actions class="padding10">
+        <button mat-flat-button color="primary"  class="formButton saveButton mr10" (click)='updateReserveQuantity($event, data.index, data.soLineQty)'>Yes</button>
+        <button mat-flat-button  color="accent" class="formButton cancelButton" (click)="closeConfirmationDialog(data)">No</button>
+    </div>
+</ng-template>
+
+
+<ng-template #itemListDialog>
+    <div mat-dialog-container>
+            <div fxLayout="row" fxLayoutGap="10px" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle class="messageHeaderTitle mat-dialog-title removePadding ">
+                <div fxFlex="96" fxLayoutGap="10px" style="padding-top: 5px;"><span class="viewDialogTitle mt5" >Component Item List</span></div>
+                <div fxFlex="4" fxLayoutGap="10px">
+                    <button mat-icon-button (click)='closeDialog()'  style="vertical-align: auto;">
+                        <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+        <div mat-dialog-content >
+            
+            <div class="container" fxLayout="column" >
+                <div fxLayout="column" >
+                    <div fxLayout="row"  fxLayoutGap="30px">
+                            <mat-form-field fxFlex="25">
+                                <input matInput placeholder="Enter Item" [(ngModel)]="searchItemName"  autocomplete="off"/>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="25">
+                                <input matInput placeholder="Enter Description" [(ngModel)]="searchDescription"  autocomplete="off"/>
+                            </mat-form-field>
+                      
+                            <button fxFlex="10"  mat-flat-button [ngClass]="'headerButton saveButton mr10'" (click)='updateDialogDatasourse()'>
+                                search
+                            </button>
+                    
+                            <button fxFlex="10" mat-flat-button [ngClass]="'headerButton saveButton mr10'" (click)='clearSearchFields()'>
+                                Clear
+                            </button>
+                            <div  fxFlex="29"></div>
+                    </div>
+                </div>
+                <div class="customTable" [ngClass]="!parameterDataSourceItemSearch.data.length || listProgressPopup ? 'setScroll' : 'setScroll'" 
+                style="max-height: 280px; ">
+                    <table mat-table [dataSource]="parameterDataSourceItemSearch" >
+                        <ng-container matColumnDef="No">
+                            <th mat-header-cell *matHeaderCellDef  >
+                                <span >#</span>
+                            </th>
+                            <td mat-cell *matCellDef="let element; let i = index;" >
+                                <div>
+                                    <span [ngClass]="'nonEditiableField'">
+                                        {{ paginatorSearchItem.pageSize * paginatorSearchItem.pageIndex + i + 1 }} </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="itemName">
+                            <th mat-header-cell *matHeaderCellDef  >Component Item</th>
+                            <td mat-cell *matCellDef="let element;   "  >
+                                <div>
+                                    <span [ngClass]="'nonEditiableField'"  >
+                                        {{ element.itemName ? element.itemName : '-' }}
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="itemDescription">
+                            <th mat-header-cell *matHeaderCellDef  >Description</th>
+                            <td mat-cell *matCellDef="let element;"  >
+                                <div>
+                                    <span [ngClass]="'nonEditiableField'"  >
+                                        <!-- {{ element.itemDescription ? element.itemDescription : '-' }} -->
+                                        {{(element.itemDescription.length > 80) ? ((element.itemDescription).slice(0, 70) + '...') : element.itemDescription}}
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                       
+                        <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsItemSearch" ></tr>
+                        <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumnsItemSearch; let i = index;"
+                        (click)="getSelectedItemRecord(row,  paginator.pageSize * paginator.pageIndex + i)"
+                        (dblclick)='saveSelectedItem()'
+                        [ngClass]="{'highlightRowSelect': itemSelectedRowIndex == paginator.pageSize * paginator.pageIndex + i}"></tr>
+                    </table>
+                    <ng-container *ngIf="listProgressPopup">
+                        <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                    </ng-container>
+
+                    <ng-container *ngIf="!parameterDataSourceItemSearch.data.length && !listProgressPopup ">
+                        <div [ngClass]="'positionRelative'" style="min-height:50px;">
+                            <div [ngClass]="'noDataFound'"><small>{{itemTableMessage}}</small></div>
+                        </div>
+                    </ng-container>
+               
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <div fxFlex='30'>
+                        <button  mat-flat-button [ngClass]="'formButton saveButton mr10'" [disabled]='itemSelectedRowIndex === null ' (click)='saveSelectedItem()'>
+                            ok
+                        </button>
+                        <button  mat-flat-button [ngClass]="'formButton saveButton mr10'"
+                         (click)="closeDialog()">
+                            Cancel
+                        </button>
+                    </div>
+                    <mat-paginator fxFlex='70' (page)="commonService.setPaginationSize($event)" #paginatorSearchItem   showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+                    </mat-paginator>
+                </div>
+              
+               
+            </div>
+        </div>
+    </div>
+</ng-template>
+ 

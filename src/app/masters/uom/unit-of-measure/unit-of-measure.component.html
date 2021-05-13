@@ -1,0 +1,266 @@
+<div [ngClass]="searchEnable ? 'sideContent' : ''">
+    <div class="contentBorder marginT15" [ngClass]="searchEnable ? 'content-wrapper1' : ''">
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">Unit of Measure :</span>
+            </div>
+            <div fxLayoutAlign="end">
+                <button *ngIf="!searchEnable" mat-mini-fab class="btn-search-bg mr10" (click)="searchComponentOpen()" matTooltip="Search"
+                    [matTooltipPosition]="tooltipPosition">
+                    <span class="headerIcon icon-search"></span>
+                </button>
+                <button mat-stroke-button class="orangeButtonBorder colorOperatingUnit mr10" color="primary"
+                    (click)="addRow($event)" matTooltip="Add Row">
+                    Add UOM
+                </button>
+                <span class="down-arrow" [matMenuTriggerFor]="exportmenu">
+                    <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                        Export
+                    </button>
+                </span>
+                <mat-menu #exportmenu="matMenu">
+                    <button mat-menu-item
+                        (click)="exporter.exportTable('xls', {fileName:'Flexi WMS - Unit of Measure List'})">XLS</button>
+                    <button mat-menu-item
+                        (click)="exporter.exportTable('xlsx', {fileName:'Flexi WMS - Unit of Measure List'})">XLSX</button>
+                    <button mat-menu-item
+                        (click)="exporter.exportTable('csv', {fileName:'Flexi WMS - Unit of Measure List'})">CSV</button>
+                </mat-menu>
+            </div>
+        </div>
+        <div class="container" fxLayout="column">
+            <div #customTable [ngClass]="!parameterDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'"
+            [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+                <table mat-table matTableExporter hiddenColumns='[9]' #exporter="matTableExporter" [dataSource]="parameterDataSource" matSort class="resize-table" style="min-width: 1300px;" matSortDisableClear>
+                    <ng-container matColumnDef="uom_Sno">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto mat-header-column-'+columns[0].field">
+                            <span >{{ columns[0] .name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i = index;">
+                            <span>{{ paginator.pageSize * paginator.pageIndex + i + 1 }} </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="uom_code">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[1].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[1] .name }} <sup class="requiredMark">*</sup></span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-form-field *ngIf="element.editing">
+                                <input matInput [(ngModel)]="element.uom_code" 
+                                    maxlength="10" autocomplete="off" required />
+                                <mat-error>Please enter uom code</mat-error>
+                            </mat-form-field>
+                            <span *ngIf="!element.editing" [ngClass]="'nonEditiableField'">{{ element.uom_code }}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="unit_of_measure">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[2].field" (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[2].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[2] .name }} <sup class="requiredMark">*</sup></span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-form-field *ngIf="element.editing">
+                                <input matInput [(ngModel)]="element.unit_of_measure" 
+                                autocomplete="off" required />
+                                <mat-error>Please enter unit of measure</mat-error>
+                            </mat-form-field>
+                            <span *ngIf="!element.editing">
+                                {{ element.unit_of_measure }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="uom_description">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[3].field" (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[3].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[3] .name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-form-field *ngIf="element.editing">
+                                <input maxlength="50" matInput [(ngModel)]="element.uom_description" autocomplete="off"/>
+                            </mat-form-field>
+                            <span *ngIf="!element.editing">
+                                {{ element.uom_description }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="class">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[4].field" (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[4].field" [disabled]="(isAdd || isEdit)? true : false">{{ columns[4] .name }} <sup class="requiredMark">*</sup></span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i=index">
+                            <mat-form-field *ngIf="element.editing">
+                                <mat-select [(ngModel)]="element.class" name="class" 
+                                    required>
+                                    <mat-option *ngFor="let temp of classLov" [value]="temp.key"
+                                    (onSelectionChange)="classSelectionChanged($event, paginator.pageSize * paginator.pageIndex + i, temp.key)">
+                                        {{temp.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error> Please Select class</mat-error>
+                            </mat-form-field>
+                            <span *ngIf="!element.editing" style="pointer-events: none;">
+                                <mat-select [(ngModel)]="element.class" [ngClass]="'selectArrowHide'" name="class" 
+                                    required>
+                                    <mat-option *ngFor="let temp of classLov" [value]="temp.key"
+                                    (onSelectionChange)="classSelectionChanged($event, paginator.pageSize * paginator.pageIndex + i, temp.key)" >
+                                        {{temp.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="conversion">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[5].field" (mousedown)="commonService.onResizeColumn($event, 5, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[5].field" [disabled]="(isAdd || isEdit)? true : false" ><div style='font-weight: bold;'>=</div>
+                            &nbsp;{{ columns[5] .name }} <sup class="requiredMark">*</sup></span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-form-field *ngIf="element.editing">
+                                <input matInput [(ngModel)]="element.conversion" 
+                                autocomplete="off" maxlength="15" (keypress)="commonService.isDecimal($event)"
+                                required [disabled]="element.enabled_baseFlag" />
+                            </mat-form-field>
+                            <span *ngIf="!element.editing">
+                                {{ element.conversion }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="baseUom">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[6].field" (mousedown)="commonService.onResizeColumn($event, 6, columns, matTableRef)">
+                            <span [mat-sort-header]="(isAdd || isEdit) ? null : columns[6].field" [disabled]="(isAdd || isEdit)? true : false" ><div style='font-weight: bold;'>x</div>
+                            &nbsp;{{ columns[6] .name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-form-field *ngIf="element.editing">
+                                <input matInput [(ngModel)]="element.baseUom" [disabled]="true"
+                                    required />
+                            </mat-form-field>
+                            <span *ngIf="!element.editing">{{ element.baseUom }}</span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="enabled_baseFlag">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto text-center mat-header-column-'+columns[7].field">
+                            <span >{{ columns[7] .name }} </span>
+                            </th>
+                        <td mat-cell *matCellDef="let element; let i=index" class="">
+                            <!-- <span matTooltip="Enable Flag" [matTooltipPosition]="tooltipPosition"
+                                [ngClass]="'padding0'">
+                                <mat-checkbox fxLayout="row" fxLayoutAlign="center center"
+                                    [(ngModel)]="element.enabled_baseFlag" disabled>
+                                </mat-checkbox>
+                            </span> -->
+                            <span *ngIf="element.editing" matTooltip="Base UOM Flag" [matTooltipPosition]="tooltipPosition">
+                            <mat-checkbox fxLayout="row" fxLayoutAlign="center center" [(ngModel)]="element.enabled_baseFlag"
+                            (change)="baseFlagSelectionChanged($event, paginator.pageSize * paginator.pageIndex + i)"
+                            [disabled]="element.baseUom !==''">
+                            <mat-icon>{{element.enabled_baseFlag}}</mat-icon>
+                            </mat-checkbox>
+                            </span>
+                            <span *ngIf="!element.editing" matTooltip="Base UOM Flag" [matTooltipPosition]="tooltipPosition">
+                            <mat-checkbox fxLayout="row" fxLayoutAlign="center center" [(ngModel)]="element.enabled_baseFlag" disabled>
+                            <mat-icon>{{element.enabled_baseFlag}}</mat-icon>
+                            </mat-checkbox>
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="enabled_flag">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto text-center mat-header-column-'+columns[8].field">
+                            <span >{{ columns[8] .name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span *ngIf="element.editing" matTooltip="Enable Flag" [matTooltipPosition]="tooltipPosition"
+                                [ngClass]="'padding0'">
+                                <mat-checkbox fxLayout="row" fxLayoutAlign="center center"
+                                    [(ngModel)]="element.enabled_flag">
+                                    <mat-icon>{{element.enabled_flag}}</mat-icon>
+                                </mat-checkbox>
+                            </span>
+                            <span *ngIf="!element.editing" matTooltip="Enable Flag" [matTooltipPosition]="tooltipPosition"
+                                [ngClass]="'padding0'">
+                                <mat-checkbox fxLayout="row" fxLayoutAlign="center center"
+                                    [(ngModel)]="element.enabled_flag" disabled>
+                                    <mat-icon>{{element.enabled_flag}}</mat-icon>
+                                </mat-checkbox>
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action" stickyEnd>
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto actionColumn mat-header-column-'+columns[9].field">
+                            <span >{{ columns[9] .name }} </span>
+                            </th>
+                        <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'">
+                            <div fxLayout="row" fxLayoutGap="5px" style="justify-content: center;">
+                                <span *ngIf="!element.addNewRecord && element.uomId" class="icon-edit"
+                                    (click)="beginEdit(element, $event, i)" matRipple matTooltip="Edit"
+                                    [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                    [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                                <span *ngIf="!element.addNewRecord && element.editing" [ngClass]="'padding0'">
+                                        <span class="icon-clear" (click)="disableEdit(element, paginator.pageSize * paginator.pageIndex + i)" matRipple
+                                            matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                            [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                            [matRippleRadius]="false"></span>
+                                </span>
+                                <span *ngIf="element.addNewRecord" [ngClass]="'padding0'">
+                                    <span class="icon-clear" (click)="deleteRow(element, i)" matRipple
+                                        matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                        [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                        [matRippleRadius]="false"></span>
+                                </span>
+                                <span *ngIf="!element.addNewRecord  && element.uomId" [ngClass]="'padding0'">
+                                    <span class="icon-box-3" (click)="gotoUomCoversion(element, i)" matRipple
+                                        matTooltip="Set UOM Conversion" [matTooltipPosition]="tooltipPosition"
+                                        [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                        [matRippleRadius]="false"></span>
+
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns; sticky: true"></tr>
+                    <tr mat-row [ngClass]="{'highlightRowError': selectedRowIndex == paginator.pageSize * paginator.pageIndex + i}" *matRowDef="let row; let i= index; columns: parameterDisplayedColumns;"></tr>
+                </table>
+                <ng-container *ngIf="listProgress">
+                    <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </ng-container>
+                <ng-container *ngIf="!parameterDataSource.data.length && !listProgress">
+                    <div [ngClass]="'noDataFound'">
+                        <small>{{uomTableMessage}}</small>
+                    </div>
+                </ng-container>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <div [ngClass]="isAdd || isEdit ? 'formContainer' : ''">
+                    <button *ngIf="isAdd" mat-flat-button [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10' : 'formButton saveButton mr10'" color="primary"
+                        (click)="onSubmit('save')">
+                        Save
+                    </button>
+                    <button *ngIf="isEdit" mat-flat-button [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10' : 'formButton saveButton mr10'" color="primary"
+                        (click)="onSubmit('update')">
+                        Update
+                    </button>
+                    <!-- <button *ngIf="isAdd || isEdit" mat-flat-button
+                    [ngClass]="'formButton saveButton'"                           
+                    (click)="commonService.openConfirmationDialog('trading partner','uom')"
+                        color="primary">
+                        Cancel
+                    </button> -->
+                </div>
+                <mat-paginator (page)="commonService.setPaginationSize($event)"  showFirstLastButtons
+                    [ngClass]="'mat-paginator-sticky'">
+                </mat-paginator>
+            </div>
+
+        </div>
+    </div>
+    <div [fxShow]="searchEnable" [ngClass]="searchEnable ? 'searchRight top-68' : ''">
+        <mat-sidenav class="rightSideNav" opened mode="side" position="end" [disableClose]="true">
+            <app-search-bar fxLayout="row" (searchComponentToggle)="getSearchToggle($event)"></app-search-bar>
+        </mat-sidenav>
+    </div>
+</div>

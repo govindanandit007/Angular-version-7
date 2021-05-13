@@ -1,0 +1,226 @@
+<div class="contentArea">
+
+    <mat-tab-group mat-stretch-tabs animationDuration="0ms" class="example-stretched-tabs" (selectedTabChange)="onTabChanged($event);"> 
+        <mat-tab label="Master">
+            <ng-template mat-tab-label>
+                <span><img   src="assets/images/iconsBlue/icon_master.png" class="imgTabHeader" alt="Master"></span>
+                Master
+            </ng-template>
+            <div  fxLayout="row" fxLayoutGap="15px">
+                <div fxLayout="column" fxFlex="7 0 0">
+                    <div fxLayout="row" fxLayoutGap="10px" class="mt10">
+                        <div fxFlex="50">
+                            <div [className]="'chartHeading'" >Active Items Categories</div>
+                            <div id="activeItemsCategoriesChart" style="height: 220px; background-color: white;"></div>
+                        </div>
+                        <div fxFlex="50" >
+                            <div [className]="'chartHeading'" >Active Items</div>
+                            <div id="activeItemsChart" style="height: 220px; background-color: white;"></div>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="10px" class="mt10">
+                        <div fxFlex="50">
+                            <div [className]="'chartHeading'" >Active Trading-Partners Customers</div>
+                            <div id="activeTPCustomerChart" style="height: 220px; background-color: white;"></div>
+                        </div>
+                        <div fxFlex="50">
+                            <div [className]="'chartHeading'" >Active Trading-Partners Suppliers</div>
+                            <div id="activeTPSupplierChart" style="height: 220px; background-color: white;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab label="Inbound">
+            <ng-template mat-tab-label>
+                <span><img   src="assets/images/iconsBlue/Inbound.svg" class="imgTabHeader" alt="Master"></span>
+                Inbound
+            </ng-template>
+            <div  fxLayout="row" fxLayoutGap="15px">
+                <div fxLayout="column" fxFlex="7 0 0">
+                    <div fxLayout="row" fxLayoutGap="10px" class="mt10">
+                        <div fxFlex="50">
+                            <div [className]="'chartHeading'" >Pending Receipts</div>
+                            <div id="pendingReceiptsChart" style="height: 220px; background-color: white;"></div>
+                        </div>
+                        <div fxFlex="50" >
+                            <div [className]="'chartHeading'" >Pending QC Receipts</div>
+                            <div id="pendingQCReceiptsChart" style="height: 220px; background-color: white;"></div>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="10px" class="mt10">
+                        <div fxFlex="50">
+                            <div [className]="'chartHeading'" >Pending Putaway</div>
+                            <div id="pendingPutawayChart" style="height: 220px; background-color: white;"></div>
+                        </div>
+                        <div fxFlex="50"></div>
+                    </div>
+                </div>
+        </div>
+        </mat-tab>
+        <mat-tab label="Warehouse"> 
+            <ng-template mat-tab-label>
+                <span><img   src="assets/images/iconsBlue/Warehouse.svg" class="imgTabHeader" alt="Master"></span>
+                Warehouse
+            </ng-template>
+            <div  fxLayout="row" fxLayoutGap="15px"  >
+                <div fxLayout="column" fxFlex="7 0 0">
+                    <div fxLayout="row" fxLayoutGap="10px" class="mt10">
+                        <div fxFlex="50">
+                            <div [className]="'chartHeading'" >Tasks by locator groups</div>
+                            <div id="subInventoryBarChart" style="height: 350px; background-color: white;"></div>
+                        </div>
+                        <div fxFlex="50">
+                            <div [className]="'chartHeading'" >Tasks by Users</div>
+                            <div id="usersBarChart" style="height: 350px; background-color: white;"></div>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="10px" class="mt10 mb40">
+                        <div fxFlex="50">
+                            <div [className]="'chartHeading'" >Pending Cycle Count Task</div>
+                            <div id="pendingCycleCountChart" style="height: 250px; background-color: white;"></div>
+                        </div>
+                        <div fxFlex="50">
+                            <div [className]="'chartHeading'" >Pending Replenishment</div>
+                            <div id="pendingReplenishmentChart" style="height: 250px; background-color: white;"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab label="Outbound">
+            <ng-template mat-tab-label>
+                <span><img   src="assets/images/iconsBlue/Outbound.svg" class="imgTabHeader" alt="Master"></span>
+                Outbound
+            </ng-template>
+            <div  fxLayout="row" fxLayoutGap="15px"  >
+                <div fxLayout="column" fxFlex="7 0 0">
+                    <div fxLayout="row" fxLayoutGap="10px" class="mt10">
+                        <div fxFlex="50">
+                            <div [className]="'chartHeading'" >Pending Pick release tasks by locator groups</div>
+                            <div id="pendingPickReleaseLgChart" style="height: 350px; background-color: white;"></div>
+                        </div>
+                        <div fxFlex="50">
+                            <div [className]="'chartHeading'" >Pending Pick release tasks by Users</div>
+                            <div id="pendingPickReleaseUserChart" style="height: 350px; background-color: white;"></div>
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="10px" class="mt10 mb40">
+                        <div fxFlex="50">
+                            <div [className]="'chartHeading'" >Pending Pick release</div>
+                            <div id="pendingPickReleaseChart" style="height: 250px; background-color: white;"></div>
+                        </div>
+                        <div fxFlex="50">
+                            <div [className]="'chartHeading'" >Pending Ship Confirm</div>
+                            <div id="pendingShipConfirmChart" style="height: 250px; background-color: white;"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab label="Transactions"> 
+            <ng-template mat-tab-label>
+                <span><img   src="assets/images/iconsBlue/Transactions.svg" class="imgTabHeader" alt="Master"></span>
+                Transactions
+            </ng-template>
+            <div  fxLayout="row" fxLayoutGap="15px" class="mt10">
+                <div fxLayout="column" fxFlex="7 0 0">
+                    <div fxLayout="row" fxLayoutGap="10px">
+                        <div fxFlex="50">
+                            <div [className]="'chartHeading'" >Onhand Stock LG Wise</div>
+                            <div id="onhandStockLGBarChart" style="height: 450px; background-color: white;"></div>
+                        </div>
+                        <div fxFlex="50">
+                            <!-- <div [className]="'chartHeading'" >LPN/Non LPN Controlled LG</div>
+                            <div id="lpnControlledLGChart" style="height: 450px; background-color: white;"></div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+       
+        <!-- <mat-tab label="Reports"> 
+            <ng-template mat-tab-label>
+                <span><img   src="assets/images/iconsBlue/Reports.svg" class="imgTabHeader" alt="Master"></span>
+                Reports
+            </ng-template>
+            <div *ngIf='currentDashboard === "Reports"'  fxLayoutGap="15px"  >
+                <div *ngIf='reportList === true' [className]="'panelTitle'" style="padding-bottom: 20px;">Reports</div>
+                <div *ngIf='reportList === true' fxLayout="row" fxLayout="row wrap" fxLayoutAlign="start flex-start"   class="homepageContent">
+                    <div  class="setDimension" *ngFor="let screenModule of reportArray">
+                        <div fxLayout="column" [ngClass]="'moduleTab'" (click)="loadReport(screenModule)">
+                            <div class="cover"></div>
+                            <div fxFlex="60"  class="thumb35 icon" fxLayoutAlign="center center">
+                                <img src="assets/images/icons/ReportViewer.svg" class="setImg" >
+                            </div>
+                            <div fxFlex="40" fxLayoutAlign="center center" class='tabTitle'>
+                                    {{screenModule }}
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                <!-- [viewMode]="'PRINT_PREVIEW'" -->
+                <!-- <div *ngIf='reportList !== true' style="width: 100%; height: 100vh;">
+                    <button mat-stroke-button class="orangeButtonBorder colorAttribute reportsBtn" (click)="backToReports()" color="primary" >Back</button>
+                    <tr-viewer #viewer1 
+                    [containerStyle]="viewerContainerStyle"
+                    [serviceUrl]="'http://150.136.110.79:8084/api/reports/'"
+                    [viewMode]="'INTERACTIVE'"
+                    [scaleMode]="'SPECIFIC'"
+                    [scale]="1.0"
+                    [ready]="ready"
+                    [viewerToolTipOpening]="viewerToolTipOpening"
+                    [enableAccessibility]="false">
+                    </tr-viewer>
+                </div>
+            </div>
+        </mat-tab> -->
+       
+        <mat-tab label="Manufacturing">
+            <ng-template mat-tab-label>
+                <span><img   src="assets/images/iconsBlue/icon_ASN.png" class="imgTabHeader" alt="Master"></span>
+                Manufacturing
+            </ng-template>
+            <div *ngIf='currentDashboard === "Settings"' fxLayout="row" fxLayoutGap="15px"  >
+
+            </div>
+        </mat-tab>
+        <mat-tab label="3PL">
+            <ng-template mat-tab-label>
+                <span><img   src="assets/images/iconsBlue/icon_lpn.png" class="imgTabHeader" alt="Master"></span>
+                3PL
+            </ng-template>
+            <div *ngIf='currentDashboard === "Settings"' fxLayout="row" fxLayoutGap="15px"  >
+
+            </div>
+        </mat-tab>
+        
+        
+    
+
+    </mat-tab-group>
+
+
+
+
+    
+
+   
+
+
+    
+
+   
+
+    
+
+   
+
+     
+
+    
+
+</div>
+

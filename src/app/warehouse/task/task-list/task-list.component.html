@@ -1,0 +1,808 @@
+<div [ngClass]="searchEnable ? 'sideContent' : ''">
+    <div class="contentBorder marginT15" [ngClass]="searchEnable ? 'content-wrapper1' : ''">
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle"><app-breadcrumb></app-breadcrumb></span>
+            </div>
+            <div fxLayoutAlign="end">
+                <button *ngIf="!searchEnable" mat-mini-fab class="btn-search-bg mr10" (click)="searchComponentOpen()"
+                    matTooltip="Search" [matTooltipPosition]="tooltipPosition">
+                    <span class="headerIcon icon-search"></span>
+                </button>
+            </div>
+            <div fxLayoutAlign="end">
+                <button mat-stroke-button class="orangeButtonBorder colorOperatingUnit mr10" color="primary"
+                    (click)="refresh()">Refresh
+                </button>
+
+                <span class="down-arrow" [matMenuTriggerFor]="exportmenu">
+                    <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                        Export
+                    </button>
+                </span>
+                <mat-menu #exportmenu="matMenu">
+                    <button mat-menu-item
+                        (click)="exporter.exportTable('xls', {fileName:'Flexi WMS - Task Detail List'})">XLS</button>
+                    <button mat-menu-item
+                        (click)="exporter.exportTable('xlsx', {fileName:'Flexi WMS - Task Detail List'})">XLSX</button>
+                    <button mat-menu-item
+                        (click)="exporter.exportTable('csv', {fileName:'Flexi WMS - Task Detail List'})">CSV</button>
+                </mat-menu>
+            </div>
+
+        </div>
+        <div class="container" fxLayout="column">
+            <div #customTable
+                [ngClass]="!taskDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'"
+                [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+                <table mat-table matTableExporter [hiddenColumns]='[0,26]' #exporter="matTableExporter"
+                    [dataSource]="taskDataSource" matSort class="resize-table" style="width: 3200px;" (matSortChange)= "sortChanged($event)"
+                    matSortDisableClear>
+                    <ng-container matColumnDef="rowSelect">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[0].field">
+                            <mat-checkbox [disabled]="!showSelectAllRow" [(ngModel)]="selectAllRow"
+                                (change)="selectAll()">
+                            </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i = index">
+                            <mat-checkbox [disabled]="(element.taskStatus === 'New') ? false : true"
+                                [(ngModel)]="element.rowSelect" (change)="selectedRowCount()"
+                                (click)="beginEdit(element,i, $event)" [ngClass]="'searchBoxLabel'">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="No">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[1].field"
+                            (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                            <span>{{ columns[1].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i=index">
+                            <span [ngClass]="'nonEditiableField Number'">{{paginator.pageSize * paginator.pageIndex + i
+                                + 1}}</span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="pickSlipNumber">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[2].field"
+                            (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)" >
+                            <span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[2].field">{{ columns[2].name }} </span> 
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [(ngModel)]="element.pickSlipNumber"
+                                        [disabled]="isEdit" required />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.pickSlipNumber ? element.pickSlipNumber : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="taskNumber">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[3].field"
+                            (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[3].field">{{ columns[3].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [(ngModel)]="element.taskNumber"
+                                        [disabled]="isEdit" required />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.taskNumber ? element.taskNumber : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="taskGroupNo">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[4].field"
+                            (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[4].field">{{ columns[4].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.taskGroupNumber" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.taskGroupNumber ? element.taskGroupNumber : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="taskStatus">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[5].field"
+                            (mousedown)="commonService.onResizeColumn($event, 5, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[5].field">{{ columns[5].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.taskStatus" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.taskStatus ? element.taskStatus :'-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="iu">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[6].field"
+                            (mousedown)="commonService.onResizeColumn($event, 6, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[6].field">{{ columns[6].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" [disabled]="isEdit" matInput [(ngModel)]="element.iu" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.iuName ? element.iuName : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="itemName">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[7].field"
+                            (mousedown)="commonService.onResizeColumn($event, 7, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[7].field">{{ columns[7].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.itemName" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.itemName ? element.itemName : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="revisionNumber">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[8].field"
+                            (mousedown)="commonService.onResizeColumn($event, 8, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[8].field">{{ columns[8].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.revisionNumber" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.revisionNumber ? element.revisionNumber : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="qty">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[9].field"
+                            (mousedown)="commonService.onResizeColumn($event, 9, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[9].field">{{ columns[9].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.categoryName4" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.qty ? element.qty : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="uom">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[10].field"
+                            (mousedown)="commonService.onResizeColumn($event, 10, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[10].field">{{ columns[10].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.categoryName4" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.uom ? element.uom :'-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="shipmentNumber">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[11].field"
+                            (mousedown)="commonService.onResizeColumn($event, 11, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[11].field">{{ columns[11].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.categoryName4" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.shipmentNumber ? element.shipmentNumber : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="salesOrder">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[12].field"
+                            (mousedown)="commonService.onResizeColumn($event, 12, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[12].field">{{ columns[12].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.categoryName4" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.salesOrder ? element.salesOrder : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="soLine">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[13].field"
+                            (mousedown)="commonService.onResizeColumn($event, 13, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[13].field">{{ columns[13].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.categoryName4" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.soLine ? element.soLine : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="workOrder">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[14].field"
+                            (mousedown)="commonService.onResizeColumn($event, 14, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[14].field">{{ columns[14].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.workOrder" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.workOrder ? element.workOrder : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="lg">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[15].field"
+                            (mousedown)="commonService.onResizeColumn($event, 15, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[15].field">{{ columns[15].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.categoryName4" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.lg ? element.lg : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="locator">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[16].field"
+                            (mousedown)="commonService.onResizeColumn($event, 16, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[16].field">{{ columns[16].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.locatorCode" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.locatorCode ? element.locatorCode : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="lpn">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[17].field"
+                            (mousedown)="commonService.onResizeColumn($event, 17, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[17].field">{{ columns[17].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit" [(ngModel)]="element.lpn" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.lpn ? element.lpn : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="priority">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[18].field"
+                            (mousedown)="commonService.onResizeColumn($event, 18, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[18].field">{{ columns[18].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [(ngModel)]="element.priority"
+                                    (keypress)="commonService.isNaturalNumber($event)" />
+                                </mat-form-field>
+                            </div>                           
+                            <span *ngIf="!element.editing">
+                                {{element.priority ? element.priority : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="user">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[19].field"
+                            (mousedown)="commonService.onResizeColumn($event, 19, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[19].field">{{ columns[19].name }} </span></th>
+                        <td mat-cell *matCellDef="let element; let i=index">
+
+                            <div *ngIf="element.editing">
+                                <div fxLayout="row" *ngIf="element.inlineSearchLoader === 'hide'">
+                                    <div fxFlex="80">
+                                        <mat-form-field *ngIf="element.showLov === 'show'" autofocus>
+                                            <mat-select [(ngModel)]="element.userId" [ngClass]="''"
+                                                placeholder="Required" required>
+                                                <mat-option *ngFor="let user of element.userList" [value]="user.value"
+                                                    (onSelectionChange)="userChanged($event, user, paginator.pageSize * paginator.pageIndex + i)">
+                                                    {{ user.label }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="element.userId === ''">Please Enter User Name</mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field *ngIf="element.showLov === 'hide'">
+                                            <input matInput
+                                                (keydown)="fetchNewUserSearchList($event, paginator.pageSize * paginator.pageIndex + i, false, element.searchValue)"
+                                                (blur)="fetchNewUserSearchList($event, paginator.pageSize * paginator.pageIndex + i, false, element.searchValue)"
+                                                placeholder="Search User" [(ngModel)]="element.searchValue"
+                                                autocomplete="off" required />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div fxFlex="20">
+                                        <div [ngClass]="'pt-15'">
+                                            <button class="searchBtn icon-search" matTooltip="Search"
+                                                [matTooltipPosition]="tooltipPosition"
+                                                (click)="fetchNewUserSearchList($event, paginator.pageSize * paginator.pageIndex + i, true, element.searchValue)">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div fxLayout="row" *ngIf="element.inlineSearchLoader === 'show'">
+                                    <div fxFlex="100">Searching...</div>
+                                </div>
+
+
+                            </div>
+                            <div *ngIf="!element.editing">
+                                <span [ngClass]="'nonEditiableField'" style="pointer-events: none; "
+                                    class="maxWidthSelect setWidth">
+
+                                    <span>{{element.userName ? element.userName : '-'}}</span>
+
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="dropDpn">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[20].field"
+                            (mousedown)="commonService.onResizeColumn($event, 20, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[20].field">{{ columns[20].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.dropDpn" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.dropDpn ? element.dropDpn : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="dropLG">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[21].field"
+                            (mousedown)="commonService.onResizeColumn($event, 21, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[21].field">{{ columns[21].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.dropLg" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.destinationLG ? element.destinationLG : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="dropLocator">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[22].field"
+                            (mousedown)="commonService.onResizeColumn($event, 22, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[22].field">{{ columns[22].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.dropLocatorField" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.destinationLocator ? element.destinationLocator : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="cycleCountName">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[23].field"
+                            (mousedown)="commonService.onResizeColumn($event, 23, columns, matTableRef)"><span
+                            [disabled]="isEdit ? true : false"
+                            [mat-sort-header]="isEdit ? null : columns[23].field">{{ columns[23].name }} </span></th>
+                        <td mat-cell *matCellDef="let element">
+                            <div *ngIf="element.editing">
+                                <mat-form-field>
+                                    <input autocomplete="off" matInput [disabled]="isEdit"
+                                        [(ngModel)]="element.cycleCountName" />
+                                </mat-form-field>
+                            </div>
+                            <span *ngIf="!element.editing">
+                                {{element.cycleCountName ? element.cycleCountName : '-'}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchCount">
+                        <th mat-header-cell *matHeaderCellDef
+                            [ngClass]="'cursor-auto text-center mat-header-column-'+columns[24].field">
+                            <span>{{ columns[24].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element;" class=" text-center">
+                            <div fxLayout="row" fxLayoutAlign="center">
+                                <span>
+                                    <span *ngIf="element.batchCount <= 9"
+                                        (click)='openBatchPopup(myDialogBatch, element)'
+                                        class="badge1">{{element.batchCount ? element.batchCount : '0'}}</span>
+                                    <span *ngIf="element.batchCount > 9"
+                                        (click)='openBatchPopup(myDialogBatch, element)'
+                                        class="badge2">{{element.batchCount ? element.batchCount : '0'}}</span>
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="serialCount">
+                        <th mat-header-cell *matHeaderCellDef
+                            [ngClass]="'cursor-auto text-center mat-header-column-'+columns[25].field">
+                            <span>{{ columns[25].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element;" class=" text-center">
+                            <div fxLayout="row" fxLayoutAlign="center">
+                                <span>
+                                    <span *ngIf="element.serialCount <= 9"
+                                        (click)='openSerialPopup(myDialogBatch, element)'
+                                        class="badge1">{{element.serialCount ? element.serialCount : '0'}}</span>
+                                    <span *ngIf="element.serialCount > 9"
+                                        (click)='openSerialPopup(myDialogBatch, element)'
+                                        class="badge2">{{element.serialCount ? element.serialCount : '0'}}</span>
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action" stickyEnd>
+                        <th mat-header-cell *matHeaderCellDef
+                            [ngClass]="'actionColumn text-center mat-header-column-'+columns[26].field">
+                            <span>{{ columns[26].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'">
+                            <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center">
+                                <span *ngIf="!element.addNewRecord && element.taskStatus === 'New' " class="icon-edit"
+                                    (click)="beginEdit(element,paginator.pageSize * paginator.pageIndex + i,$event, true)" matRipple matTooltip="Edit"
+                                    [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                    [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                                <span *ngIf="!element.addNewRecord && element.editing" [ngClass]="'padding0'">
+                                    <span class="icon-clear"
+                                        (click)="disableEdit(element, paginator.pageSize * paginator.pageIndex + i)"
+                                        matRipple matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                        [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                        [matRippleRadius]="false"></span>
+                                </span>
+                                <span *ngIf="element.addNewRecord" [ngClass]="'padding0'">
+                                    <span class="icon-clear" (click)="deleteRow(element, i)" matRipple
+                                        matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                        [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                        [matRippleRadius]="false"></span>
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="taskDisplayedColumns; sticky: true"></tr>
+                    <tr mat-row
+                        [ngClass]="{'highlightRowError': selectedRowIndex == paginator.pageSize * paginator.pageIndex + i}"
+                        *matRowDef="let row; let i= index; columns: taskDisplayedColumns"></tr>
+                </table>
+
+                <ng-container *ngIf="listProgress">
+                    <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </ng-container>
+                <ng-container *ngIf="!taskDataSource.data.length && !listProgress">
+                    <div [ngClass]="'noDataFound'">
+                        <small>{{taskMessage}}</small>
+                    </div>
+                </ng-container>
+            </div>
+            <div fxLayout="row">
+                <div fxFlex="35">
+                    <div [ngClass]="(isEdit) ? 'formContainer' : ''">
+                        <button *ngIf="isEdit" mat-flat-button
+                            [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton  mr10': 'formButton saveButton  mr10'"
+                            color="primary" (click)="onSubmit($event,'update')">
+                            Update
+                        </button>
+                        <button *ngIf="modifyButton" style=" margin-top: 10px; margin-left: 10px;" mat-flat-button
+                              color="primary" matTooltip="Modify"
+                            [ngClass]="disableAllBtn ? 'formButton saveButton mr10 disableBtn' : 'formButton saveButton mr10'"
+                            [matTooltipPosition]="tooltipPosition" (click)="openModifyDialog(myDialog,'modify')">
+                            Modify
+                        </button>
+                    </div>
+                </div>
+                <div fxFlex="65">
+                    <mat-paginator (page)="commonService.setPaginationSize($event)" showFirstLastButtons
+                        [ngClass]="'mat-paginator-sticky'">
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div [fxShow]="searchEnable" [ngClass]="searchEnable ? 'searchRight top-68' : ''">
+        <mat-sidenav class="rightSideNav" opened mode="side" position="end" [disableClose]="true">
+            <app-task-search fxLayout="row" (searchComponentToggle)="getSearchToggle($event)"></app-task-search>
+        </mat-sidenav>
+    </div>
+</div>
+
+
+<ng-template #myDialog let-data>
+    <div [ngClass]="'modifyDialog'">
+        <h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+            <div fxLayout="row" fxLayoutGap="10px">
+                <div fxFlex="60" fxLayoutGap="10px"><span class="viewDialogTitle">Modify</span>
+                </div>
+                <div fxFlex="40" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end center">
+                    <button mat-icon-button matDialogClose (click)='closeDialog()'>
+                        <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </h1>
+        <div mat-dialog-content [ngClass]="'pb-24'">
+            <div fxLayoutGap="20px">
+                <div fxLayout="row" fxLayoutGap="20px" fxFlex="100">
+                    <mat-form-field class="width-100" fxFlex="50">
+                        <mat-label>Priority <span class="requiredMark">*</span></mat-label>
+                        <input matInput [(ngModel)]="taskPriority" (keypress)="commonService.isNaturalNumber($event)"  />
+                    </mat-form-field>                     
+                    <div *ngIf="userInlineSearchLoader === 'hide'" fxFlex="50">
+
+                        <mat-form-field class="materailFieldSize" *ngIf="userShowLov === 'show'" fxFlex="80" autofocus>
+                            <mat-label>User <span class="requiredMark">*</span></mat-label>
+                            <mat-select [(ngModel)]="userId" [ngClass]="''">
+                                <mat-option *ngFor="let element of userListForDialog" [value]="element.value"
+                                    (onSelectionChange)="popupUserChanged($event, element)">
+                                    {{ element.label }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="materailFieldSize" *ngIf="userShowLov === 'hide'" fxFlex="80">
+                            <mat-label>Search User <span class="requiredMark">*</span></mat-label>
+                            <input matInput (keydown)="fetchNewUserListForDialog($event, null, false)"
+                                (blur)="fetchNewUserListForDialog($event, null, false)"
+                                [(ngModel)]="userSearchValue" autocomplete="off" />
+                        </mat-form-field>
+
+                        <div [ngClass]="'pt-15'" fxFlex="20">
+                            <div class="icon-search" style="width: 0px;
+                                padding-left: 10px;" matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                                (click)="fetchNewUserListForDialog($event, null, true)">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div *ngIf="userInlineSearchLoader === 'show'" fxFlex="50"
+                        style="padding-top: 15px; padding-left: 60px;">
+                        <div fxFlex="100">Searching...</div>
+                    </div>
+                    <!-- <div fxFlex="100" style="color:red;" *ngIf="isPasswordEmpty">Please fill password</div> -->
+                </div>
+            </div>
+            <!-- </div> -->
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <button mat-flat-button [ngClass]="'formButton modifySaveButton mr10'" color="primary"
+                    (click)="modifyDone($event)">
+                    Done
+                </button>
+                <!-- <button *ngIf="isEdit" mat-flat-button matDialogClose [ngClass]="'formButton modifySaveButton mr10'"
+                        color="primary" (click)="onSubmit('update','sort', data)">
+                        Update
+                    </button> -->
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #myDialogBatch>
+    <h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+        <div fxLayout="row" fxLayoutGap="10px">
+            <div fxFlex="90" fxLayoutGap="10px"><span class="viewDialogTitle">{{ isBatch ? 'Batch' : 'Serial'}}</span>
+            </div>
+            <div fxFlex="10" fxLayoutGap="10px">
+                <button mat-icon-button matDialogClose (click)='closeDialog()'>
+                    <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </h1>
+    <div mat-dialog-content [ngClass]="'pb-24'">
+        <div class="container" fxLayout="column" *ngIf='isBatch'>
+            <div [ngClass]="!parameterDataSourceBatch.data.length || listProgress ? 'customTable ' : 'customTable'">
+                <table mat-table [dataSource]="parameterDataSourceBatch">
+                    <ng-container matColumnDef="No">
+                        <th mat-header-cell *matHeaderCellDef class="setWith10Percent">No</th>
+                        <td mat-cell *matCellDef="let element; let i = index;">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ paginatorBatch.pageSize * paginatorBatch.pageIndex + i +1 }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchNumber">
+                        <th mat-header-cell *matHeaderCellDef class="setWith15Percent">Batch No</th>
+                        <td mat-cell *matCellDef="let element;">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ element.batchNumber }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchQty">
+                        <th mat-header-cell *matHeaderCellDef class="setWith15Percent">Quantity</th>
+                        <td mat-cell *matCellDef="let element;">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ element.batchQty }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchOriginationDate">
+                        <th mat-header-cell *matHeaderCellDef class="setWith15Percent">MFG Date</th>
+                        <td mat-cell *matCellDef="let element;">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ element.batchOriginationDate | date }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="batchExpirationDate">
+                        <th mat-header-cell *matHeaderCellDef class="setWith15Percent">Expiry Date</th>
+                        <td mat-cell *matCellDef="let element;">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ element.batchExpirationDate | date}}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="serialCount">
+                        <th mat-header-cell *matHeaderCellDef class="setWith15Percent" style="text-align: center;">
+                            Serial</th>
+                        <td mat-cell *matCellDef="let element;">
+                            <div fxLayout="row" fxLayoutAlign="center">
+                                <span>
+                                    <span *ngIf="element.serialCount <= 9"
+                                        (click)='openBatchSerialPopup(myDialogBatch, element)'
+                                        class="badge1">{{element.serialCount}}</span>
+                                    <span *ngIf="element.serialCount > 9"
+                                        (click)='openBatchSerialPopup(myDialogBatch, element)'
+                                        class="badge2">{{element.serialCount}}</span>
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsBatch"></tr>
+                    <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumnsBatch;"></tr>
+                </table>
+                <ng-container *ngIf="listProgress">
+                    <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </ng-container>
+
+                <ng-container *ngIf="!parameterDataSourceBatch.data.length && !listProgress ">
+                    <div [ngClass]="'positionRelative'" style="min-height:50px;">
+                        <div [ngClass]="'noDataFound'"><small>{{batchTableMessage}}</small></div>
+                    </div>
+                </ng-container>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <mat-paginator (page)="commonService.setPaginationSize($event)" #paginatorBatch showFirstLastButtons
+                    [ngClass]="'mat-paginator-sticky'">
+                </mat-paginator>
+            </div>
+        </div>
+        <div class="container" fxLayout="column" *ngIf='!isBatch'>
+            <div [ngClass]="!parameterDataSourceSerial.data.length || listProgress ? 'customTable ' : 'customTable'">
+                <table mat-table [dataSource]="parameterDataSourceSerial">
+                    <ng-container matColumnDef="No">
+                        <th mat-header-cell *matHeaderCellDef class="setWith15Percent">No</th>
+                        <td mat-cell *matCellDef="let element; let i = index;">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ paginatorSerial.pageSize * paginatorSerial.pageIndex + i +1 }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="serialNumber">
+                        <th mat-header-cell *matHeaderCellDef class="setWith15Percent">Serial Number</th>
+                        <td mat-cell *matCellDef="let element;   ">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ element.serialNumber }}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsSerial; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumnsSerial;"></tr>
+                </table>
+                <ng-container *ngIf="listProgress">
+                    <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </ng-container>
+
+                <ng-container *ngIf="!parameterDataSourceSerial.data.length && !listProgress ">
+                    <div [ngClass]="'positionRelative'" style="min-height: 50px;">
+                        <div [ngClass]="'noDataFound'"><small>{{serialTableMessage}}</small></div>
+                    </div>
+                </ng-container>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <mat-paginator (page)="commonService.setPaginationSize($event)" #paginatorSerial showFirstLastButtons
+                    [ngClass]="'mat-paginator-sticky'">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+    <div *ngIf='isBackBtnEnable' mat-dialog-actions class="padding10">
+        <button mat-flat-button color="primary" (click)='backToBatchList()'
+            class="formButton saveButton mr10">Back</button>
+    </div>
+
+</ng-template>

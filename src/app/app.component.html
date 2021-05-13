@@ -1,0 +1,16 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<ng-container *ngIf="isLogin">
+    <mat-sidenav-container class="sidenav-container setBackground" style="background-image: url(assets/images/icons/IWMS-cover.png)"  >
+        <mat-sidenav *ngIf="!isHomePage"  #sidenav mode="side" class="sidenav" [ngStyle]="{ 'width.px': sidenavWidth, 'opacity': isHomePage ? '0': '1' }" [opened]="opened"
+            [disableClose]="true"  >
+            <app-side-bar (notify)="notifyAppController($event)" ></app-side-bar>
+        </mat-sidenav>
+        <mat-sidenav-content fxLayout="column" [ngClass]="isHomePage ? 'removeScroll overideContent' : ''" [ngStyle]="{ 'margin-left.px': sidenavContentMargin }" >
+            <!-- <mat-toolbar [ngClass]=" !isHomePage ? 'appHeader' : 'appHeaderHome'">
+                <app-header  [showSidebarBtn]="showSidebarBtn" (notify)="notifyAppController($event)"></app-header>
+            </mat-toolbar> -->
+            <router-outlet (activate)="onOutletLoaded($event)" ></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</ng-container>
+<router-outlet *ngIf="!isLogin" name="login"></router-outlet>

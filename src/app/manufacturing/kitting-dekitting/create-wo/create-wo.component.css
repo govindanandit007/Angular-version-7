@@ -1,0 +1,77 @@
+.customWidth60{
+    min-width: 60px;
+    max-width: 60px;
+}
+
+.customWidth80{
+    min-width: 80px;
+    max-width: 80px;
+}
+
+.customWidth100{
+    min-width: 100px;
+    max-width: 100px;
+}
+
+.customWidth110{
+    min-width: 110px;
+    max-width: 110px;
+}
+
+.customWidth120{
+    min-width: 120px;
+    max-width: 120px;
+}
+.customWidth150{
+    min-width: 150px;
+    max-width: 150px;
+}
+.customWidth180{
+    min-width: 180px;
+    max-width: 180px;
+}
+.customWidth165{
+    min-width: 165px;
+    max-width: 165px;
+}
+
+.dateField {
+    margin-right: 10px;
+    max-width: 110px;
+}
+.dateField2 {
+    margin-right: 10px;
+    max-width: 110px;
+}
+
+.searchBtn{
+    width: 25px;
+    height: 25px;
+    background-color: transparent;
+    border: 0px transparent;
+    font-size: 14px;
+}
+.customTable {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.actionIcons2 {
+    width: 70px !important;
+    text-align: center !important;
+    padding-right: 0px !important;
+}
+.highlightRowError td.mat-cell:first-child {
+    border-left: 4px solid red ;
+    padding-left: 20px !important;
+}
+
+ 
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff !important;
+}
+
+.mat-form-field-type-mat-native-select.mat-form-field-disabled
+    .mat-form-field-infix::after,
+.mat-input-element:disabled,::ng-deep .mat-select-disabled .mat-select-value, .inputDisable {
+    color: #000000 !important;
+}

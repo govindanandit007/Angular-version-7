@@ -1,0 +1,322 @@
+<div class="contentBorder marginT15">
+    <div [ngClass]="'formHeader'" fxLayout="row">
+        <div fxFlex fxLayoutAlign="start">
+            <span class="formHeaderTitle">Policy Routing :</span>
+        </div>
+        <div fxLayoutAlign="end">
+            <span class="down-arrow" [matMenuTriggerFor]="exportmenu">
+                <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                    Export
+                </button>
+            </span>
+            <mat-menu #exportmenu="matMenu">
+                <button mat-menu-item (click)="exporter.exportTable('xls', {fileName:'Flexi WMS - Policy Routing List'})">XLS</button>
+                <button mat-menu-item
+                    (click)="exporter.exportTable('xlsx', {fileName:'Flexi WMS - Policy Routing List'})">XLSX</button>
+                <button mat-menu-item (click)="exporter.exportTable('csv', {fileName:'Flexi WMS - Policy Routing List'})">CSV</button>
+            </mat-menu>
+        </div>
+    </div>
+    <div class="roleSearchBox" fxLayout="row" fxLayoutAlign=" center">
+        <div class="searchBoxLabel" fxLayout="column" fxLayoutAlign="center">Policy Type :</div>
+        <div>
+            <mat-select class="searchInput iuInputWidth" required [(ngModel)]="policyType">
+                <mat-option *ngFor="let temp of policyTypeLov" [value]="temp.value"
+                    (onSelectionChange)="policyTypeChanged($event,temp.value)">
+                    {{temp.label}}
+                </mat-option>
+            </mat-select>
+        </div>
+        <div class="searchBoxLabel">Inventory Unit <span class='mandatory'>*</span>:</div>
+        <div>
+            <mat-select class="searchInputIU text-black-disabled" #model="ngModel" [(ngModel)]="iuId" required disabled>
+                <mat-option *ngFor="let temp of iuLov" [value]="temp.value" >
+                    {{temp.name}}
+                </mat-option>
+            </mat-select>
+        </div>
+        <mat-error *ngIf="!model.valid && (model.touched || model.dirty)"> Please Select inventory Unit</mat-error>
+    </div>
+    <div class="container" fxLayout="column">
+        <div [ngClass]="!parameterDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'"
+                [ngStyle]="{'max-height': screenMaxHeight }">
+            <table mat-table matTableExporter matSort [hiddenColumns]='[6]' #exporter="matTableExporter" [dataSource]="parameterDataSource" matSortDisableClear  (matSortChange)= "sortChanged($event)">
+                <!-- <ng-container matColumnDef="routingId">
+                    <th mat-header-cell *matHeaderCellDef class="minimumWidth40">No</th>
+                    <td mat-cell *matCellDef="let element; let i = index">
+                        <div class="pt-7">{{ i + 1 }}</div>
+                    </td>
+                </ng-container> -->
+                <ng-container matColumnDef="priority">
+                    <th [mat-sort-header]="(isAdd || isEdit) ? null : 'priority'" [disabled]="(isAdd || isEdit)? true : false" mat-header-cell *matHeaderCellDef  class="percent10">
+                        Priority <sup class="requiredMark">*</sup>
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="percent10">
+                        <div *ngIf="element.editing">
+                            <mat-form-field >
+                                <input matInput [(ngModel)]="element.priority" autocomplete="off"
+                                (keypress)="commonService.isNaturalNumber($event)" required />
+                                <mat-error>Please enter priority</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">{{element.priority ? element.priority : '-'}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="routingLogicCode">
+                    <th [mat-sort-header]="(isAdd || isEdit) ? null : 'routingLogicCode'" [disabled]="(isAdd || isEdit)? true : false" mat-header-cell *matHeaderCellDef class="percent20">
+                        Routing Logic <sup class="requiredMark">*</sup>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="percent20">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputWidthClass'">
+                                <mat-select [(ngModel)]="element.routingLogicCode" name="class"
+                                    required>
+                                    <mat-option *ngFor="let temp of logicLov" [value]="temp.value"
+                                    (onSelectionChange)="routingLogicChanged($event, temp.dataType, temp.value, temp.source, temp.sourceValue, paginator.pageSize * paginator.pageIndex + i)">
+                                        {{temp.label}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error> Please Select routing logic</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">{{element.logicMeaning ? element.logicMeaning : '-'}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="operator">
+                    <th [mat-sort-header]="(isAdd || isEdit) ? null : 'operator'" [disabled]="(isAdd || isEdit)? true : false" mat-header-cell *matHeaderCellDef class="percent10">
+                        Operator <sup class="requiredMark">*</sup>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="percent10">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputWidthClass'">
+                                <mat-select [(ngModel)]="element.operator" name="class"
+                                    required>
+                                    <mat-option *ngFor="let temp of element.operatorLov" [value]="temp.value"
+                                    (onSelectionChange)="routingOperatorChanged($event, temp.value, paginator.pageSize * paginator.pageIndex + i)">
+                                        {{temp.label}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error> Please Select operator</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <mat-form-field style='display: none;' [ngClass]="'inputWidthClass'">
+                                <mat-select [(ngModel)]="element.operator" name="class" required>
+                                    <mat-option *ngFor="let temp of element.operatorLov" [value]="temp.value"
+                                        (onSelectionChange)="routingOperatorChanged($event, temp.value, paginator.pageSize * paginator.pageIndex + i)">
+                                        {{temp.label}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error> Please Select operator</mat-error>
+                            </mat-form-field>
+                            <span [ngClass]="'nonEditiableField'">{{element.operator ? element.operator : '-'}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="routingValue">
+                    <th [mat-sort-header]="(isAdd || isEdit) ? null : 'routingValue'" [disabled]="(isAdd || isEdit)? true : false" mat-header-cell *matHeaderCellDef class="percent15">
+                        Routing Value <sup class="requiredMark">*</sup>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="percent15">
+                        <div *ngIf="element.editing">
+                            <!-- <mat-form-field [ngClass]="'inputWidthClass'" *ngIf="element.isRoutingValue==='TABLE' || element.isRoutingValue==='LOOKUP'">
+                                <mat-select [(ngModel)]="element.routingValue" name="class"
+                                    required>
+                                    <mat-option *ngFor="let temp of routingValueLov" [value]="temp.value">
+                                        {{temp.label}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error> Please Select routing value</mat-error>
+                            </mat-form-field> -->
+                            <mat-form-field [ngClass]="'inputWidthClass'">
+                                <input matInput [(ngModel)]="element.routingValue" autocomplete="off"
+                                (keypress)="isNumeric ? commonService.isDecimal($event) : ''"
+                                 required />
+                                <mat-error>Please enter routing value</mat-error>
+                                <mat-hint *ngIf="(!element.showHint && element.operator==='IN') || (!element.showHint && element.operator==='NOT IN')">Hint: ('abc','def','ab1')</mat-hint>
+                                <mat-hint *ngIf="(element.showHint && element.operator==='IN') || (element.showHint && element.operator==='NOT IN')">Hint: (123,456,789)</mat-hint>
+                            </mat-form-field>
+                            <mat-form-field floatLabel="never" [hideRequiredMarker]="true" [ngClass]="'dateField'" *ngIf="element.isRoutingValue==='DATE'">
+                                <input matInput [matDatepicker]="picker" autocomplete="off" (click)="picker.open()"
+                                    [(ngModel)]="element.routingValue" disabled />
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker disabled="false"></mat-datepicker>
+                                <mat-error>Please enter routing value</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span *ngIf="element.dataType !=='DATE'" [ngClass]="'nonEditiableField'">{{element.routingValue ? element.routingValue : '-'}}</span>
+                            <span *ngIf="element.dataType ==='DATE'" [ngClass]="'nonEditiableField'">{{element.routingValue ? (element.routingValue | date): '-'}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="routingQuery">
+                    <th [mat-sort-header]="(isAdd || isEdit) ? null : 'routingQuery'" [disabled]="(isAdd || isEdit)? true : false" mat-header-cell *matHeaderCellDef class="percent15">
+                        Routing Query
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="percent15">
+                      <div *ngIf="element.editing">
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="element.routingQuery" autocomplete="off" (click)="dialogForSQL(i,element,sqlDialog)" readonly />
+                        </mat-form-field>
+                      </div>
+                      <div *ngIf="!element.editing">
+                          <span [ngClass]="'nonEditiableField'">{{element.routingQuery ? element.routingQuery : '-'}}</span>
+                      </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="policyId">
+                    <th [mat-sort-header]="(isAdd || isEdit) ? null : 'policyId'" [disabled]="(isAdd || isEdit)? true : false" mat-header-cell *matHeaderCellDef class="percent20">
+                        Goto Policy <sup class="requiredMark">*</sup>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="percent20">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputWidthClass'">
+                                <mat-select [(ngModel)]="element.policyId" name="class"
+                                    required>
+                                    <mat-option *ngFor="let temp of routingGoToLov" [value]="temp.value">
+                                        {{temp.label}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error> Please Select goto policy</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">{{element.policyName ? element.policyName : '-'}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'actionColumn percent10'"> Action </th>
+                    <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons percent10'">
+                        <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center"
+                            style="justify-content: center;">
+                            <span *ngIf="!element.addNewRecord" class="icon-edit"
+                                (click)="beginEdit(element,$event)" matRipple matTooltip="Edit"
+                                [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                            <span *ngIf="!element.addNewRecord && element.editing" [ngClass]="'padding0'">
+                                    <span class="icon-clear" (click)="disableEdit(element, paginator.pageSize * paginator.pageIndex + i)" matRipple
+                                        matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                        [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                        [matRippleRadius]="false"></span>
+                            </span>
+                                <span *ngIf="!element.addNewRecord" class="icon-delete"
+                                 matRipple matTooltip="Delete"
+                                (click)= "openDialog(myDialog , element,$event, paginator.pageSize * paginator.pageIndex + i )"
+                                [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                            <span *ngIf="element.addNewRecord" [ngClass]="'padding0'">
+                                <span class="icon-clear" (click)="deleteRow(element, i)" matRipple
+                                    matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                    [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                    [matRippleRadius]="false"></span>
+
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns; sticky: true"></tr>
+                <tr mat-row [ngClass]="{'highlightRowError': selectedRowIndex == paginator.pageSize * paginator.pageIndex + i}" *matRowDef="let row; let i= index; columns: parameterDisplayedColumns"></tr>
+            </table>
+            <ng-container *ngIf="listProgress">
+                <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+            </ng-container>
+            <ng-container *ngIf="!parameterDataSource.data.length && !listProgress">
+                <div [ngClass]="'noDataFound'"><small>{{routingTableMessage}}</small></div>
+            </ng-container>
+            <div class="text-align-right pr-10 mt10">
+                <button mat-stroke-button class="orangeButtonBorder border-radius-3 colorAttribute"
+                    color="primary" (click)="addRow()">
+                    Add Row
+                </button>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div [ngClass]="(isAdd || isEdit) ? 'formContainer' : ''">
+                <button *ngIf="isAdd" mat-flat-button
+                [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10': 'formButton saveButton mr10'"
+                  color="primary"
+                    (click)="onSubmit('save')">
+                    Save
+                </button>
+                <button *ngIf="isEdit" mat-flat-button
+                [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10': 'formButton saveButton mr10'"
+                 color="primary"
+                    (click)="onSubmit('update')">
+                    Update
+                </button>
+            </div>
+            <mat-paginator (page)="commonService.setPaginationSize($event)"  showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+            </mat-paginator>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #myDialog>
+    <h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+        <div fxLayout="row">
+            <div fxFlex="88"><span class="viewDialogTitle">Confirmation</span></div>
+            <div fxFlex="12">
+                <button mat-icon-button matDialogClose>
+                    <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </h1>
+    <div mat-dialog-content [ngClass]="'pb-24'">
+
+       <div fxLayout="row">
+            <div fxFlex="100" class="padding10">
+                <span style="font-size: 14px;">Are you sure you want to delete this policy routing?</span>
+            </div>
+        </div>
+        <div fxLayout="row">
+            <div fxFlex="35"></div>
+            <div fxFlex="15">
+                <button mat-stroke-button class="orangeButtonBorder border-radius-3 colorAttribute"
+                    color="primary" (click)="deletePolicyRouting()">
+                    Yes
+                </button>
+            </div>
+            <div fxFlex="15">
+                <button mat-stroke-button class="orangeButtonBorder border-radius-3 colorAttribute"
+                color="primary" matDialogClose>
+                    No
+                </button>
+            </div>
+            <div fxFlex="35"></div>
+        </div>
+    </div>
+
+</ng-template>
+
+<ng-template #sqlDialog let-data>
+  <div [ngClass]="'deleteDialog'">
+      <h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+          <div fxLayout="row" fxLayoutGap="10px">
+              <div fxFlex="60" fxLayoutGap="10px"><span class="viewDialogTitle">SQL Query</span></div>
+          </div>
+      </h1>
+      <div mat-dialog-content>
+          <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center" [ngClass]="'minH70 marginT5'">
+              <mat-form-field class="example-full-width">
+                  <textarea matInput  [(ngModel)]="inputSQLQuery" cdkTextareaAutosize cdkAutosizeMinRows="10" cdkAutosizeMaxRows="10"></textarea>
+                  <!-- <mat-error>Please Enter SQL Query.</mat-error> -->
+              </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start">
+              <button mat-flat-button [ngClass]="'formButton saveButton copySaveBtn marginT0'" color="primary" [mat-dialog-close]="data">
+                  Done
+              </button>
+          </div>
+      </div>
+  </div>
+</ng-template>

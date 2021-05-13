@@ -1,0 +1,598 @@
+<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start">
+    <div *ngIf="showInventoryList  && !showItemAssignment" fxFlex="100" class="contentBorder">
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">Locator Groups List :</span>
+            </div>
+            <div fxLayoutAlign="end">
+                <button *ngIf="!searchEnableFlag" mat-mini-fab class="btn-search-bg mr10" (click)="searchComponentOpen()">
+                    <span class="headerIcon icon-search" matTooltip="Search"></span>
+                </button>
+                <button mat-stroke-button (click)="addSubInventory('add')" class="orangeButtonBorder colorOperatingUnit mr10"
+                    color="primary">
+                    Add Locator Group
+                </button>
+                <!-- <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                    Add Attribute
+                </button> -->
+                <span class="down-arrow" [matMenuTriggerFor]="exportmenu">
+                    <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                        Export
+                    </button>
+                </span>
+                <mat-menu #exportmenu="matMenu">
+                    <button mat-menu-item
+                        (click)="exporter.exportTable('xls', {fileName:'Flexi WMS - Locator Group List'})">XLS</button>
+                    <button mat-menu-item
+                        (click)="exporter.exportTable('xlsx', {fileName:'Flexi WMS - Locator Group List'})">XLSX</button>
+                    <button mat-menu-item
+                        (click)="exporter.exportTable('csv', {fileName:'Flexi WMS - Locator Group List'})">CSV</button>
+                </mat-menu>
+            </div>
+        </div>
+
+        <div fxLayout="row">
+            <mat-divider fxFlex="100"></mat-divider>
+        </div>
+
+        <div class="container">
+            <div [ngClass]=" !subInventoryDataSource.data.length || listProgress ? 'customTable  scrollHide' : 'customTable '"
+            [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+                <table mat-table matTableExporter hiddenColumns='[6]' #exporter="matTableExporter" [dataSource]="subInventoryDataSource" matSort class="resize-table" style="min-width:700px;" matSortDisableClear>
+                    <!-- No Column -->
+                    <ng-container matColumnDef="lgCode">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[0].field" (mousedown)="commonService.onResizeColumn($event, 0, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[0].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.lgCode }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="lgName">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)"
+                        style="min-width: 160px !important; ">
+                            <span mat-sort-header>{{ columns[1].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="min-width: 160px !important;  ">
+                            {{ element.lgName }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="iuCode">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[2].field" (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[2].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.iuName }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="lgType">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[3].field" (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)"
+                        style="min-width: 120px !important;  ">
+                            <span mat-sort-header>{{ columns[3].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="min-width: 120px !important;">
+                            {{ element.lgTypeName }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="creationDate">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'cursor-auto mat-header-column-'+columns[4].field" (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)"
+                        style="min-width: 90px !important;  ">
+                            <span mat-sort-header>{{ columns[4].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element" style="min-width: 90px !important;  ">
+                            {{ element.creationDate | date}}
+                        </td>
+                    </ng-container>
+                    <!-- Enabled Flag Column -->
+                    <ng-container matColumnDef="lgEnabledFlag">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto text-center mat-header-column-'+columns[5].field" (mousedown)="commonService.onResizeColumn($event, 5, columns, matTableRef)"
+                        style="min-width: 90px !important; ">
+                            {{ columns[5].name }}
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center" style="padding-bottom: 10px; min-width: 90px !important;  " >
+                            <mat-checkbox [(ngModel)]="element.lgEnabledFlag" value="element.lgEnabledFlag"
+                                disabled="true"> 
+                            </mat-checkbox>
+                            <mat-icon>{{element.lgEnabledFlag}}</mat-icon>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action" stickyEnd>
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto actionColumn1 mat-header-column-'+columns[6].field" 
+                        style="min-width:120px !important; width: 120px !important; " >
+                            {{ columns[6].name }}
+                        </th>
+                        <td mat-cell *matCellDef="let element" [ngClass]="'actionIcons1'" style=" width: 120px !important" >
+                            <span [ngClass]="'padding0'">
+                                <div class="View" (click)="editSubInventory(element.lgId,element.lgName,'view')"  [ngClass]="disableAllBtn ? 'disableBtn' : ''" 
+                                    matRipple matTooltip="View" [matTooltipPosition]="tooltipPosition"
+                                    [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                    [matRippleRadius]="false">
+                                    <mat-icon>remove_red_eye</mat-icon></div>
+                            </span>
+                            <span (click)="editSubInventory(element.lgId, element.lgName)" matRipple matTooltip="Edit"
+                                [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                [matRippleCentered]="true" [matRippleRadius]="false">
+                                <mat-icon>edit</mat-icon>
+                            </span>
+                            <span *ngIf='element.lgType === "STORAGE" ' class="icon-box-3" matRipple matTooltip="Item Assignment" [matTooltipPosition]="tooltipPosition"
+                                  [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true" [matRippleRadius]="false"
+                                  (click)="handleItemAssignment(element)">
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                </table>
+                <ng-container *ngIf="listProgress">
+                    <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </ng-container>
+                <ng-container *ngIf="!subInventoryDataSource.data.length && !listProgress">
+                    <div [ngClass]="'noDataFound'"><small> {{lgMessage}}</small></div>
+                </ng-container>
+            </div>
+
+            <mat-paginator #paginator (page)="commonService.setPaginationSize($event)"  showFirstLastButtons [ngClass]="'marginT5'">
+            </mat-paginator>
+        </div>
+    </div>
+    <div *ngIf="!showInventoryList && !showItemAssignment" fxFlex="100" class="contentBorder">
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">{{ isEdit ? showLGName : 'Add Locator Group :'}}</span>
+            </div>            
+        </div>
+
+        <div fxLayout="row">
+            <mat-divider fxFlex="100"></mat-divider>
+        </div>
+
+        <div class="container" class="formContainer">
+            <form [formGroup]="subInventoryForm" autocomplete="off">
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <div fxFlex='82'>
+                        <div class="container" fxLayout="column">
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="33">
+                                    <input matInput placeholder="Code" formControlName="lgCode"   required maxlength="10" required
+                                        (blur)="logValidationErrors()">
+                                    <mat-error *ngIf="formErrors.lgCode">{{formErrors.lgCode}}</mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" fxFlex="33">
+                                    <input matInput placeholder="Name" formControlName="lgName" required (blur)="logValidationErrors()">
+                                    <mat-error *ngIf="formErrors.lgName">{{formErrors.lgName}}</mat-error>
+                                </mat-form-field>
+                                <mat-form-field  class="materailFieldSize" *ngIf='is3plCompany' fxFlex="33" >
+                                    <mat-select name="Customer" formControlName="customerId" 
+                                        [placeholder]="customerPlaceHolder">
+                                        <mat-option *ngFor="let item of _3plCustomerList" [value]="item.value"
+                                        (onSelectionChange)="setCUstomerLabel($event,item.label)" >
+                                            {{item.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <!-- <mat-form-field class="materailFieldSize" fxFlex="33">
+                                    <mat-label>IU Code</mat-label>
+                                    <mat-select *ngIf="isEdit" formControlName="lgIuId" [disabled]='invertoryInputDisable' required class='text-black-disabled'
+                                        (blur)="logValidationErrors()">
+                                        <mat-option *ngFor="let item of inventoryCodeList" [value]="item.iuId">
+                                            {{item.iuCode}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-select *ngIf="!isEdit" formControlName="lgIuId" [disabled]='invertoryInputDisable' required class='text-black-disabled'
+                                        (blur)="logValidationErrors()">
+                                        <mat-option *ngFor="let item of enabledInventoryCodeList" [value]="item.iuId">
+                                            {{item.iuCode}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="formErrors.lgIuId">{{formErrors.lgIuId}}</mat-error>
+                                </mat-form-field> -->
+                                
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="68.33">
+                                    <input matInput placeholder="Description" formControlName="lgDescription">
+                                </mat-form-field>
+
+                                <mat-form-field class="materailFieldSize" fxFlex="31.64">
+                                    <mat-label>Material Status</mat-label>
+                                    <mat-select formControlName="materialStatusId" required>
+                                        <mat-option *ngFor="let item of materialStatusLovList" [value]="item.value">
+                                            {{item.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="33">
+                                    <input  matInput placeholder="Picking Order" formControlName="lgPickingOrder"
+                                        (blur)="logValidationErrors()" type="number" (keydown)="commonService.inputLengthCheck($event,10)" (keypress)="commonService.isNaturalNumber($event)">
+                                    <mat-error *ngIf="formErrors.lgPickingOrder">{{formErrors.lgPickingOrder}}</mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" fxFlex="33">
+                                    <input matInput placeholder="Dropping Order" formControlName="lgDroppingOrder"
+                                        (blur)="logValidationErrors()" type="number" (keydown)="commonService.inputLengthCheck($event,10)" (keypress)="commonService.isNaturalNumber($event)">
+                                    <mat-error *ngIf="formErrors.lgDroppingOrder">{{formErrors.lgDroppingOrder}}</mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" fxFlex="34">
+                                    <mat-label>Type</mat-label>
+                                    <mat-select formControlName="lgType" (blur)="logValidationErrors()" required>
+                                        <mat-option *ngFor="let item of subInventoryTypeLov" [value]="item.lookupValue" (onSelectionChange)="checkType()">
+                                            {{item.lookupValueDesc}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="formErrors.lgType">{{formErrors.lgType}}</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row wrap" fxFlex="2 0 0" fxLayoutGap="15px" class="marginT15">
+                                <button (click)="onSubmit('save')" mat-flat-button
+                                [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton': 'formButton saveButton'"
+                                    color="primary">
+                                    {{ isEdit ? 'Update' : 'Save' }}
+                                </button>
+                                <button (click)="openConfirmationDialog('locator group','locatorGroup')" mat-flat-button [ngClass]="'formButton saveButton'"
+                                    color="primary">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div fxFlex='18'>
+                        <div class="container" fxLayout="column" class='setCheckboxes'>
+                            <div fxFlex='25'> 
+                                <mat-checkbox formControlName="lgEnabledFlag">Enabled Flag</mat-checkbox>
+                            </div>
+                            <div fxFlex='25'>
+                                    <mat-checkbox class="materailFieldSize" formControlName="lgLpnControlledFlag" style="margin-top: 10px"
+                                    >LPN Controlled Flag</mat-checkbox>
+                                        <!-- lpn is enabled for all types so the below code is commented on 29thApr2021
+                                             <mat-checkbox class="materailFieldSize" formControlName="lgLpnControlledFlag" style="margin-top: 10px"
+                                    [disabled]="subInventoryForm.controls.lgType.value !== 'STORAGE'">LPN
+                                        Controlled Flag</mat-checkbox> -->
+                            </div>
+                            <div fxFlex='25'>
+                                <mat-checkbox class="materailFieldSize" formControlName="lgCartonizationFlag" style="margin-top: 10px">Cartonization
+                                    Flag</mat-checkbox>
+                            </div>
+                            <div fxFlex='25'>
+                                <mat-checkbox class="materailFieldSize" formControlName="lgBulkPickFlag" style="margin-top: 10px">Enabled Bulk Pick
+                                </mat-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             
+            </form>
+        </div>
+    </div>
+
+    <!-- LG Item Assignment screen -->
+    <div *ngIf="showItemAssignment" class="contentBorder" fxFlex="100">
+      <div [ngClass]="'formHeader'" fxLayout="row">
+          <div fxFlex fxLayoutAlign="start">
+              <span class="formHeaderTitle">LG Item Assignment:</span>
+          </div>
+      </div>
+      <div fxLayout="row">
+          <mat-divider fxFlex="100"></mat-divider>
+      </div>
+      <div class="itemSearchBox" fxLayout="row" fxLayoutAlign=" center">
+        <div fxFlex="25" style="display: contents;">
+            <div fxLayout="column" class="searchBoxLabel setHeaderFieldLabelWidth" >LG Code:</div>
+            <input fxLayout="column" matInput [(ngModel)]="lgCodeItemAssignment" style="color: black;" [ngClass]="'searchInput setHeaderFieldInputWidth'" disabled>
+        </div>
+        <div fxFlex="2"></div>
+        <div fxFlex="25" style="display: contents;">
+            <div class="searchBoxLabel setHeaderFieldLabelWidth"  >LG Name:</div>
+            <input matInput  [(ngModel)]="lgNameItemAssignment" style="color: black;" [ngClass]="'searchInput setHeaderFieldInputWidth'" disabled>
+        </div>
+        <div fxFlex="2"></div>
+        <div fxFlex="25" style="display: contents;">
+            <div class="searchBoxLabel setHeaderFieldLabelWidth"  >IU Name:</div>
+            <input matInput  [(ngModel)]="lgIuItemAssignment" style="color: black;" [ngClass]="'searchInput setHeaderFieldInputWidth'" disabled>
+        </div>
+        
+       
+    </div>
+    <div class="container">
+      <div [ngClass]="!itemAssignmentDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'"
+        [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+        <table mat-table [dataSource]="itemAssignmentDataSource" class="resize-table" style="min-width: 1200px;" matSort>
+            <ng-container matColumnDef="lgId">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto mat-header-column-'+itemAssignmentColumns[0].field" >
+                    {{ itemAssignmentColumns[0].name }}
+                </th>
+                <td mat-cell *matCellDef="let element; let i=index">
+                    <span [ngClass]="'nonEditiableField'">{{ paginatorItemAssignment.pageSize * paginatorItemAssignment.pageIndex + i + 1 }}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="lgItemName">
+                <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+itemAssignmentColumns[1].field">
+                    <span >{{ itemAssignmentColumns[1].name }} </span>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index;">
+                  <div *ngIf="element.editing">
+                    <div fxLayout="row"  *ngIf="element.itemSearchLoader === 'hide'">
+                      <div fxFlex="80">
+                          <mat-form-field *ngIf="element.showLov === 'show'" autofocus>
+                              <mat-select [(ngModel)]="element.lgItemId" placeholder="Required" required >
+                                  <mat-option *ngFor="let item of element.itemList" [value]="item.value"
+                                  (onSelectionChange)="itemSelectionChanged($event, i, item)" >
+                                      {{ item.label }}
+                                  </mat-option>
+                             </mat-select>
+                              <mat-error *ngIf="element.itemId === ''" >Please Enter Item Name</mat-error>
+                          </mat-form-field>
+                          <mat-form-field *ngIf="element.showLov === 'hide'">
+                              <input matInput (keydown)="fetchNewSearchList($event, i, false, element.searchValue)"
+                              (blur)="fetchNewSearchList($event, i, false, element.searchValue)"
+                              placeholder="Search Item" [(ngModel)]="element.searchValue"  autocomplete="off" required/>
+                          </mat-form-field>
+                      </div>
+                      <div fxFlex="20">
+                          <div [ngClass]="'pt-15'">
+                              <button  class="searchBtn icon-search" matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                              (click)="fetchNewSearchList($event, i, true, element.searchValue)" >
+                              </button>
+                          </div>
+                      </div>
+                    </div>
+                    <div  fxLayout="row"  *ngIf="element.itemSearchLoader === 'show'">
+                      <div fxFlex="100">Searching...</div>
+                    </div>
+                  </div>
+                  <div *ngIf="!element.editing">
+                    <span [ngClass]="'nonEditiableField'" style="pointer-events: none; " class="maxWidthSelect setWidth">
+                        <span >{{element.lgItemName ? element.lgItemName : '-'}}</span>
+                    </span>
+                </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="lgItemDescription">
+                <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+itemAssignmentColumns[2].field">
+                    <span >{{ itemAssignmentColumns[2].name }} </span>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index;">
+                  {{element.lgItemDescription ? element.lgItemDescription : '-'}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="lgLocatorName">
+                <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+itemAssignmentColumns[8].field">
+                    <span >{{ itemAssignmentColumns[8].name }} </span>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index;">
+                  <div *ngIf="element.editing">
+                    <div fxLayout="row"  *ngIf="element.locatorSearchLoader === 'hide'">
+                      <div fxFlex="80">
+                          <mat-form-field *ngIf="element.showLocatorLov === 'show'" autofocus>
+                              <mat-select [(ngModel)]="element.locatorId" placeholder="Locator" >
+                                  <mat-option *ngFor="let item of element.sourceLocatorList" [value]="item.value"
+                                   >
+                                      {{ item.label }}
+                                  </mat-option>
+                             </mat-select>
+                              <mat-error *ngIf="element.locatorId === ''" >Please Enter Locator Name</mat-error>
+                          </mat-form-field>
+                          <mat-form-field *ngIf="element.showLocatorLov === 'hide'">
+                              <input matInput (keydown)="fetchLocatorSearchList($event, i, false, element.locatorSearchValue)"
+                              (blur)="fetchLocatorSearchList($event, i, false, element.locatorSearchValue)"
+                              placeholder="Search Locator" [(ngModel)]="element.locatorSearchValue"  autocomplete="off" required/>
+                          </mat-form-field>
+                      </div>
+                      <div fxFlex="20">
+                          <div [ngClass]="'pt-15'">
+                              <button  class="searchBtn icon-search" matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                              (click)="fetchLocatorSearchList($event, i, true, element.locatorSearchValue)" >
+                              </button>
+                          </div>
+                      </div>
+                    </div>
+                    <div  fxLayout="row"  *ngIf="element.locatorSearchLoader === 'show'">
+                      <div fxFlex="100">Searching...</div>
+                    </div>
+                  </div>
+                  <div *ngIf="!element.editing">
+                    <span [ngClass]="'nonEditiableField'" style="pointer-events: none; " class="maxWidthSelect setWidth">
+                        <span >{{element.locCode ? element.locCode : '-'}}</span>
+                    </span>
+                </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="replenishmentCriteriaName">
+                <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+itemAssignmentColumns[9].field">
+                    <span >{{ itemAssignmentColumns[9].name }} </span>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index;">
+              
+                    <mat-form-field *ngIf="element.editing" autofocus>
+                        <mat-select [(ngModel)]="element.replenishmentCriteria" placeholder="Required" required  [disabled]='!element.lgItemId || !element.sourceLgId ' >
+                            <mat-option *ngFor="let item of element.repCriteriaList" [value]="item.value"
+                            >
+                                {{ item.label }}
+                            </mat-option>
+                       </mat-select>
+                        <mat-error *ngIf="element.replenishmentCriteria === ''" >Please Enter Replenishment Criteria Name</mat-error>
+                    </mat-form-field>
+                  <div *ngIf="!element.editing">
+                    <span [ngClass]="'nonEditiableField'" style="pointer-events: none; " class="maxWidthSelect setWidth">
+                        <span >{{element.replenishmentCriteriaDesc ? element.replenishmentCriteriaDesc : '-'}}</span>
+                    </span>
+                </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="lgMinQty">
+                <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+itemAssignmentColumns[3].field">
+                    <span >{{ itemAssignmentColumns[3].name }} </span>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index;">
+                  <div *ngIf="element.editing">
+                    <mat-form-field [ngClass]="'inputMarginClass'">
+                      <input matInput placeholder="Required" [(ngModel)]="element.lgMinQty" (keypress)="commonService.isDecimal($event)" autocomplete="off" required>
+                    </mat-form-field>
+                  </div>
+                  <span *ngIf="!element.editing" >
+                      {{element.lgMinQty ? element.lgMinQty : '-'}}
+                  </span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="lgMaxQty">
+                <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+itemAssignmentColumns[4].field">
+                    <span >{{ itemAssignmentColumns[4].name }} </span>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index;">
+                  <div *ngIf="element.editing">
+                    <mat-form-field [ngClass]="'inputMarginClass'">
+                      <input matInput placeholder="Required" [(ngModel)]="element.lgMaxQty" (keypress)="commonService.isDecimal($event)" autocomplete="off" required>
+                    </mat-form-field>
+                  </div>
+                  <span *ngIf="!element.editing" >
+                      {{element.lgMaxQty ? element.lgMaxQty : '-'}}
+                  </span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="lgItemUom">
+                <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+itemAssignmentColumns[5].field">
+                    <span >{{ itemAssignmentColumns[5].name }} </span>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index;">
+                  {{element.lgUnitOfMeasure ? element.lgUnitOfMeasure : '-'}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="sourceLgName">
+                <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+itemAssignmentColumns[6].field">
+                    <span >{{ itemAssignmentColumns[6].name }} </span>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index;">
+                  <div *ngIf="element.editing">
+                    <div fxLayout="row"  *ngIf="element.lgSearchLoader === 'hide'">
+                      <div fxFlex="80">
+                          <mat-form-field *ngIf="element.showLgLov === 'show'" autofocus>
+                              <mat-select [(ngModel)]="element.sourceLgId" placeholder="Required" required >
+                                  <mat-option *ngFor="let temp of element.sourceLgList" [value]="temp.value">
+                                      {{ temp.label }}
+                                  </mat-option>
+                             </mat-select>
+                              <mat-error *ngIf="element.sourceLgId=== ''" >Please Enter Source LG</mat-error>
+                          </mat-form-field>
+                          <mat-form-field *ngIf="element.showLgLov === 'hide'">
+                              <input matInput (keydown)="fetchLgSearchList($event, i, false, element.lgSearchValue)"
+                              (blur)="fetchLgSearchList($event, i, false, element.lgSearchValue)"
+                              placeholder="Search LG" [(ngModel)]="element.lgSearchValue" autocomplete="off" required/>
+                          </mat-form-field>
+                      </div>
+                      <div fxFlex="20">
+                          <div [ngClass]="'pt-15'">
+                              <button  class="searchBtn icon-search" matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                              (click)="fetchLgSearchList($event, i, true, element.lgSearchValue)" >
+                              </button>
+                          </div>
+                      </div>
+                    </div>
+                    <div  fxLayout="row"  *ngIf="element.lgSearchLoader === 'show'">
+                      <div fxFlex="100">Searching...</div>
+                    </div>
+                  </div>
+                  <span *ngIf="!element.editing" >
+                      {{element.sourceLgName ? element.sourceLgName : '-'}}
+                  </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef  [ngClass]="'cursor-auto center actionColumn mat-header-column-'+itemAssignmentColumns[7].field">
+                    {{ itemAssignmentColumns[7].name }}
+                </th>
+                <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons percent10'">
+                    <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center"
+                        style="justify-content: center;">
+                        <span *ngIf="!element.addNewRecord" class="icon-edit" matRipple matTooltip="Edit"
+                        (click)="beginEdit(element,$event, i)"
+                            [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                            [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                        <span *ngIf="!element.addNewRecord && element.editing" [ngClass]="'padding0'">
+                          <span class="icon-clear" matRipple matTooltip="Cancel" [matTooltipPosition]="tooltipPosition" (click)="disableEdit(element, i)"
+                              [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true" [matRippleRadius]="false">
+                          </span>
+                        </span>
+                            <span *ngIf="!element.addNewRecord" class="icon-delete" matRipple matTooltip="Delete"
+                            [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'" (click)="openDeleteDialog(myDialog, element, i )"
+                            [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                        <span *ngIf="element.addNewRecord" [ngClass]="'padding0'">
+                            <span class="icon-clear" matRipple (click)="deleteRow(element, i)" matTooltip="Delete" [matTooltipPosition]="tooltipPosition"
+                                [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true" [matRippleRadius]="false">
+                        </span>
+                        </span>
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="itemAssignmentDisplayColumns; sticky: true"></tr>
+            <tr mat-row [ngClass]="{'highlightRowError': selectedRowIndex == paginatorItemAssignment.pageSize * paginatorItemAssignment.pageIndex + i}" *matRowDef="let row; let i= index; columns: itemAssignmentDisplayColumns"></tr>
+        </table>
+        <ng-container *ngIf="itemAssignmentlistProgress">
+            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+        </ng-container>
+        <ng-container *ngIf="!itemAssignmentDataSource.data.length && !itemAssignmentlistProgress">
+            <div [ngClass]="'noDataFound'"><small>{{lgItemAssignmentMessage}}</small></div>
+        </ng-container>
+      </div>
+      <div class="text-align-right pr-10">
+          <button mat-stroke-button class="orangeButtonBorder border-radius-3 colorAttribute marginT5" color="primary" (click)="addRow()">
+              Add Row
+          </button>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div [ngClass]="'formContainer'">
+              <button *ngIf="isAdd" mat-flat-button [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10' : 'formButton saveButton mr10'"
+              color="primary" (click)="onItemAssignmentSubmit($event, 'save')">
+                  Save
+              </button>
+              <button *ngIf="isEdit" mat-flat-button [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10' : 'formButton saveButton mr10'"
+              color="primary" (click)="onItemAssignmentSubmit($event, 'update')">
+                  Update
+              </button>
+              <!-- (click)="cancelItemAssignment()" -->
+              <button 
+              (click)="openConfirmationDialogItem('LG Item Assignment','locatorGroup')" mat-flat-button [ngClass]="'formButton saveButton mr10'" color="primary">
+                  Cancel
+              </button>
+          </div>
+          <mat-paginator (page)="commonService.setPaginationSize($event)" #paginatorItemAssignment showFirstLastButtons [ngClass]="'mat-paginator-sticky'"></mat-paginator>
+
+      </div>
+    </div>
+    </div>
+</div>
+
+<ng-template #myDialog let-data>
+  <h1 class="viewDialogHeader" mat-dialog-title>
+      <div fxLayout="row" fxLayoutGap="10px">
+          <div fxFlex="90" fxLayoutGap="10px"><span class="viewDialogTitle">Confirmation</span></div>
+      </div>
+  </h1>
+  <div mat-dialog-content [ngClass]="'pb-24'">
+     <div fxLayout="row" fxLayoutGap="10px" style='margin-bottom: 20px;'>
+          <div fxFlex="5" fxLayoutGap="10px"></div>
+          <div fxFlex="95" fxLayoutGap="10px">
+              <span style="font-size: 14px;">Are you sure you want to delete this item assignment?</span>
+          </div>
+      </div>
+      <div fxLayout="row" fxLayoutGap="10px" style='margin-bottom: 20px;'>
+          <div fxFlex="30" fxLayoutGap="10px"></div>
+          <div fxFlex="20" fxLayoutGap="10px">
+              <button mat-flat-button class="formButton saveButton"
+                  color="primary" matDialogClose (click)="deleteItemAssignment(data)">
+                  Yes
+              </button>
+          </div>
+          <div fxFlex="20" fxLayoutGap="10px">
+              <button mat-flat-button class="formButton saveButton"
+              color="primary" matDialogClose>
+                  No
+              </button>
+          </div>
+          <div fxFlex="30" fxLayoutGap="10px"></div>
+      </div>
+  </div>
+
+</ng-template>

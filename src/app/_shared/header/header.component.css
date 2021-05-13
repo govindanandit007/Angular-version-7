@@ -1,0 +1,75 @@
+.btn-header-bg{
+    background-color:#c7cdec;
+    box-shadow:none;
+    width:30px;
+    height:30px;
+}
+.mat-fab.mat-accent, .mat-flat-button.mat-accent, .mat-mini-fab.mat-accent, .mat-raised-button.mat-accent {
+    color: rgb(26, 113, 177) !important;
+}
+.headerIcon{
+    font-size:16px;
+}
+.userInfo{
+    margin-left:35px;
+    align-items: center;
+}
+.userInfo .thumb35{
+    display:inline-block;
+}
+.userInfo .thumb35 img{
+    width: 25px;
+    height: 25px;
+    border-radius:50%;
+}
+
+.userInfo .homeIcon img{
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.dashboardIcon{
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+.userInfo .userName{
+    font-family: 'Poppins-Regular', Arial, Helvetica;
+    font-size:0.75em;
+    margin:0 0 0 10px;
+    display: inline-block;
+    max-width: 100px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.userInfo .down-arrow{
+    display:inline-block;
+    height: 24px;
+    cursor:pointer;
+}
+.iuText{
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    color: #7F7F7F !important;
+    font-size: 17px;
+    cursor: pointer;
+}
+/* ::ng-deep .mat-form-field-appearance-legacy .mat-form-field-wrapper{
+    padding-bottom: 0px !important;
+} */
+ ::ng-deep .mat-select.iuTextHeaderInput{
+    /* border: 1px solid #ccc; */
+    /* padding: 5px 10px; */
+    /* margin: 5px 10px; */
+    /* background: #fff; */
+    color: rgba(191, 218, 246, 1) !important;
+    width: 110px;
+    font-size: 14px;
+}

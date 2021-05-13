@@ -1,0 +1,74 @@
+.formHeader {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+.minimumWidth40{
+    min-width:40px;
+}
+.minimumWidth60{
+    min-width:60px;
+}
+.minimumWidth80{
+    min-width:80px;
+}
+.minimumWidth100{
+    min-width:100px;
+}
+.minimumWidth120{
+    min-width:120px;
+}
+.minimumWidth150{
+    min-width:150px;
+}
+.mat-column-itemCode, .mat-column-iuCode, .mat-column-quantity, .mat-column-parentNumber
+{
+    width: 60px;
+}
+.mat-column-batchNumber, .mat-column-expirationDate, .mat-column-gradeCode, .mat-column-originationDate {
+    width: 80px;
+}
+.mat-column-description{
+    width: 150px;
+}
+th.mat-header-cell, td.mat-cell{
+    padding-right:10px;
+}
+th.mat-header-cell:last-child{
+    padding-right:0;
+}
+.mat-column-action{
+    /* border-left:1px solid #ccc; */
+}
+.inputWidthClass, .dateField, .inputMarginClassExtend {
+    margin-right: 10px;
+    max-width: fit-content;
+    height:56px;
+}
+
+.setBtm{
+    align-items: flex-end;
+}
+
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff !important;
+}
+.content-wrapper1{
+    padding:0;
+}
+.searchRight {
+    position: fixed;
+    right: 5px;
+}
+.customTable {
+    overflow-x: auto;
+}
+
+.mat-input-element:disabled{
+    color: rgba(0,0,0,.87);
+}
+/* td.mat-cell{
+    padding-left: 12px !important;
+} */

@@ -1,0 +1,45 @@
+{
+    "type": "ITEMREV",
+    "searchType": "itemRevision",
+    "searchFor": "Search Item Revision",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "code",
+            "label": "Item Name",
+            "key": "itemName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "revsnNumber",
+            "label": "Item Reference",
+            "key": "revsnNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "revsnEnabledFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": "" },
+                { "label": "Yes", "value": "Y" },
+                { "label": "No", "value": "N" }
+            ]
+        }
+    ]
+}

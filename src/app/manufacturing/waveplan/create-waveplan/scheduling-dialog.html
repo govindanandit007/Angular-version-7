@@ -1,0 +1,116 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle">Scheduling</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'">
+    <!-- <div  fxLayout="column" style="padding-left: 20px; padding-top: 10px;"> -->
+<div fxLayout="row">
+    <div fxFlex="100" class="mt7 headerColor">Recurrence Pattern:</div>
+</div>
+<div fxLayout="row" fxLayoutGap="20px" class="mt7">
+    <div fxFlex="15">
+        <mat-radio-group fxFlex="40" (change)="optionchanged()" class="setCircle" [(ngModel)]="recurrencePattern">
+            <mat-radio-button value="D" class="mr10 optionHeading">Daily</mat-radio-button>
+            <mat-radio-button value="W" class="mr10 optionHeading">Weekly</mat-radio-button>
+            <mat-radio-button value="M" class="mr10 optionHeading">Monthly</mat-radio-button>
+            <mat-radio-button value="Y" class="mr10 optionHeading">Yearly</mat-radio-button>
+        </mat-radio-group>
+    </div>
+    <div fxFlex="85" class="setLeftBorder">
+        <div *ngIf="recurrencePattern === 'D'" class="optionSection">
+            Every &nbsp;<input matInput placeholder="" [(ngModel)]='recur' class="searchInput width" autocomplete="off"
+                (keypress)="commonService.isNaturalNumber($event)"> &nbsp;day(s)
+        </div>
+        <div *ngIf="recurrencePattern === 'W'" class="optionSection">
+            <div fxLayout="row" fxLayoutGap="20px">
+                Recur every &nbsp;<input matInput placeholder="" [(ngModel)]='recur' class="searchInput width"
+                    autocomplete="off" (keypress)="commonService.isNaturalNumber($event)"> &nbsp;week(s) on
+            </div>
+            <div fxLayout="column">
+                <div fxLayout="row" class="mt10">
+                    <mat-checkbox fxFlex="25" [(ngModel)]="weekdays.sun">Sunday</mat-checkbox>
+                    <mat-checkbox fxFlex="25" [(ngModel)]="weekdays.mon">Monday</mat-checkbox>
+                    <mat-checkbox fxFlex="25" [(ngModel)]="weekdays.tue">Tuesday</mat-checkbox>
+                    <mat-checkbox fxFlex="25" [(ngModel)]="weekdays.wed">Wednesday</mat-checkbox>
+                </div>
+                <div fxLayout="row">
+                    <mat-checkbox fxFlex="25" [(ngModel)]="weekdays.thu">Thursday</mat-checkbox>
+                    <mat-checkbox fxFlex="25" [(ngModel)]="weekdays.fri">Friday</mat-checkbox>
+                    <mat-checkbox fxFlex="25" [(ngModel)]="weekdays.sat">Saturday</mat-checkbox>
+                    <div fxFlex="25"></div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="recurrencePattern === 'M'" class="optionSection">
+            Day &nbsp;<input matInput [(ngModel)]="onDate" class="searchInput width" autocomplete="off"
+                (keypress)="commonService.isNaturalNumber($event)"> &nbsp;of every&nbsp;
+            <input matInput placeholder="" [(ngModel)]='recur' class="searchInput width" autocomplete="off"
+                (keypress)="commonService.isNaturalNumber($event)"> &nbsp;month(s)
+        </div>
+        <div *ngIf="recurrencePattern === 'Y'" class="optionSection">
+            <div fxLayout="row" class="mt10">
+                Recur &nbsp;<input matInput placeholder="" [(ngModel)]='recur' class="searchInput width"
+                    autocomplete="off" (keypress)="commonService.isNaturalNumber($event)"> &nbsp;year(s)&nbsp;
+
+            </div>
+            <div fxLayout="row" class="mt10">
+                <div fxFlex="6" style="padding-top: 15px;">on</div>
+                <mat-form-field class="materailFieldSize" fxFlex="25">
+                    <mat-select placeholder="Select Month" required [ngClass]="" [(ngModel)]='onMonthName'>
+                        <mat-option *ngFor="let element of monthList" [value]="element.value"
+                            (onSelectionChange)="getDayList($event, element.value)">
+                            {{element.label}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <mat-form-field class="materailFieldSize" fxFlex="25">
+                    <mat-select placeholder="Select Day" required [ngClass]="" [(ngModel)]='onDate'>
+                        <mat-option *ngFor="let element of dayList" [value]="element.value">
+                            {{element.label}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</div>
+<div fxLayout="row" class="mt15">
+    <span fxFlex="100" class="mt7 headerColor">Range of Recurrence:</span>
+</div>
+<div fxLayout="row">
+    <div fxFlex="100">
+        <span fxFlex="15" class="mt15 headerColor colorBlack">Start Date</span>
+        <mat-form-field fxFlex="30">
+            <mat-label>Choose start date</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]='startDate' autocomplete="off">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </div>
+</div>
+<div fxLayout="row">
+    <div fxFlex="100">
+        <span fxFlex="15" class=" headerColor colorBlack" style="padding-top: 5px;">End Date</span>
+        <mat-radio-group fxFlex="30" class="setCircle radio-direction-column" [(ngModel)]='rangeofRecurrence'>
+            <mat-radio-button value="EB" class="setFont14">End by
+                <mat-form-field class="dateField">
+                    <mat-label>Choose End date</mat-label>
+                    <input matInput [matDatepicker]="picker1" [(ngModel)]='endByDate' autocomplete="off">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            </mat-radio-button>
+            <mat-radio-button value="EAO" class="setFont14">End after &nbsp;
+                <input matInput [(ngModel)]='recurEndDate' class="searchInput width" autocomplete="off"
+                (keypress)="commonService.isNaturalNumber($event)">&nbsp;
+                occurrences</mat-radio-button>
+                <mat-radio-button value="NED" class="setFont14 mt7">No end date</mat-radio-button>
+            </mat-radio-group>
+    </div>
+</div>
+</div>
+<!-- </div> -->

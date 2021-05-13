@@ -1,0 +1,60 @@
+{
+    "type": "JOBHISTORY",
+    "searchType": "job-history",
+    "searchFor": "Search Job History",
+    "companyKey": "",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "firstDate",
+            "label": "Date",
+            "key": "firstDate",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "firstTime",
+            "label": "Time",
+            "key": "firstTime",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "secondDate",
+            "label": "Date",
+            "key": "secondDate",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "secondTime",
+            "label": "Time",
+            "key": "secondTime",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

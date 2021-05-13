@@ -1,0 +1,73 @@
+{
+    "type": "LG",
+    "searchType": "subInventory",
+    "searchFor": "Search Locator Groups",
+    "companyKey": "lgCompanyId",
+    "searchArray": [
+
+        {
+            "type": "LOV",
+            "lovType": "LocGroupCode",
+            "label": "Locator Group Code",
+            "key": "lgCode",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "lgMaterialStatus",
+            "label": "Material Status",
+            "key": "materialStatusId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "customer",
+            "label": "Customer",
+            "key": "customerName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "lgEnabledFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": "" },
+                { "label": "Yes", "value": "Y" },
+                { "label": "No", "value": "N" }
+            ]
+        },
+        {
+            "type": "selectionChangeLOV",
+            "lovType": "iuCode",
+            "label": "Inventory Unit Code",
+            "key": "lgIuId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

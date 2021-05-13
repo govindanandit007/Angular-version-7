@@ -1,0 +1,99 @@
+<h1 class="viewDialogHeader" mat-dialog-title>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle">Job Schedule</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" tabindex="0" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'">
+    <div class="container" fxLayout="column">
+        <div [ngClass]="'mb10'" fxLayout="row" fxLayoutGap="20px">
+            <div *ngIf="isLoading; else thenBlock" style="width: 100%;">
+                <div   fxLayout="column" fxFlexFill >
+                <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </div>
+            </div>
+            <ng-template #thenBlock>
+            <div fxLayout="column" fxFlex>
+                 <div fxLayout="row" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex="25">
+                        <span [ngClass]="'viewDialogDataTitle'">Job Name</span>
+                        <span [ngClass]="'viwDialogData'">{{this.resultData[0].jobName ? this.resultData[0].jobName : '-'}}</span>
+                    </div>
+                   <div fxLayout="column" fxFlex="25">
+                        <span [ngClass]="'viewDialogDataTitle'">Job Type</span>
+                        <span [ngClass]="'viwDialogData'">{{this.resultData[0].jobTypeName ? this.resultData[0].jobTypeName : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viewDialogDataTitle'">Interval</span>
+                        <span [ngClass]="'viwDialogData'">{{this.resultData[0].schedule ? this.resultData[0].schedule : '-'}}</span>
+                    </div>
+                     <div fxLayout="column" fxFlex="10">
+                        <span [ngClass]="'viewDialogDataTitle'">Value</span>
+                        <span [ngClass]="'viwDialogData'">{{this.resultData[0].value ? this.resultData[0].value : '-'}}</span>
+                    </div>
+                     <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Log Name</span>
+                        <span [ngClass]="'viwDialogData'">{{ this.resultData[0].logName ?  this.resultData[0].logName : '-'}}</span>
+                    </div>
+                   <!-- <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Start Time</span>
+                        <span [ngClass]="'viwDialogData'">{{this.resultData[0].startTime ? this.resultData[0].startTime : '-'}}</span>
+                    </div>  -->
+                   
+                </div> 
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <div class="item-head" fxFlex="23">Start Date/ Time:</div>
+                    <div class="item-head" fxFlex="75">Job Parameters</div>
+                </div>
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <div fxLayout="column" fxFlex="11">
+                        <span [ngClass]="'viewDialogDataTitle'">Start Date</span>
+                        <span [ngClass]="'viwDialogData'"> {{ this.resultData[0].startDate ?  (this.resultData[0].startDate  | date ) : '-'}} 
+                            <!-- <mat-icon class="maticon">today</mat-icon> -->
+                        </span>
+                  
+                    </div>
+                    <div fxLayout="column" fxFlex="10.5">
+                        <span [ngClass]="'viewDialogDataTitle'">Time</span>
+                        <span [ngClass]="'viwDialogData'"> 
+                          {{this.resultData[0].startTime ? this.resultData[0].startTime : '-'}}
+                          <!-- <mat-icon class="maticon">access_time</mat-icon> -->
+                        </span>
+                  
+                    </div>
+                    <div fxLayout="column" fxFlex="10"  *ngFor="let listItem of this.resultData[0].jobparameter">
+                         
+                        <span [ngClass]="'viewDialogDataTitle'">{{ listItem.jobParameterName ? listItem.jobParameterName.split("_").join(" ") : '' }}</span>
+                        <span [ngClass]="'viwDialogData'">{{ listItem.valueDesc ? listItem.valueDesc : '' }}</span>
+                         
+                    </div>
+                </div>
+             
+                           <!--  <div fxLayout="column" fxFlex="20">
+                                <span [ngClass]="'viewDialogDataTitle'">Schedule</span>
+                                <span [ngClass]="'viwDialogData'">{{data[0].schedule ? data[0].schedule : '-'}}</span>
+                            </div>
+                            <div fxLayout="column" fxFlex="20">
+                                <span [ngClass]="'viewDialogDataTitle'">Start Date</span>
+                                <span [ngClass]="'viwDialogData'">{{data[0].startDate ? data[0].startDate : '-'}}</span>
+                            </div>
+                            <div fxLayout="column" fxFlex="20">
+                                <span [ngClass]="'viewDialogDataTitle'">Start Time</span>
+                                <span [ngClass]="'viwDialogData'">{{data[0].startTime ? data[0].startTime : '-'}}</span>
+                            </div> 
+                           
+                        </div> 
+               
+                </div>
+                </div> -->
+     
+       </div>
+    </ng-template>
+</div>
+<div mat-dialog-actions [ngClass]="'viewActionFooter'" >
+    <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data[0].jobId"
+        cdkFocusInitial>Edit</button>
+</div>

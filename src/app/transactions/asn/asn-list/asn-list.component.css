@@ -1,0 +1,76 @@
+.formHeader {
+    padding: 7px 10px;
+    border-bottom: 1px solid #ccc;
+}
+.top-688  {
+    top: 68px !important;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+.content-wrapper1 {
+    padding: 0px;
+    /* width:  76.5% ; */
+}
+.searchRight {
+    position: fixed;
+    right: 5px;
+}
+.content{
+    border:1px solid #ccc;
+    border-radius: 3px;
+    padding:10px;
+}
+.searchBoxLabel{
+    font-size:13px;
+}
+.no-screen-found{
+    font-size:11px;
+    padding-bottom:10px;
+}
+.viewActionFooter{
+    padding: 5px 15px !important;
+    border-top: 1px solid #ccc;
+}
+.pb-24{
+    padding-bottom: 24px !important;
+}
+.customTable{
+    overflow: auto;
+}
+::ng-deep .mat-column-No{
+    min-width: 50px;
+}
+::ng-deep .mat-column-asnIuId{
+    min-width: 100px;
+}
+
+::ng-deep .inputMarginClass {
+    margin-right: 10px;
+    max-width: 100px;
+}
+.customWidth100{
+    max-width: 100px;
+    min-width: 100px;
+}
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff !important;
+}
+.customWidth80 {
+    min-width: 80px;
+    max-width: 80px;
+    position: relative;
+}
+.customWidth250 {
+    min-width: 250px;
+    max-width: 250px;
+}
+.scrollHide {
+    overflow: hidden;
+}
+th.mat-header-cell, td.mat-cell{
+    padding-right:10px;
+}
+th.mat-header-cell:last-child{
+    padding-right:0;
+}

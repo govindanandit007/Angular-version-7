@@ -1,0 +1,129 @@
+.formHeader {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+
+.customTable {
+    overflow: auto;
+}
+
+.customWidthClass {
+    min-width: 135px;
+}
+.customWidth80 {
+    min-width: 95px;
+}
+.customWidth100 {
+    min-width: 100px;
+    max-width: 100px;
+}
+.width80 {
+    min-width: 80px;
+}
+.customWidth95 {
+    min-width: 105px;
+}
+.stickyColumn {
+    min-width: 105px;
+    max-width: 105px;
+}
+.stickyColumn2 {
+    min-width: 135px;
+    max-width: 135px;
+    left: 129px !important;
+}
+.stickyColumn3 {
+    min-width: 135px;
+    max-width: 135px;
+    left: 264px !important;
+}
+.stickyColumn4 {
+    min-width: 80px;
+    max-width: 80px;
+    right: 80px !important;
+}
+.customDescriptionField {
+    margin-right: 10px;
+    min-width: 250px;
+}
+
+.nonEditiableDesField {
+    display: inline-block;
+    width: 160px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+    padding-top: 7px;
+    color: #5b5b5b;
+}
+
+.inputWidthClass {
+    margin-right: 10px;
+    max-width: 95px;
+}
+.locCodeField {
+    margin-right: 10px;
+    max-width: 120px;
+}
+
+.checkFieldWidthClass {
+    min-width: 80px;
+}
+
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+}
+
+.scrollHide {
+    overflow-x: hidden;
+}
+
+.textInput{
+    background-color: white;
+    width: 100%;
+    font-size: 15px;
+    padding: 1px;
+    padding-left: 5px;
+    margin-bottom: 10px;
+}
+
+.textInputLabel{
+    font-size: 12px;
+    padding-top: 5px;
+    color: #1a71b1;
+}
+
+.alignCenter{
+    text-align: center;
+}
+
+.minimumWidth40{
+    min-width:40px;
+}
+
+.minimumWidth60{
+    min-width:60px;
+}
+
+
+.minimumWidth100{
+    min-width:100px;
+}
+
+.minimumWidth130{
+    min-width:130px;
+}
+.content-wrapper1 {
+    padding: 0px;
+}
+.searchRight {
+    position: fixed;
+    right: 5px;
+}

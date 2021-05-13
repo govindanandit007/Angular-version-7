@@ -1,0 +1,272 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle">ASN</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'">
+    <div *ngIf='!isAsnContent' class="container" fxLayout="column">
+        <div [ngClass]="'mb10'" fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex>
+                <div fxLayout="row" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viewDialogDataTitle'">ASN Number</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].asnNumber ? data[0].asnNumber : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viewDialogDataTitle'">OU</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].ouCode ? data[0].ouCode : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="30">
+                        <span [ngClass]="'viewDialogDataTitle'">Description</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].asnDescription ? data[0].asnDescription : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viewDialogDataTitle'">Supplier</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].supplier ? data[0].supplier : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viewDialogDataTitle'">Supplier Site</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].supplierSite ? data[0].supplierSite : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="10">
+                        <span [ngClass]="'viewDialogDataTitle'">ASN Date</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].asnDate ? (data[0].asnDate | date) : '-'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+       <div [ngClass]="'marginT15'" fxLayout="row" fxLayoutGap="5px">
+            <div fxFlex="100" [ngClass]="'viewDialogLabelBar'">
+                <mat-label [ngClass]="'viewDialogLabel'">ASN Lines :</mat-label>
+            </div>
+        </div>
+        <div [ngClass]="'customTable'" [ngStyle]="{ 'min-width': 'auto', 'max-height': '240px' }">
+            <table mat-table [dataSource]="parameterDataSource" style="width:1800px;">
+                <ng-container matColumnDef="asnLineId">
+                    <th mat-header-cell *matHeaderCellDef>#</th>
+                    <td mat-cell *matCellDef="let element; let i=index">
+                        <span>{{i+1}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="asnPoId">
+                    <th mat-header-cell *matHeaderCellDef>PO</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.poNumber ? element.poNumber : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="asnPoLineId">
+                    <th mat-header-cell *matHeaderCellDef>PO Line</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.poLineNumber ? element.poLineNumber : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="asnIuId">
+                    <th mat-header-cell *matHeaderCellDef>IU</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.iuCode ? element.iuCode : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="asnLineNumber">
+                    <th mat-header-cell *matHeaderCellDef>ASN Line #</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.lineNumber ? element.lineNumber : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="asnItemId">
+                    <th mat-header-cell *matHeaderCellDef>Item</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.itemName ? element.itemName : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="asnItemRevision">
+                    <th mat-header-cell *matHeaderCellDef>Item Revision</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.revsnNumber ? element.revsnNumber : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="asnUomCode">
+                    <th mat-header-cell *matHeaderCellDef>UOM Code</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.uomCode ? element.uomCode : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="asnQuantity">
+                    <th mat-header-cell *matHeaderCellDef>Qty</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.quantity ? element.quantity : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="asnReceiptRouting">
+                    <th mat-header-cell *matHeaderCellDef>Receipt Routing</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.receiptRouting ? element.receiptRouting : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poRemQuantity">
+                    <th mat-header-cell *matHeaderCellDef>PO Remain Qty</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.poRemainQty ? element.poRemainQty : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poQuantity">
+                    <th mat-header-cell *matHeaderCellDef>PO Quantity</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.poQuantity ? element.poQuantity : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poPlannedReceiptDate">
+                    <th mat-header-cell *matHeaderCellDef>PO Planned Receipt Date</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.poPlannedReceiptDate ? (element.poPlannedReceiptDate | date) : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="asnPlannedReceiptDate">
+                    <th mat-header-cell *matHeaderCellDef>ASN Planned Receipt Date</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.asnPlannedReceiptDate ? (element.asnPlannedReceiptDate | date) : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poLineReceiptQty">
+                    <th mat-header-cell *matHeaderCellDef>PO Line Receipt Quantity</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.poLineReceiptQty ? element.poLineReceiptQty : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="action" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef
+                       >
+                        Action
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'">
+                        <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center">
+                            <span *ngIf="element.linesContent.length"  [ngClass]="'padding0'">
+                                <span class="icon-direct" (click)="openContentLines(element, i)" matRipple matTooltip="Details"
+                                    [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                    [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="asnViewdColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: asnViewdColumns"></tr>
+            </table>
+            <ng-container *ngIf="
+                    !parameterDataSource.data.length">
+                <div [ngClass]="'noDataFound'"><small>No ASN Lines Defined</small></div>
+            </ng-container>
+        </div>
+    </div>
+    <div *ngIf='isAsnContent' class="container" fxLayout="column">
+        <div [ngClass]="'customTable'" [ngStyle]="{ 'min-width': 'auto', 'max-height': '240px' }">
+            <table mat-table [dataSource]="parameterDataSourceItemAsnLine" >
+                <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef class="width10">
+                        <span >S.No</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i = index;" class="width10">
+                        <span>{{ i + 1 }} </span>
+                    </td>
+                </ng-container>   
+                <ng-container matColumnDef="asnLpnNumber">
+                    <th mat-header-cell *matHeaderCellDef  class="width15" >LPN</th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="width15 setPadding">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">{{element.asnLpnNumber}}</span>
+                            </div>
+                    </td>
+                </ng-container>    
+                <ng-container matColumnDef="asnBatchNumber">
+                    <th mat-header-cell *matHeaderCellDef class="width15">Batch</th>
+                    <td mat-cell *matCellDef="let element; let i=index" class="width15 setPadding">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">{{element.asnBatchNumber}}</span>
+                            </div>
+                        </td>
+                </ng-container>  
+                <ng-container matColumnDef="asnFromSerial">
+                    <th mat-header-cell *matHeaderCellDef class="width15">From Serial</th>
+                    <td mat-cell *matCellDef="let element" class="width15 setPadding">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">{{element.asnFromSerial}}</span>
+                            </div>
+                        </td>
+                </ng-container>  
+                <ng-container matColumnDef="asnToSerial">
+                    <th mat-header-cell *matHeaderCellDef class="width15">To Serial</th>
+                    <td mat-cell *matCellDef="let element" class="width15 setPadding">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">{{element.asnToSerial}}</span>
+                            </div>
+                        </td>
+                </ng-container>  
+                <ng-container matColumnDef="asnQuantity">
+                    <th mat-header-cell *matHeaderCellDef class="width15">Quantity</th>
+                    <td mat-cell *matCellDef="let element" class="width15 setPadding">
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">{{element.asnQuantity}}</span>
+                            </div>
+                        </td>
+                </ng-container>    
+         
+             
+         
+                <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsItemAsnLine"></tr>
+                <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumnsItemAsnLine"></tr>
+            </table>
+            <ng-container *ngIf="listProgress">
+                <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+            </ng-container>
+
+            <ng-container *ngIf="!parameterDataSourceItemAsnLine.data.length && !listProgress">
+                <div [ngClass]="'positionRelative'">
+                    <div [ngClass]="'noDataFound'"><small></small></div>
+                </div>
+            </ng-container>
+            <div class="text-align-right pr-10" style="margin-top: 10px;" >  
+                <!-- <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons
+                    [ngClass]="'mat-paginator-sticky'">
+                </mat-paginator> -->
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf='!isAsnContent' mat-dialog-actions [ngClass]="'viewActionFooter'">
+    <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data[0].asnId"
+        cdkFocusInitial>Edit</button>
+</div>
+<div  *ngIf='isAsnContent' mat-dialog-actions [ngClass]="''" style="padding: 5px 15px !important;">
+    <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" 
+        cdkFocusInitial (click)='gotoAsnLines()' >Back</button>
+</div>

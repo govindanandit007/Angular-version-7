@@ -1,0 +1,130 @@
+.formHeader {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+
+.customTable {
+    overflow-x: auto;
+}
+.content-wrapper1 {
+    padding: 0px;
+}
+.searchRight {
+    position: fixed;
+    right: 5px;
+}
+
+.customDescriptionField {
+    margin-right: 10px;
+}
+
+.nonEditiableDesField {
+    display: inline-block;
+    width: 160px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+    padding-top: 7px;
+    color: #5b5b5b;
+}
+
+.inputWidthClass {
+    margin-right: 10px;
+}
+.locCodeField {
+    margin-right: 10px;
+}
+
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+}
+
+.scrollHide {
+    overflow-x: auto;
+}
+
+
+.dateField {
+    margin-right: 10px;
+}
+.inputMarginClass {
+    margin-right: 10px;
+}
+
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff;
+}
+
+
+::ng-deep .selectArrowHide.mat-select.mat-select-disabled .mat-select-arrow {
+    color: #fff;
+}
+
+th.mat-header-cell, td.mat-cell{
+    padding-right:10px;
+}
+th.mat-header-cell:last-child{
+    padding-right:0;
+}
+
+::ng-deep .mat-expansion-panel-content{
+    font: inherit;
+}
+.example-action-buttons {
+    padding-bottom: 20px;
+  }
+  
+  .example-headers-align .mat-expansion-panel-header-title,
+  .example-headers-align .mat-expansion-panel-header-description {
+    flex-basis: 0;
+  }
+  
+  .example-headers-align .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .example-headers-align .mat-form-field + .mat-form-field {
+    margin-left: 8px;
+  }
+  .accordianPanel{
+      margin-bottom: 20px !important;
+  }
+
+  ::ng-deep .mat-expansion-panel-header, 
+  ::ng-deep .mat-expansion-panel-header:hover{
+    background-color: rgba(0,0,0,.04) !important;
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+  }
+
+  .txndetailsData{
+    padding: 20px 0px 0px 0px;
+  }
+
+  .panelTitle{
+    font-weight: 500;
+  }
+  .viewDialogHeader.mat-dialog-title{
+    padding: 10px 0 10px 20px;
+  }
+
+  ::ng-deep .mat-expansion-indicator::after {
+    height: 5px;
+    width: 5px;
+    margin-top: -6px;
+  }
+
+  ::ng-deep .mat-expansion-panel-body{
+    padding-bottom: 0px !important;
+  }
+  ::ng-deep .mat-paginator-container{
+    padding: 0;
+  }

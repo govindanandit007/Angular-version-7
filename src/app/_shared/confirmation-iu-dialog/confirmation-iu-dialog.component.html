@@ -1,0 +1,10 @@
+<div mat-dialog-container>
+    <h2 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle class="messageHeaderTitle mat-dialog-title">{{messageHeader}}</h2>
+    <div mat-dialog-content>
+        <p class="pl-20">{{messageBody}}</p>
+    </div>
+    <div mat-dialog-actions class="padding10">
+        <button mat-flat-button color="primary"  class="formButton saveButton mr10" (click)="navigate()">Yes</button>
+        <button mat-flat-button  color="accent" class="formButton cancelButton" (click)="close()">No</button>
+    </div>
+</div>

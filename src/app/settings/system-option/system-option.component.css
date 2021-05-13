@@ -1,0 +1,155 @@
+.formHeader {
+    padding: 10px 20px;
+    /* border-bottom: 1px solid #ccc; */
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+
+.customTable {
+    overflow: auto;
+}
+.content-wrapper1 {
+    padding: 0px;
+    /* width:  76.5% ; */
+}
+.searchRight {
+    position: fixed;
+    right: 5px;
+}
+
+.customDescriptionField {
+    margin-right: 10px;
+    /* min-width: 250px; */
+}
+
+.nonEditiableDesField {
+    display: inline-block;
+    width: 160px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+    padding-top: 7px;
+    color: #5b5b5b;
+}
+
+.inputWidthClass {
+    margin-right: 10px;
+    /* max-width: 95px; */
+}
+.locCodeField {
+    margin-right: 10px;
+    /* max-width: 120px; */
+}
+
+.checkFieldWidthClass {
+    /* min-width: 80px; */
+}
+
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+}
+
+.scrollHide {
+    overflow: hidden;
+}
+
+
+.dateField {
+    margin-right: 10px;
+}
+.inputMarginClass {
+    margin-right: 10px;
+    /* max-width: 90px; */
+}
+.dateFieldWidth{
+    /* min-width: 120px; */
+    /* max-width: 120px; */
+}
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff;
+}
+.mat-column-action {
+    /* border-left: 1px solid #ccc; */
+}
+
+::ng-deep .selectArrowHide.mat-select.mat-select-disabled .mat-select-arrow {
+    color: #fff;
+}
+
+th.mat-header-cell, td.mat-cell{
+    padding-right:10px;
+}
+th.mat-header-cell:last-child{
+    padding-right:0;
+}
+
+.roleSearchBox{
+    background-color:#f2f2f4;
+    position: relative;
+}
+.searchBoxLabel{
+    font-size:14px;
+    margin-right: 20px;
+}
+
+.roleSearchBox .mat-flat-button.formButton{
+    height:28px;
+    line-height: 28px;
+}
+.roleSearchBox .mat-error{
+    display: inline-block;
+    font-size:12px;
+}
+
+.activeTab{
+    padding: 10px 10px 10px 10px;
+    background-color: #098ccd;
+    color: white;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.inActiveTab{
+    padding: 10px 10px 10px 10px;
+    background-color: #f2f2f4; 
+    color: black;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.setPadding{
+    padding: 10px 20px 0px 0px;
+
+}
+
+.searchInput{
+    border: 1px solid #ccc;
+    padding-left: 10px;
+    padding-top: 2px;
+    min-height: 25px; 
+    background: #fff;
+    width: 150px;
+    font-size: 14px;
+}
+
+::ng-deep  .mat-form-field-wrapper .mat-input-element{
+    color: rgba(0,0,0,.87);;
+}
+
+.mandatory {
+    margin-left: 5px;
+    margin-right: 5px;
+    color: #f80707;
+    font-size: 14px;
+}

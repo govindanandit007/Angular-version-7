@@ -1,0 +1,22 @@
+/* .customTable{
+    overflow-x: hidden;
+} */
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff !important;
+}
+.item-head{
+    color: #098ccd;
+}
+
+.hideSerach {
+    display: none;
+}
+
+.showSearch {
+    display: block;
+}
+
+::ng-deep .mat-input-element:disabled,
+::ng-deep .mat-select-disabled .mat-select-value{
+    color: rgba(0,0,0,1);
+}

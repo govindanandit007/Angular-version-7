@@ -1,0 +1,73 @@
+<div fxLayout="column" fxLayoutAlign="space-between stretch" fxFlex="100">
+    <div fxLayout="column">
+        <div class="search-header" fxLayout="row">
+            <div class="search-title" fxLayout="column" fxFlex="5 0 0">
+                {{ searchLabel }}
+            </div>
+            <div class="search-header-right" (click)="hideSearchContainer()">
+                <span class="searchBarIcon icon-close"></span>
+            </div>
+        </div>
+        
+        <div *ngFor="let fieldsInfo of searchFieldData; let i = index" >
+            <div fxLayout="column" class="search-content" fxFlex="1 0 0" >
+               <ng-container *ngIf="fieldsInfo.lovType === 'requestNumber'">
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <input type="text" (keyup.enter)="getSearhInfo()" (keypress)="commonService.isDecimal($event)" matInput [(ngModel)]="requestNumber" autocomplete="off">
+                    </mat-form-field>
+                </ng-container>
+
+                <ng-container *ngIf="fieldsInfo.lovType === 'status'">
+                    <mat-form-field class="materailFieldSize" fxFlex="100">
+                        <mat-label>{{ fieldsInfo.label }}</mat-label>
+                        <!-- <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="statusCode" autocomplete="off"> -->
+                        <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="statusCode">
+                            <mat-option ngDefaultControl *ngFor="let listItem of contractList" [value]="listItem.value"
+                            autocomplete="off">
+                                {{ listItem.label }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    
+                </ng-container>
+
+                
+            </div>
+        </div>
+        <div fxLayout="row wrap" class="onhandDivs" style="margin-top: -30px;">
+            <div *ngFor="let fieldsInfo of searchFieldData; let i = index" [ngStyle]="{'display': (i < 2) ? 'none' : ''}" fxFlex="50">
+                <div  class="search-content">
+                    <ng-container *ngIf="fieldsInfo.lovType === 'fromDate'">
+                        <div class="onHandTitle">Execution Period :</div>
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="picker" placeholder="Start Date" [(ngModel)]="dateFrom" (click)="this.commonService.disableInput($event)"
+                            on-focus="this.commonService.disableInput($event)" [max]="dateTo">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </ng-container>
+                    
+                    <ng-container *ngIf="fieldsInfo.lovType === 'toDate'">
+                        <mat-form-field class="marginT18">
+                            <input matInput [matDatepicker]="picker1" placeholder="End Date" [(ngModel)]="dateTo" (click)="this.commonService.disableInput($event)"
+                            on-focus="this.commonService.disableInput($event)" [min]="dateFrom">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        
+
+
+    </div>
+    <div class="search-footer">
+        <button mat-flat-button [ngClass]="'formButton saveButton'" (click)="getSearhInfo()">
+            Search
+        </button>
+        <button mat-flat-button [ngClass]="'formButton cancelButton ml-15'" (click)="clearSearchFields()">
+            Clear
+        </button>
+    </div>
+</div>

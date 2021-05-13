@@ -1,0 +1,34 @@
+{
+    "type": "BillingTxnHistory",
+    "searchType": "BillingTxnHistory",
+    "searchFor": "Search Billing Transaction",
+    "companyKey": "",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "fromDate",
+            "label": "From",
+            "key": "txnDateFrom",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "toDate",
+            "label": "To",
+            "key": "txnDateTo",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,499 @@
+<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start">
+    <div *ngIf="showItemList" fxFlex="100" class="contentBorder">
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">Item List :</span>
+            </div>
+            <div fxLayoutAlign="end">
+                <button *ngIf="!searchEnableFlag" mat-mini-fab class="btn-search-bg mr10" (click)="searchComponentOpen()">
+                    <span class="headerIcon icon-search" matTooltip="Search"></span>
+                </button>
+                <button mat-stroke-button (click)="addItem('add')" class="orangeButtonBorder colorOperatingUnit mr10"
+                    color="primary">
+                    Add Item
+                </button>
+                <span class="down-arrow" [matMenuTriggerFor]="exportmenu">
+                    <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                        Export
+                    </button>
+                </span>
+                <mat-menu #exportmenu="matMenu">
+                    <button mat-menu-item (click)="exporter.exportTable('xls', {fileName:'Flexi WMS - Item List'})">XLS</button>
+                    <button mat-menu-item (click)="exporter.exportTable('xlsx', {fileName:'Flexi WMS - Item List'})">XLSX</button>
+                    <button mat-menu-item (click)="exporter.exportTable('csv', {fileName:'Flexi WMS - Item List'})">CSV</button>
+                </mat-menu>
+            </div>
+        </div>
+
+        <div fxLayout="row">
+            <mat-divider fxFlex="100"></mat-divider>
+        </div>
+        <div class="container" fxLayout="column">
+            <div #customTable [ngClass]="!itemDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'"
+            [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+                <table mat-table matTableExporter hiddenColumns='[8]' #exporter="matTableExporter" [dataSource]="itemDataSource" matSort class="resize-table" style="min-width: 1400px;"
+                matSortDisableClear>
+                    <!-- <ng-container matColumnDef="itemId">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto mat-header-column-'+columns[0].field">
+                            {{ columns[0].name }}
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i=index">
+                            <span>{{element.serialNumber}}</span>
+                        </td>
+                    </ng-container> -->
+                    <ng-container matColumnDef="itemId">
+                        <th mat-header-cell *matHeaderCellDef  [ngClass]="'cursor-auto mat-header-column-'+columns[0].field"
+                       ><span >{{ columns[0].name }} </span></th>
+                        <td mat-cell *matCellDef="let element; let i=index">
+                            <span [ngClass]="'nonEditiableField Number'">{{paginator.pageSize * paginator.pageIndex + i + 1}}</span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="itemName">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[1].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span>{{element.itemName}}</span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="itemDescription">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[2].field" (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[2].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span>{{element.itemDescription}}</span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="itemPrimaryUom">
+                        <th mat-header-cell *matHeaderCellDef  [ngClass]="'mat-header-column-'+columns[3].field" (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[3].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [ngClass]="'pl-10'">{{element.itemPrimaryUomDesc ? element.itemPrimaryUomDesc : '-'}}</span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="itemSecondaryUom">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[4].field" (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[4].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span>{{element.itemSecondaryUomDesc ? element.itemSecondaryUomDesc : '-'}}</span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="itemRevisionNum">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[5].field" (mousedown)="commonService.onResizeColumn($event, 5, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[5].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element" >
+                            <span>{{element.itemRevisionNum ? element.itemRevisionNum : '-'}}</span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="ctgryName1">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[6].field">
+                            <span mat-sort-header>{{ columns[6].name }}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span>{{element.ctgryName1}}</span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="itemEnabledFlag">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto text-center mat-header-column-'+columns[7].field">
+                            {{ columns[7].name }}
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span matTooltip="Enable Flag" [matTooltipPosition]="tooltipPosition"
+                                [ngClass]="'padding0'">
+                                <mat-checkbox fxLayout="row" fxLayoutAlign="center center"
+                                    [(ngModel)]="element.itemEnabledFlag" disabled>
+                                    <mat-icon>{{element.itemEnabledFlag}}</mat-icon>
+                                </mat-checkbox>
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action" stickyEnd >
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto width100 actionColumn1 mat-header-column-'+columns[8].field">
+                            {{ columns[8].name }}
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons1 width100 '">
+                            <!-- <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center"> -->
+                                <!-- <span (click)="addItem('view', element)" matRipple matTooltip="View"
+                                    [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                    [matRippleCentered]="true" [matRippleRadius]="false">
+                                    <mat-icon>remove_red_eye</mat-icon>
+                                </span> -->
+                                <span [ngClass]="'padding0'">
+                                    <div class="View" (click)="addItem('view', element)" [ngClass]="disableAllBtn ? 'disableBtn' : ''" 
+                                        matRipple matTooltip="View" [matTooltipPosition]="tooltipPosition"
+                                        [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                        [matRippleRadius]="false">
+                                        <mat-icon>remove_red_eye</mat-icon></div>
+                                </span>
+                                <span *ngIf="element.itemWithNoTransaction === 'Y'" (click)="addItem('edit', element)" matRipple matTooltip="Edit"
+                                    [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                    [matRippleCentered]="true" [matRippleRadius]="false">
+                                    <mat-icon>edit</mat-icon>
+                                </span>
+                            <!-- </div> -->
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumns"></tr>
+                </table>
+                <ng-container *ngIf="listProgress">
+                    <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </ng-container>
+                <ng-container *ngIf="!itemDataSource.data.length && !listProgress">
+                    <div [ngClass]="'noDataFound'"><small>{{itemListMessage}}</small></div>
+                </ng-container>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="end center">
+                <mat-paginator #paginator (page)="commonService.setPaginationSize($event)"  showFirstLastButtons>
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!showItemList" fxFlex="100" class="contentBorder">
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">{{ isEdit ? showItemName : 'Define Item :'}}</span>
+            </div>
+            <div fxLayoutAlign="end">
+                <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                    Add Attribute
+                </button>
+            </div>
+        </div>
+
+        <div fxLayout="row">
+            <mat-divider fxFlex="100"></mat-divider>
+        </div>
+
+        <div class="formContainer">
+            <form [formGroup]="itemForm" autocomplete="off">
+                <div class="container" fxLayout="row" fxLayoutGap="20px">
+                    <div fxFlex="80" fxLayout="column">
+                        <div fxLayout="row" fxLayoutGap="20px">
+                            <mat-form-field class="materailFieldSize" fxFlex="22" [ngClass]="editItemWithNoTransaction =='N' ? 'disableField' : ''">
+                                <input matInput placeholder="Item Name" formControlName="itemName"
+                                   maxlength="50" (blur)="logValidationErrors()" required />
+                                <mat-error *ngIf="formErrors.itemName">{{formErrors.itemName}}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="36">
+                                <input matInput placeholder="Item Description" formControlName="itemDescription"
+                                    (blur)="logValidationErrors()" required />
+                                <mat-error *ngIf="formErrors.itemDescription">{{formErrors.itemDescription}}</mat-error>
+                            </mat-form-field>
+                            <div *ngIf='is3plCompany' fxFlex="20">
+                                <mat-form-field  class="materailFieldSize"  >
+                                    <mat-select name="Customer" formControlName="itemCustomerId" 
+                                        [placeholder]="customerPlaceHolder">
+                                        <mat-option *ngFor="let item of _3plCustomerList" [value]="item.value"
+                                        (onSelectionChange)="setCUstomerLabel($event,item.label)" >
+                                            {{item.label}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div fxFlex="22">
+                                <mat-checkbox class="materailFieldSize" [ngStyle]="{'margin-top': '12px','display':'flex'}" formControlName="itemEnabledFlag">Enable
+                                    Flag
+                                </mat-checkbox>
+                            </div>
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="20px">
+                            <!-- functionality is changed to allow barcode and pro]imary uom to update on 12/11/2020 -->
+                            <!-- <mat-form-field class="materailFieldSize" fxFlex="22" [ngClass]="isEdit ? 'disableField' : ''"> -->
+                            <mat-form-field class="materailFieldSize" fxFlex="22">
+                                <input (keypress)="commonService.isAlphanumeric($event)" matInput placeholder="Item Barcode" formControlName="itemBarcode" />
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="11.7" >
+                                <!-- <input *ngIf='isEdit' matInput placeholder="Primary UOM" formControlName="itemPrimaryUomDesc" /> 
+                                  <mat-select *ngIf='!isEdit' name="primaryUom" formControlName="itemPrimaryUom" -->
+                                <mat-select name="primaryUom" formControlName="itemPrimaryUom"
+                                    (blur)="logValidationErrors()" placeholder="Primary UOM" required>
+                                    <mat-option *ngFor="let itemUom of itemUomList" [value]="itemUom.uomCode"
+                                    [disabled]="itemUom.uomCode === disablePrimaryUom" (onSelectionChange)="uomSelectionChanged($event,itemUom.uomCode, 'primary')">
+                                        {{itemUom.unitOfMeasure}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formErrors.itemPrimaryUom">{{formErrors.itemPrimaryUom}}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="14">
+                                <!-- <input *ngIf='isEdit' matInput placeholder="Secondary UOM" formControlName="itemSecondaryUomDesc" /> -->
+                                <!-- <mat-select *ngIf='!isEdit' name="secondaryUom" formControlName="itemSecondaryUom" -->
+                                <mat-select   name="secondaryUom" formControlName="itemSecondaryUom"
+                                    placeholder="Secondary UOM" [disabled]="disableSecUom === true" (click)="showMsg()">
+                                    <mat-option *ngFor="let itemUom of secondaryUomList" [value]="itemUom.uomCode"
+                                    [disabled]="itemUom.uomCode === disableSecondaryUom && itemUom.uomCode !== ''" (onSelectionChange)="uomSelectionChanged($event,itemUom.uomCode, 'secondary')">
+                                        {{itemUom.unitOfMeasure}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="10" >
+                                <!-- [required]="itemForm.controls.itemNetWt.value !== '' || itemForm.controls.itemGrossWt.value !== '' || itemForm.controls.itemContainerMaxLoad.value !== ''" -->
+                                <mat-select name="weightUom" formControlName="itemWeightUom" 
+                                    placeholder="Weight UOM">
+                                    <mat-option *ngFor="let itemUom of weightUomList" [value]="itemUom.uomCode" >
+                                        {{itemUom.unitOfMeasure}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" fxFlex="10" >
+                                <!-- [required]="itemForm.controls.itemVolume.value !=='' || itemForm.controls.itemContainerMaxVolume.value !==''" -->
+                                <mat-select name="volumeUom" formControlName="itemVolumeUom" placeholder="Volume UOM">
+                                    <mat-option *ngFor="let itemUom of volumeUomList" [value]="itemUom.uomCode" [disabled]="itemUom.uomCode === disableSecondaryUom"
+                                    (onSelectionChange)="uomSelectionChanged($event,itemUom.uomCode, 'secondary')">
+                                        {{itemUom.unitOfMeasure}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formErrors.itemVolumeUom">{{formErrors.itemVolumeUom}}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="22" >
+                                <mat-select name="itemCategory" formControlName="itemCategoryId"
+                                    (blur)="logValidationErrors()" placeholder="Item Category" required>
+                                    <mat-option *ngFor="let itemCategory of itemCategories" [value]="itemCategory.categoryId">
+                                        {{itemCategory.categoryName1}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="formErrors.itemCategoryId">{{formErrors.itemCategoryId}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="20px" class="mt30">
+                            <div fxFlex="17">
+                                <div class="divBorder">
+                                    <h1>Revisions</h1>
+                                    <div fxLayout="row" fxLayoutGap="15px" class="pa10 mt10">
+                                        <!-- [ngClass]="isEdit ? 'disableField' : ''" -->
+                                            <mat-checkbox class="materailFieldSize" fxFlex="20" [ngStyle]="{'margin-top': '20px','display':'flex'}" formControlName="itemRevisionFlag"
+                                            (change)="checkItemRevisionFlag()" >
+                                            </mat-checkbox>
+                                            
+                                            <!-- <mat-form-field class="materailFieldSize" fxFlex="80"  [ngClass]="isEdit ? 'disableField' : ''"> -->
+                                            <mat-form-field class="materailFieldSize" fxFlex="80" >
+                                                <input matInput placeholder="Revision Number" maxlength="5" formControlName="itemRevisionNum" [required]="itemForm.controls.itemRevisionFlag.value" />
+                                                <mat-error *ngIf="formErrors.itemRevisionNum">{{formErrors.itemRevisionNum}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <div fxFlex="17">
+                                <div class="divBorder">
+                                    <h1>Shelf Life</h1>
+                                    <div fxLayout="row" fxLayoutGap="15px" class="pa10 mt10">
+                                        <mat-checkbox class="materailFieldSize" fxFlex="20"   [ngStyle]="{'margin-top': '20px','display':'flex'}"  formControlName="itemShelflifeCntrldFlag"
+                                        (change)="checkShelflifeCntrldFlag()" [disabled]="!itemForm.controls.itemLotEnabledFlag.value">
+                                        </mat-checkbox>
+                                        <mat-form-field class="materailFieldSize" fxFlex="80" >
+                                            <input type="number" matInput placeholder="Shelf Life Days" formControlName="itemShelfLifeDays" min="1"
+                                                (blur)="logValidationErrors()" (keypress)="commonService.isWholeNumber($event)" />
+                                            <mat-error *ngIf="formErrors.itemShelfLifeDays">{{formErrors.itemShelfLifeDays}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <div fxFlex="31">
+                                <div class="divBorder">
+                                    <h1>Batch</h1>
+                                    <div fxLayout="row" fxLayoutGap="15px" class="pa10 mt10">
+                                        <div fxFlex="10">
+                                            <!-- [ngClass]="isEdit ? 'disableField' : ''" -->
+                                            <mat-checkbox class="materailFieldSize"  [ngStyle]="{'margin-top': '20px','display':'flex'}"  formControlName="itemLotEnabledFlag" (change)="checkLotFlag()"
+                                            >
+
+                                            </mat-checkbox>
+                                        </div>
+                                        <!-- <mat-form-field class="materailFieldSize" fxFlex="25" [ngClass]="isEdit ? 'disableField' : ''"> -->
+                                        <mat-form-field class="materailFieldSize" fxFlex="25" >
+                                            <input matInput placeholder="Prefix" (keypress)="commonService.isAlphanumeric($event)"  formControlName="itemLotPrefix"
+                                            [required]="itemForm.controls.itemLotEnabledFlag.value" min="1" maxlength="10" (blur)="logValidationErrors()"/>
+                                            <mat-error *ngIf="formErrors.itemLotPrefix">{{formErrors.itemLotPrefix}}</mat-error>
+                                        </mat-form-field>
+                                        <!-- <mat-form-field class="materailFieldSize" fxFlex="25" [ngClass]="isEdit ? 'disableField' : ''"> -->
+                                        <mat-form-field class="materailFieldSize" fxFlex="25">
+                                            <input id="batchLength" type="number" matInput placeholder="Length" formControlName="itemLotLength"  min="1" maxlength="20"
+                                                (keypress)="commonService.isWholeNumber($event)" (focusout)="lengthValidation($event)"
+                                                [required]="itemForm.controls.itemLotEnabledFlag.value"  (blur)="logValidationErrors()" />
+                                            <mat-error *ngIf="formErrors.itemLotLength">{{formErrors.itemLotLength}}</mat-error>
+                                        </mat-form-field>
+                                        <!-- <mat-form-field class="materailFieldSize" fxFlex="25" [ngClass]="isEdit ? 'disableField' : ''"> -->
+                                        <mat-form-field class="materailFieldSize" fxFlex="25" >
+                                            <input matInput placeholder="Starting No" min="1" [maxlength]="batchstartLength"
+                                               (keypress)="commonService.isWholeNumber($event)" formControlName="itemLotStartingNum"
+                                               [required]="itemForm.controls.itemLotEnabledFlag.value" />
+                                            <mat-error *ngIf="formErrors.itemLotStartingNum">{{formErrors.itemLotStartingNum}}</mat-error>
+                                        </mat-form-field>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div fxFlex="31">
+                                <div class="divBorder">
+                                    <h1>Serial</h1>
+                                    <div fxLayout="row" fxLayoutGap="15px" class="pa10 mt10">
+                                        <div fxFlex="10">
+                                            <!-- [ngClass]="isEdit ? 'disableField' : ''" -->
+                                            <mat-checkbox class="materailFieldSize" [ngStyle]="{'margin-top': '20px','display':'flex'}"
+                                            formControlName="itemSerialCntrldFlag" (change)="checkSerialFlag()"
+                                            >
+
+                                            </mat-checkbox>
+                                        </div>
+                                        <!-- <mat-form-field class="materailFieldSize" fxFlex="25" [ngClass]="isEdit ? 'disableField' : ''"> -->
+                                        <mat-form-field class="materailFieldSize" fxFlex="25">
+                                            <input #serialPrefix matInput placeholder="Prefix" min="1"  maxlength="10" (keypress)="commonService.isAlphanumeric($event)" formControlName="itemSerialPrefix"
+                                            [required]="itemForm.controls.itemSerialCntrldFlag.value" />
+                                            <mat-error *ngIf="formErrors.itemSerialPrefix">{{formErrors.itemSerialPrefix}}</mat-error>
+                                        </mat-form-field>
+                                        <!-- <mat-form-field class="materailFieldSize" fxFlex="25" [ngClass]="isEdit ? 'disableField' : ''"> -->
+                                        <mat-form-field class="materailFieldSize" fxFlex="25">
+                                            <input matInput placeholder="Length" min="1"
+                                                formControlName="itemSerialLength" (focusout)="lengthValidation($event)" (keypress)="commonService.isWholeNumber($event)" (blur)="logValidationErrors()"
+                                                [required]="itemForm.controls.itemSerialCntrldFlag.value" maxlength="20" />
+                                            <mat-error *ngIf="formErrors.itemSerialLength">{{formErrors.itemSerialLength}}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <!-- <mat-form-field class="materailFieldSize" fxFlex="25" [ngClass]="isEdit ? 'disableField' : ''"> -->
+                                        <mat-form-field class="materailFieldSize" fxFlex="25">
+                                            <input matInput placeholder="Starting No" min="1" [maxlength]="serialstartLength"
+                                                formControlName="itemSerialStartingNum" (keypress)="commonService.isWholeNumber($event)"
+                                                [required]="itemForm.controls.itemSerialCntrldFlag.value" />
+                                            <mat-error *ngIf="formErrors.itemSerialStartingNum">{{formErrors.itemSerialStartingNum}}</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div fxFlex="20" fxLayout="column">
+                        <span style="padding-left: 10px; margin-top: 10px;">Image :</span>
+                        <div fxLayout="column" class="pl-20" *ngIf="!isImageSelected">
+                            <div class="subItem" fxFlex="100">
+                                <input #file type="file" class="custom-file-input setImageHeight"
+                                    (change)="preview(file.files, 'logo')" accept="image/*" />
+                            </div>
+                        </div>
+                        <div fxLayout="column" class="pl-20 pt-20" *ngIf="isImageSelected" [ngClass]="'marginforLogo'">
+                            <div [ngClass]="'enableImageChangeOption'" *ngIf="isImageSelected" >
+                              <mat-icon [ngClass]="'editImageIcon'" (click)="changeImage()">delete_forever</mat-icon>
+                            </div>
+                            <div class="subItem mr-auto" fxFlex="100">
+                                <img [ngClass]="'userImage'" [src]="itemImgURL" *ngIf="itemImgURL" full-container-img  style="max-width: 230px; max-height: 135px;" />
+                            </div>
+                            <!-- <div fxFlex="100" style="color:red;" *ngIf="messageUserLogo">{{messageUserLogo}}</div> -->
+                        </div>
+                        <div class="pl-20 pt-20" fxFlex="100" style="color:red;" *ngIf="messageUserLogo">{{messageUserLogo}}</div>
+                    </div>
+                </div>
+
+
+
+                <div fxLayout="row"  fxLayoutGap="20px" class="mt30">
+                    <div fxFlex="28.7">
+                        <div class="divBorder">
+                            <h1>Dimensions</h1>
+                            <div fxLayout="row" fxLayoutGap="15px" class="pa10 mt10">
+                                <mat-form-field class="materailFieldSize item-dimensions" fxFlex="30">
+                                    <input class="width245" type="text" matInput placeholder="Length" min="1"
+                                        (keypress)="commonService.isDecimal($event)" formControlName="itemLength" />
+                                    <!-- <mat-error *ngIf="formErrors.userName">{{formErrors.userName}}</mat-error> -->
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize item-dimensions" fxFlex="30">
+                                    <input class="width245" type="text" matInput placeholder="Width" min="1"
+                                        (keypress)="commonService.isDecimal($event)" formControlName="itemWidth" />
+                                    <!-- <mat-error *ngIf="formErrors.userName">{{formErrors.userName}}</mat-error> -->
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize item-dimensions" fxFlex="30" >
+                                    <input class="width245" type="text" matInput placeholder="Height" min="1"
+                                        (keypress)="commonService.isDecimal($event)" formControlName="itemHeight" />
+                                    <!-- <mat-error *ngIf="formErrors.userName">{{formErrors.userName}}</mat-error> -->
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div fxFlex="24.9">
+                        <div class="divBorder">
+                            <h1>Weight/Volume</h1>
+                            <div fxLayout="row" fxLayoutGap="15px" class="pa10 mt10">
+                                <mat-form-field class="materailFieldSize " fxFlex="30" >
+                                    <input class="width245" type="text" matInput placeholder="Net Weight" min="1"
+                                        (keypress)="commonService.isDecimal($event)" formControlName="itemNetWt" [required]="itemForm.controls.itemWeightUom.value !==''"
+                                        (blur)="logValidationErrors()" />
+                                    <mat-error *ngIf="formErrors.itemNetWt">{{formErrors.itemNetWt}}</mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize " fxFlex="30" >
+                                    <input class="width245" type="text" matInput placeholder="Gross Weight" min="1"
+                                        (keypress)="commonService.isDecimal($event)" formControlName="itemGrossWt" [required]="itemForm.controls.itemWeightUom.value !==''"
+                                        (blur)="logValidationErrors()" />
+                                    <mat-error *ngIf="formErrors.itemGrossWt">{{formErrors.itemGrossWt}}</mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize " fxFlex="30" >
+                                    <input class="width245" type="text" matInput placeholder="Volume" min="1"
+                                        (keypress)="commonService.isDecimal($event)" formControlName="itemVolume"
+                                        (blur)="logValidationErrors()" />
+                                    <mat-error *ngIf="formErrors.itemVolume">{{formErrors.itemVolume}}</mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div fxFlex="44">
+                        <div class="divBorder">
+                            <h1>Container</h1>
+                            <div fxLayout="row" fxLayoutGap="15px" class="pa10 mt10">
+                                <!-- [ngClass]="isEdit ? 'disableField' : ''" -->
+                                <mat-checkbox class="materailFieldSize" fxFlex="5"  [ngStyle]="{'margin-top': '20px','display':'flex'}"
+                                     formControlName="itemContainerFlag" (change)="checkContainerFlag()"
+                                    >
+                                </mat-checkbox>
+                                <mat-form-field class="materailFieldSize" fxFlex="20">
+                                    <!-- <input *ngIf='isEdit' matInput placeholder="Container Type" formControlName="itemContainerTypeDesc" /> -->
+
+                                    <!-- <mat-select *ngIf='!isEdit'  name="itemContainerVolumeType" formControlName="itemContainerType" -->
+                                    <mat-select  name="itemContainerVolumeType" formControlName="itemContainerType"
+                                        placeholder="Type" [required]="itemForm.controls.itemContainerFlag.value === true"
+                                        (blur)="logValidationErrors()">
+                                        <mat-option *ngFor="let itemUom of containerTypeList" [value]="itemUom.value" >
+                                            {{itemUom.label}}
+                                        </mat-option>
+                                      </mat-select>
+                                      <mat-error *ngIf="formErrors.itemContainerType">{{formErrors.itemContainerType}}</mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize " fxFlex="24" >
+                                    <input class="width245" type="text" matInput placeholder="Load Weight (Max)" min="1"
+                                        (keypress)="commonService.isDecimal($event)" formControlName="itemContainerMaxLoad"
+                                        [required]="itemForm.controls.itemContainerType.value !== ''" (blur)="logValidationErrors()" />
+                                        <mat-error *ngIf="formErrors.itemContainerMaxLoad">{{formErrors.itemContainerMaxLoad}}</mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize " fxFlex="19" >
+                                    <input class="width245" type="text" matInput placeholder="Volume (Inner)" min="1"
+                                        (keypress)="commonService.isDecimal($event)" formControlName="itemContainerMaxVolume"
+                                        [required]="itemForm.controls.itemContainerType.value !== ''" (blur)="logValidationErrors()" />
+                                        <mat-error *ngIf="formErrors.itemContainerMaxVolume">{{formErrors.itemContainerMaxVolume}}</mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize " fxFlex="19" >
+                                    <input class="width245" type="text" matInput placeholder="Fill %(Min)" min="1"
+                                        (keypress)="commonService.isDecimal($event)" formControlName="itemContainerFillPercent"
+                                        [required]="itemForm.controls.itemContainerType.value !== ''" (blur)="logValidationErrors()" />
+                                        <mat-error *ngIf="formErrors.itemContainerFillPercent">{{formErrors.itemContainerFillPercent}}</mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div fxLayout="row"  class="mt20" fxLayoutGap="15px" class="mt30">
+                    <button (click)="onSubmit()" mat-flat-button [ngClass]="'formButton saveButton'"
+                        color="primary">
+                        {{isEdit?  'Update' : 'Save'}}
+                    </button>
+                    <button  (click)="openConfirmationDialog('item','item')" mat-flat-button [ngClass]="'formButton saveButton'"
+                        color="primary">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

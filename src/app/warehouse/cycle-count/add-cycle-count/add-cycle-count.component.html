@@ -1,0 +1,413 @@
+<div fxFlex="100" class="contentBorder marginT15" >
+    <div [ngClass]="'formHeader'" fxLayout="row">
+        <div fxFlex fxLayoutAlign="start">
+            <span class="formHeaderTitle"><app-breadcrumb></app-breadcrumb> </span>
+        </div>
+        <div fxLayoutAlign="end">
+           
+        </div>
+    </div>
+
+    <div fxLayout="row">
+        <mat-divider fxFlex="100"></mat-divider>
+    </div>
+
+    <div class="formContainer" fxLayout="column" > 
+        <form  #ccForm="ngForm"  id="ngForm"  [formGroup]="cycleCountForm" autocomplete="off" 
+               (ngSubmit)="onSubmit($event)" >
+            <div class="container" fxLayout="column">
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <mat-form-field class="materailFieldSize" fxFlex="25">
+                      <input matInput placeholder="Cycle Count Name" formControlName="ccname" (blur)="ccLogValidationErrors()" required />
+                      <mat-error *ngIf="ccFormErrors.ccname">{{ccFormErrors.ccname}}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="materailFieldSize" fxFlex="25">
+                      <input matInput placeholder="Description" formControlName="ccDescription" (blur)="ccLogValidationErrors()" required />
+                      <mat-error *ngIf="ccFormErrors.ccDescription">{{ccFormErrors.ccDescription}}</mat-error>
+                    </mat-form-field>
+                    <!-- <mat-form-field class="materailFieldSize" fxFlex="18">
+                      <mat-select formControlName="ccIU"  placeholder="IU"  (blur)="ccLogValidationErrors()" 
+                       required  class="mat-select-cc text-black-disabled" disabled >
+                          <mat-option *ngFor="let element of IUList" [value]="element.value" 
+                          (onSelectionChange)="iuchanged($event, element.value)" >
+                              {{element.label}}</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="ccFormErrors.ccIU">{{ccFormErrors.ccIU}}</mat-error>
+                  </mat-form-field> -->
+                    <mat-form-field class="materailFieldSize" fxFlex="25">
+                        <mat-select formControlName="manualCountAllowed"  placeholder="Manual Count Allowed" 
+                        [ngClass]="isEdit ? 'pointerEventnone selectArrowHide' : ''" required (blur)="ccLogValidationErrors()" >
+                            <mat-option *ngFor="let element of manualCountAllowedList" [value]="element.value"  >
+                                {{element.label}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="ccFormErrors.manualCountAllowed">{{ccFormErrors.manualCountAllowed}}</mat-error>
+                    </mat-form-field>
+                    <!-- <mat-form-field class="materailFieldSize" fxFlex="20">
+                      <mat-select formControlName="serialAllowed"  placeholder="Serial Allowed"
+                      [ngClass]="isEdit ? 'pointerEventnone selectArrowHide' : ''" required (blur)="ccLogValidationErrors()" [ngClass]="">
+                          <mat-option *ngFor="let element of serialAllowedList" [value]="element.value"  >
+                              {{element.label}}</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="ccFormErrors.serialAllowed">{{ccFormErrors.serialAllowed}}</mat-error>
+                  </mat-form-field> -->
+                  <mat-checkbox fxFlex="25" class="pt-14" formControlName="frequencyRequired"
+                  (change)="frequencyRequiredChange()" >Frequency Required</mat-checkbox>
+                </div>
+               
+            </div>
+        </form>
+    </div>
+      
+    <div  class="formContainer" fxLayout="column"  >
+      <div fxLayout="row" fxLayoutGap="20px">
+        <div  fxFlex="20" class="setBorder">
+          <div fxLayout="row" >
+            <div class="dialogBoxHeader optionHeading" fxFlex="100">Approval Required</div>
+          </div>
+          <div fxLayout="row" style="padding:10px">
+            <mat-radio-group (change)="approvalRequiredchanged()"  [(ngModel)]="approvalRequired" fxFlex="100" class="setCircle radio-direction-column">
+              <mat-radio-button value="N" class="mr10 optionHeading" >No</mat-radio-button>
+              <mat-radio-button value="Y" class="mr10 optionHeading" >Yes</mat-radio-button>
+              <mat-radio-button value="C" class="mr10 optionHeading" style="display: none;" >Custom</mat-radio-button>
+              <mat-radio-button value="T" class="mr10 optionHeading" >Tolerance above &nbsp; </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div fxLayout="row" style="padding-left: 35px;">
+            <input matInput  placeholder="" #toleranceQty [(ngModel)]="tolerancePercentage" class="searchInput widthSmall" autocomplete="off"
+                (keypress)="commonService.isDecimal($event)">&nbsp;&nbsp; % of Qty
+          </div>
+        </div>
+        <div  fxFlex="22"  class="setBorder">
+          <div fxLayout="row" >
+            <div class="dialogBoxHeader optionHeading" fxFlex="100">List of Class to Include in Cycle Count</div>
+          </div>
+          <div fxLayout="row" fxLayoutGap="20px">
+            <table mat-table [dataSource]="classdataSource" class="" fxFlex="100">
+              <!-- <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef="" class="sticky"></th>
+                <td mat-cell *matCellDef="let element; let i = index;">
+                  <mat-checkbox fxLayout="row" fxLayoutAlign="" [(ngModel)]="element.select"
+                  (change)="classSelectionChanged(element,null,i)" >
+                  </mat-checkbox>
+                </td>
+              </ng-container> -->
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef="" class="sticky">
+                  <mat-checkbox   style="padding-top: 7px;"  [(ngModel)]="itemSelectAll"
+                (change)="classSelectionChanged('element',null,'','fromHeader')" ></mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index;">
+                  <mat-checkbox fxLayout="row" fxLayoutAlign="" [(ngModel)]="element.select"
+                  (change)="classSelectionChanged(element,null,i,'')" >
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="classname">
+                <th mat-header-cell *matHeaderCellDef class="tableHeader"> Class Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.classname}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="tableHeader setAction"> Action </th>
+                <td mat-cell *matCellDef="let element, let i = index;"  [ngClass]="'actionIcons'">  
+                  <span [ngClass]="'padding0'">
+                  <span *ngIf='element.select === true' class="icon-box-3" matRipple (click)="getItemList(element,myDialog,i,'event')"
+                      matTooltip="Assign Items" [matTooltipPosition]="tooltipPosition"
+                      [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                      [matRippleRadius]="false">
+                  </span>
+                  </span>
+                </td>
+              </ng-container>
+            
+              <tr mat-header-row *matHeaderRowDef="displayedColumns1; sticky: true" ></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+            </table>  
+          </div>
+        </div>
+        <div   fxFlex="58"  class="setBorder">
+            <div fxLayout="row" >
+              <div class="dialogBoxHeader optionHeading leftRadius" [ngClass] = "currentTab === 'LG' ? 'left' : 'right'"  (click)='toggleTab("Frequency")' fxFlex="100">List of LG to Include in Cycle Count</div>
+              <div class="dialogBoxHeader optionHeading rightRadius" [class.right] ="currentTab === 'Frequency' ? 'right' : 'left'" [class.left]  ="currentTab !== 'LG'" (click)='toggleTab("LG")' fxFlex="100">Frequency</div>
+            </div>
+            <div *ngIf="currentTab === 'LG'" fxLayout="column" >
+                <div fxLayout="row" class="setBorderBtm">
+                    <div fxFlex="62"  class="mt7" >
+                        <div class="searchHolder" fxFlex="100">
+                          <span class="headerIcon icon-search inputIcon"></span>
+                          <input matInput (keyup)="applyFilter($event)" placeholder="Search LG Code"  class="searchInput" autocomplete="off">
+                        </div>
+                    </div> <span fxFlex="10" class="setAlignment">Select All</span> 
+                          <mat-checkbox   style="padding-top: 7px;" [disabled]='setSelectAll' [(ngModel)]="lgSelectAll"
+                          (change)="baseFlagSelectionChanged('fromHeader','')" >
+                          </mat-checkbox>
+                </div>
+                <div fxLayout="row" >
+                  <div fxFlex="100" fxLayoutGap="20px" class=" customTable setMinHeight"  [ngStyle]="{'max-height': commonService.screenMaxHeight }" >
+                    <table mat-table [dataSource]="lgdataSource" class="" fxFlex="100">
+                      <ng-container matColumnDef="select" >
+                        <th mat-header-cell *matHeaderCellDef="" class="sticky tableHeader setAction" > Include              
+                        </th>
+                        <td mat-cell *matCellDef="let element;" class="actionIcons">
+                        <span><mat-checkbox fxLayout="row" fxLayoutAlign="" [(ngModel)]="element.select"
+                          (change)="baseFlagSelectionChanged('fromRow',element)">
+                          </mat-checkbox></span> 
+                        </td>
+                      </ng-container>
+                    
+                      <ng-container matColumnDef="lgcode">
+                        <th mat-header-cell *matHeaderCellDef class="tableHeader"> LG Code </th>
+                        <td mat-cell *matCellDef="let element"> {{element.lgcode}} </td>
+                      </ng-container>
+                    
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" ></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>  
+                  </div>
+                </div>
+            </div>
+            
+            <div *ngIf="currentTab === 'Frequency'" fxLayout="column" style="padding-left: 20px; padding-top: 10px;">
+                <div  fxLayout="row" >
+                  <div fxFlex="100" class="mt7 headerColor">Recurrence Pattern :</div>
+                </div>
+                <div  fxLayout="row" fxLayoutGap="20px" class="mt7">
+                    <div fxFlex="15" >
+                      <mat-radio-group  fxFlex="40" (change)="optionchanged()" class="setCircle" [(ngModel)]="recurrencePattern" >
+                        <mat-radio-button value="D" class="mr10 optionHeading" >Daily</mat-radio-button>
+                        <mat-radio-button value="W" class="mr10 optionHeading" >Weekly</mat-radio-button>
+                        <mat-radio-button value="M" class="mr10 optionHeading" >Monthly</mat-radio-button> 
+                        <mat-radio-button value="Y" class="mr10 optionHeading" >Yearly</mat-radio-button> 
+                      </mat-radio-group>
+                    </div>
+                    <div fxFlex="85" class="setLeftBorder">
+                      <div *ngIf="recurrencePattern === 'D'" class="optionSection">
+                        Every &nbsp;<input matInput  placeholder="" [(ngModel)]='recur'  class="searchInput width" autocomplete="off"
+                        (keypress)="commonService.isNaturalNumber($event)"> &nbsp;day(s)
+                      </div>
+                      <div *ngIf="recurrencePattern === 'W'" class="optionSection">
+                        <div fxLayout="row" fxLayoutGap="20px" >
+                          Recur every &nbsp;<input matInput  placeholder=""  [(ngModel)]='recur' class="searchInput width" autocomplete="off"
+                          (keypress)="commonService.isNaturalNumber($event)"> &nbsp;week(s) on
+                        </div>
+                        <div fxLayout="column"  >
+                            <div fxLayout="row"  class="mt10" >
+                              <mat-checkbox fxFlex="25" [(ngModel)]="weekdays.sun">Sunday</mat-checkbox>
+                              <mat-checkbox fxFlex="25" [(ngModel)]="weekdays.mon">Monday</mat-checkbox>
+                              <mat-checkbox fxFlex="25" [(ngModel)]="weekdays.tue">Tuesday</mat-checkbox>
+                              <mat-checkbox fxFlex="25" [(ngModel)]="weekdays.wed">Wednesday</mat-checkbox>
+                            </div>
+                            <div fxLayout="row"  >
+                              <mat-checkbox fxFlex="25" [(ngModel)]="weekdays.thu">Thursday</mat-checkbox>
+                              <mat-checkbox fxFlex="25" [(ngModel)]="weekdays.fri">Friday</mat-checkbox>
+                              <mat-checkbox fxFlex="25" [(ngModel)]="weekdays.sat">Saturday</mat-checkbox>
+                              <div fxFlex="25"></div>
+                            </div>
+                        </div>
+                      </div>
+                      <div *ngIf="recurrencePattern === 'M'" class="optionSection">
+                        Day &nbsp;<input matInput  [(ngModel)]="onDate" class="searchInput width" autocomplete="off"
+                        (keypress)="commonService.isNaturalNumber($event)"> &nbsp;of every&nbsp; 
+                        <input matInput  placeholder=""  [(ngModel)]='recur' class="searchInput width" autocomplete="off"
+                        (keypress)="commonService.isNaturalNumber($event)"> &nbsp;month(s)
+                      </div>
+                      <div *ngIf="recurrencePattern === 'Y'" class="optionSection">
+                        <div fxLayout="row"  class="mt10" >
+                          Recur &nbsp;<input matInput  placeholder="" [(ngModel)]='recur'  class="searchInput width" autocomplete="off"
+                          (keypress)="commonService.isNaturalNumber($event)"> &nbsp;year(s)&nbsp; 
+                      
+                        </div>
+                        <div fxLayout="row"  class="mt10" >
+                          <div fxFlex="6" style="padding-top: 15px;">on</div>
+                          <mat-form-field  class="materailFieldSize" fxFlex="25">
+                            <mat-select placeholder="Select Month" required [ngClass]="" [(ngModel)]='onMonthName' >
+                              <mat-option *ngFor="let element of monthList" [value]="element.value" 
+                              (onSelectionChange)="getDayList($event, element.value)">
+                                  {{element.label}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          &nbsp;&nbsp;&nbsp;&nbsp;
+                          <mat-form-field  class="materailFieldSize" fxFlex="25">
+                          <mat-select placeholder="Select Day" required [ngClass]="" [(ngModel)]='onDate'>
+                              <mat-option *ngFor="let element of dayList" [value]="element.value" >
+                                  {{element.label}}</mat-option>
+                          </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div fxLayout="row" class="mt15" >
+                  <span  fxFlex="100" class="mt7 headerColor">Range of Recurrence :</span>
+                </div>
+                <div fxLayout="row" >
+                  <div fxFlex="100" >
+                    <span  fxFlex="15" class="mt15 headerColor colorBlack">Start Date</span>
+                    <mat-form-field  fxFlex="30" >
+                        <mat-label>Choose start date</mat-label>
+                        <input matInput [matDatepicker]="picker" [min]="setStartDate" 
+                        (click)="this.commonService.disableInput($event)"  on-focus="this.commonService.disableInput($event)"
+                        (ngModelChange)="onStartDateChanged($event)"  [(ngModel)]='startDate' autocomplete="off">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div fxLayout="row" >
+                  <div fxFlex="100" >
+                    <span  fxFlex="15" class=" headerColor colorBlack" style="padding-top: 5px;" >End Date</span>
+                    <mat-radio-group  fxFlex="30" class="setCircle radio-direction-column" [(ngModel)]='rangeofRecurrence'>
+                      <mat-radio-button value="NED" class="setFont14 mt7" >No end date</mat-radio-button>
+                      <mat-radio-button value="EB" class="setFont14" >End by 
+                        <mat-form-field class="dateField" >
+                          <mat-label>Choose End date</mat-label>
+                          <input matInput [matDatepicker]="picker1" 
+                          [min]="startDate" [disabled]='isEndDateDisabled'
+                          (click)="this.commonService.disableInput($event)"  on-focus="this.commonService.disableInput($event)"
+                          [(ngModel)]='endByDate' autocomplete="off">
+                          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                          <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                      </mat-radio-button> 
+                      <mat-radio-button value="EAO" class="setFont14" >End after &nbsp;
+                        <input matInput  [(ngModel)]='recurEndDate' class="searchInput width" autocomplete="off"
+                        (keypress)="commonService.isNaturalNumber($event)">&nbsp;
+                        occurrences</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div fxLayout="row" fxLayoutAlign="space-between center" class="setPadding">
+      <div  fxLayout="row wrap" fxFlex="2 0 0" fxLayoutGap="15px" class="marginT15 setPadding">
+          <button *ngIf='!isEdit' mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [disabled]="saveInProgress" 
+           (click)="ccForm.ngSubmit.emit()" form="ngForm" >
+              Save
+          </button>
+          <button *ngIf='isEdit' mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [disabled]="updateInProgress" 
+           (click)="ccForm.ngSubmit.emit()" form="ngForm" >
+              Update
+          </button>
+          <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary"
+          (click)="commonService.openConfirmationDialog('Cycle Count','cyclecount/cyclecountlist')" >
+              Cancel
+          </button>
+      </div>
+    </div>
+
+     
+</div>
+
+
+
+
+
+
+
+<ng-template #myDialog>
+  <h1 class="viewDialogHeader setMarginZero" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+      <div fxLayout="row" fxLayoutGap="10px">
+          <div fxFlex="95" fxLayoutGap="10px"><span class="viewDialogTitle">Review Items</span></div>
+          <div fxFlex="5" fxLayoutGap="10px">
+              <button mat-icon-button matDialogClose (click)="saveClassItems()" >
+                  <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+              </button>
+          </div>
+      </div>
+    </h1>
+    <div class="dialogSubtitle">
+      <div fxLayout="row" fxLayoutGap="20px" >
+        <div  fxFlex="50" style="padding-left: 20px; padding-top: 5px;" class="setEllipsis">Cycle Count Name :<span class="mrl10">{{currentCycleCountName}}</span> </div>
+        <div  fxFlex="50" style="padding-left: 20px; padding-top: 5px;">Class&nbsp; :&nbsp; {{currentClass}}</div>
+      </div>
+    </div>
+    <div mat-dialog-content [ngClass]="'pb-24'" style="overflow: hidden !important;"> 
+      <div fxLayout="row"  class="mt7">
+          <div fxFlex="50"  class="mt7" >
+            <div class="searchHolder" fxFlex="100">
+              <span class="headerIcon icon-search inputIcon" style="right: 0%; top: 9px;"></span>
+              <input matInput (keyup)="applyFilterforItem($event)" placeholder="Item"  class="searchInput" style="width: 95%;" autocomplete="off">
+            </div>
+          </div> 
+          <div fxFlex="31"  class="mt7"  >  </div>
+          <div fxFlex="18"  class="mt7" style="text-align: center;" >            
+              <span   class="mrl10 setAlignment">Select All</span> 
+              <mat-checkbox    [(ngModel)]="selectAllValue" (change)="selectAll()" >
+              </mat-checkbox>            
+          </div>
+    </div>
+      <div class="container" fxLayout="column" style="min-height: 300px; max-height: 300px;">
+       
+          <div [ngClass]="!parameterDataSourceClassItem.data.length || listProgress ? 'customTable ' : 'customTable'">
+              <table mat-table [dataSource]="parameterDataSourceClassItem">
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef class="sticky">#</th>
+                    <td mat-cell *matCellDef="let element; let i = index;"   >
+                        <div>
+                            <span [ngClass]="'nonEditiableField'"  >
+                                {{ i +1 }}
+                            </span>
+                        </div>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="item">
+                    <th mat-header-cell *matHeaderCellDef  class="setWith15Percent">Item</th>
+                    <td mat-cell *matCellDef="let element;   "  >
+                        <div>
+                            <span [ngClass]="'nonEditiableField'"  >
+                                {{ element.item }}
+                            </span>
+                        </div>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef  class="setWith15Percent">Description</th>
+                  <td mat-cell *matCellDef="let element;   "  >
+                      <div>
+                          <span [ngClass]="'nonEditiableField'"  >
+                              {{ element.description }}
+                          </span>
+                      </div>
+                  </td>
+                  </ng-container>
+                  <ng-container matColumnDef="include">
+                <th mat-header-cell *matHeaderCellDef  class="setWith15Percent" style="text-align: center;">Include
+                 </th>
+                <td mat-cell *matCellDef="let element;   "  >
+                    <div style="text-align: center;">
+                      <mat-checkbox  [(ngModel)]="element.include" (change)="selectAll(element)" >
+                      </mat-checkbox>
+                    </div>
+                </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsCLassItems; sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumnsCLassItems; "></tr>
+              </table>
+              <ng-container *ngIf="listProgress">
+                  <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+              </ng-container>
+
+              <ng-container *ngIf="!parameterDataSourceClassItem.data.length && !listProgress ">
+                  <div [ngClass]="'positionRelative'" style="min-height:50px;">
+                      <div [ngClass]="'noDataFound'"><small>{{classItemTableMessage}}</small></div>
+                  </div>
+              </ng-container>
+          </div>
+        </div>
+      </div>
+              <!-- <div >
+                  <mat-paginator [pageSizeOptions]="[10, 20, 30, 100]" showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+                  </mat-paginator>
+              </div> -->
+  <div  mat-dialog-actions class="padding10">
+      <button mat-flat-button color="primary" class="formButton saveButton mr10"
+      (click)="saveClassItems()"  >Save</button>
+  </div>
+
+</ng-template>

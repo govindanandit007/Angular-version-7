@@ -1,0 +1,144 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle"> Inventory Unit</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+
+</h1>
+
+<div mat-dialog-content>
+    <div class="container" fxLayout="column">
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Code</span>
+                <span [ngClass]="'viwDialogData'">{{data.iuCode}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Name</span>
+                <span [ngClass]="'viwDialogData'">{{data.iuName}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">OU Code</span>
+                <span [ngClass]="'viwDialogData'">{{data.ouCode}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <mat-checkbox class="materailFieldSize" fxFlex="25" [(ngModel)]="data.iuEnabledFlag"
+                    style="margin-top: 10px" disabled>
+                    Enabled Flag</mat-checkbox>
+            </div>
+        </div>
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <!-- <div fxFlex="50" fxLayoutGap="20px"> -->
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Address 1</span>
+                <span [ngClass]="'viwDialogData'">{{data.iuAddress1}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Address 2</span>
+                <span [ngClass]="'viwDialogData'">{{data.iuAddress2 ? data.iuAddress2 : '-'}}</span>
+            </div>
+            <!-- </div> -->
+            <!-- <div fxFlex="50" fxLayoutGap="20px"> -->
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Address 3</span>
+                <span [ngClass]="'viwDialogData'">{{data.iuAddress3 ? data.iuAddress3 : '-'}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <mat-checkbox class="materailFieldSize" fxFlex="25" [(ngModel)]="data.iuWmsFlag"
+                    style="margin-top: 10px" disabled>
+                    WMS Enabled Flag</mat-checkbox>
+            </div>
+            <!-- </div> -->
+        </div>
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Country</span>
+                <span [ngClass]="'viwDialogData'">{{data.iuCountry}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">State/County</span>
+                <span [ngClass]="'viwDialogData'">{{data.iuStateCounty}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">City</span>
+                <span [ngClass]="'viwDialogData'">{{data.iuCity}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Postal Code</span>
+                <span [ngClass]="'viwDialogData'">{{data.iuPincode}}</span>
+            </div>
+        </div>
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Phone Number</span>
+                <span [ngClass]="'viwDialogData'">{{data.iuPhone}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Timezone</span>
+                <span [ngClass]="'viwDialogData'">{{data.timezone ? data.timezone : '-'}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                
+            </div>
+        </div>
+        <div [ngClass]="'marginT15'" fxLayout="row" fxLayoutGap="5px">
+            <div fxFlex="100" [ngClass]="'viewDialogLabelBar'">
+                <mat-label [ngClass]="'viewDialogLabel'">Inventory Unit Contact :</mat-label>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="50">
+                    <span [ngClass]="'viewDialogDataTitle'">Person Name</span>
+                    <span [ngClass]="'viwDialogData'">{{data.iuPersonName}}</span>
+                </div>
+                <div fxLayout="column" fxFlex="50">
+                    <span [ngClass]="'viewDialogDataTitle'">Phone Number</span>
+                    <span [ngClass]="'viwDialogData'">{{data.iuPersonPhoneNum}}</span>
+                </div>
+            </div>
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="50">
+                    <span [ngClass]="'viewDialogDataTitle'">Email Address</span>
+                    <span [ngClass]="'viwDialogData'">{{data.iuPersonEmail}}</span>
+                </div>
+            </div>
+        </div>
+        <div [ngClass]="'marginT15'" fxLayout="row" fxLayoutGap="5px">
+            <div fxFlex="100" [ngClass]="'viewDialogLabelBar'">
+                <mat-label [ngClass]="'viewDialogLabel'">LPN :</mat-label>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+            <div fxFlex="50" fxLayoutGap="20px">
+                <div fxLayout="column" fxFlex="50">
+                    <span [ngClass]="'viewDialogDataTitle'">Prefix</span>
+                    <span [ngClass]="'viwDialogData'">{{data.lpnPrefix ? data.lpnPrefix : '-'}}</span>
+                </div>
+                <div fxLayout="column" fxFlex="50">
+                    <span [ngClass]="'viewDialogDataTitle'">Length</span>
+                    <span [ngClass]="'viwDialogData'">{{data.lpnLength ? data.lpnLength : '-'}}</span>
+                </div>
+                <div fxLayout="column" fxFlex="50">
+                    <span [ngClass]="'viewDialogDataTitle'">Start Number</span>
+                    <span [ngClass]="'viwDialogData'">{{data.lpnStartNum ? data.lpnStartNum : '-'}}</span>
+                </div>
+            </div>
+            <div fxFlex="50" fxLayoutGap="20px">
+
+            </div>
+        </div>
+       
+    </div>
+</div>
+<div mat-dialog-actions>
+    <!-- <button mat-button (click)="onNoClick(data.ouId)">Edit</button> -->
+    <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data.iuId"
+        cdkFocusInitial>Edit</button>
+</div>

@@ -1,0 +1,59 @@
+.formHeader {
+    padding: 10px 20px;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+
+.content-wrapper1 {
+    padding: 0px;
+}
+.searchRight {
+    position: fixed;
+    right: 5px;
+}
+
+
+.customTable{
+    overflow: auto;
+}
+::ng-deep .mat-column-No{
+    min-width: 50px;
+}
+::ng-deep .mat-column-poIuId{
+    min-width: 100px;
+}
+
+::ng-deep .inputMarginClass {
+    margin-right: 10px;
+}
+
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff !important;
+}
+.customWidth80 {
+    position: relative;
+}
+ 
+.mat-form-field-type-mat-native-select.mat-form-field-disabled
+    .mat-form-field-infix::after,
+.mat-input-element:disabled,::ng-deep .mat-select-disabled .mat-select-value, .inputDisable {
+    color: #000000 !important;
+}
+
+.form-field-crossdock{
+    font-size: 14px;
+    line-height: 1.2;
+    width: max-content;
+}
+::ng-deep .mat-input-element{
+    color: rgba(0,0,0,.87) !important;
+}
+.customWidth100 {
+    min-width: 100px;
+    max-width: 100px;
+}
+.customWidth80 {
+    min-width: 80px;
+    max-width: 80px;
+}

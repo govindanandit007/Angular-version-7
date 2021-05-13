@@ -1,0 +1,74 @@
+{
+    "type": "BATCH",
+    "searchType": "batch",
+    "searchFor": "Search Batch",
+    "companyKey": "",
+    "searchArray": [
+        
+        {
+            "type": "LOV",
+            "lovType": "itemCode",
+            "label": "Item Name",
+            "key": "itemName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "batchNumber",
+            "label": "Batch Number",
+            "key": "batchNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "batchStatus",
+            "label": "Batch Status",
+            "key": "batchStatus",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "batchMaterialStatus",
+            "label": "Material Status",
+            "key": "materialStatusId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "IuCode",
+            "label": "IU",
+            "key": "batchIuId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

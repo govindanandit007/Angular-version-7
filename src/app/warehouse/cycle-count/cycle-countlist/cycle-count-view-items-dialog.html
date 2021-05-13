@@ -1,0 +1,48 @@
+<h1 class="viewDialogHeader setMarginZero" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+  <div fxLayout="row" fxLayoutGap="10px">
+      <div fxFlex="90" fxLayoutGap="10px"><span class="viewDialogTitle">View Items</span></div>
+      <div fxFlex="10" fxLayoutGap="10px">
+          <button mat-icon-button matDialogClose (click) = "onItemCloseClick()">
+              <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+          </button>
+      </div>
+  </div>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'" >
+  <div class="container" fxLayout="column" style="min-height: 300px; max-height: 300px;">
+    <div [ngClass]="!parameterDataSourceClassItem.data.length" [ngClass]="customTable" >
+          <table mat-table [dataSource]="parameterDataSourceClassItem">
+              <ng-container matColumnDef="sno">
+                <th mat-header-cell *matHeaderCellDef class="sticky" style="min-width:70px;">#</th>
+                <td mat-cell *matCellDef="let element; let i = index;">
+                    <div>
+                        <span [ngClass]="'nonEditiableField'">{{ i +1 }}</span>
+                    </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="item">
+                <th mat-header-cell *matHeaderCellDef  class="setWith15Percent">Item</th>
+                <td mat-cell *matCellDef="let element;"  >
+                    <div>
+                        <span [ngClass]="'nonEditiableField'">{{ element.item }}</span>
+                    </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef  class="setWith15Percent" style="padding-left:20px;" >Description</th>
+              <td mat-cell *matCellDef="let element;"  style="padding-left:20px;" >
+                  <div>
+                      <span [ngClass]="'nonEditiableField'">{{ element.description }}</span>
+                  </div>
+              </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsCLassItems; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumnsCLassItems; "></tr>
+          </table>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions class="padding10">
+  <button mat-flat-button color="primary" class="formButton saveButton mr10"
+  (click)="onItemCloseClick()">Close</button>
+</div>

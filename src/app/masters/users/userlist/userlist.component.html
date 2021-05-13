@@ -1,0 +1,181 @@
+<div [ngClass]="searchEnable ? 'sideContent' : ''">
+    <div class="contentBorder marginT15" [ngClass]="searchEnable ? 'content-wrapper1' : ''">
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">Users :</span>
+            </div>
+
+            <div fxLayoutAlign="end">
+                <button *ngIf="!searchEnable" mat-mini-fab class="btn-search-bg mr10" (click)="searchForUser()" matTooltip="Search"
+                    [matTooltipPosition]="tooltipPosition">
+                    <span class="headerIcon icon-search"></span>
+                </button>
+                <button mat-stroke-button (click)="addUser('add')" class="orangeButtonBorder colorOperatingUnit mr10"
+                    color="primary">
+                    Add User
+                </button>
+                <span class="down-arrow" [matMenuTriggerFor]="exportmenu">
+                    <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                        Export
+                    </button>
+                </span>
+                <mat-menu #exportmenu="matMenu">
+                    <button mat-menu-item (click)="exporter.exportTable('xls', {fileName:'Flexi WMS - User List'})">XLS</button>
+                    <button mat-menu-item (click)="exporter.exportTable('xlsx', {fileName:'Flexi WMS - User List'})">XLSX</button>
+                    <button mat-menu-item (click)="exporter.exportTable('csv', {fileName:'Flexi WMS - User List'})">CSV</button>
+                </mat-menu>
+            </div>
+        </div>
+        <div fxLayout="row">
+            <mat-divider fxFlex="100"></mat-divider>
+        </div>
+
+        <div [ngClass]="!dataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'"
+        [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+            <table mat-table matTableExporter hiddenColumns='[7]' #exporter="matTableExporter" [dataSource]="dataSource" matSort class="resize-table" matSortDisableClear>
+                <!-- No Column -->
+                <ng-container matColumnDef="userId">
+                    <th mat-header-cell *matHeaderCellDef PurchaseOrderForm   [ngClass]="'cursor-auto mat-header-column-'+columns[0].field" >
+                        <span >{{ columns[0].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index">
+                        {{ paginator.pageSize * paginator.pageIndex + i + 1 }}
+                    </td>
+                </ng-container>
+                <!-- Name Column -->
+                <ng-container matColumnDef="userName">
+                    <th mat-header-cell *matHeaderCellDef PurchaseOrderForm    [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[1].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.userName }}
+                    </td>
+                </ng-container>
+
+                <!-- startDate Column -->
+                <ng-container matColumnDef="userStartDate">
+                    <th mat-header-cell *matHeaderCellDef PurchaseOrderForm    [ngClass]="'mat-header-column-'+columns[2].field" (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[2].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.userStartDate ? (element.userStartDate | date) : '-'}}
+                    </td>
+                </ng-container>
+                <!-- EndDate Column -->
+                <ng-container matColumnDef="userEndDate">
+                    <th mat-header-cell *matHeaderCellDef PurchaseOrderForm    [ngClass]="'mat-header-column-'+columns[3].field" (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[3].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.userEndDate ? (element.userEndDate | date) : '-'}}
+                    </td>
+                </ng-container>
+
+                <!-- Company id Column -->
+                <!-- <ng-container matColumnDef="userCompanyId">
+                    <th mat-header-cell *matHeaderCellDef PurchaseOrderForm>
+                        Company Id
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.userCompanyId }}
+                    </td>
+                </ng-container> -->
+                <!-- Email Column -->
+                <ng-container matColumnDef="userEmail">
+                    <th mat-header-cell *matHeaderCellDef PurchaseOrderForm    [ngClass]="'mat-header-column-'+columns[4].field" (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                        <span mat-sort-header>{{ columns[4].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.userEmail ? element.userEmail : '-'}}
+                    </td>
+                </ng-container>
+                <!-- createdBy Column -->
+                <ng-container matColumnDef="createdBy">
+                    <th mat-header-cell *matHeaderCellDef PurchaseOrderForm>
+                        createdBy
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.createdBy }}
+                    </td>
+                </ng-container>
+                <!-- updatedBy Column -->
+                <ng-container matColumnDef="updatedBy">
+                    <th mat-header-cell *matHeaderCellDef PurchaseOrderForm>
+                        updatedBy
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.updatedBy ? element.updatedBy : '-' }}
+                    </td>
+                </ng-container>
+
+                <!-- Enabled Flag Column -->
+                <ng-container matColumnDef="userEnabledFlag">
+                        <th mat-header-cell *matHeaderCellDef PurchaseOrderForm    [ngClass]="'cursor-auto text-center mat-header-column-'+columns[5].field">
+                            <span >{{ columns[5].name }} </span>
+                        </th>
+                    <td mat-cell *matCellDef="let element" class="text-center">
+                        <mat-checkbox [(ngModel)]="element.userEnabledFlag" value="element.userEnabledFlag" disabled>
+                            <mat-icon>{{element.userEnabledFlag}}</mat-icon>
+                        </mat-checkbox>
+                    </td>
+                </ng-container>
+                <!-- country Column -->
+                <ng-container matColumnDef="admin">
+                    <th mat-header-cell *matHeaderCellDef PurchaseOrderForm   [ngClass]="'cursor-auto text-center mat-header-column-'+columns[6].field" >
+                        <span >{{ columns[6].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="text-center">
+                        <mat-checkbox [(ngModel)]="element.userAdminFlag" value="element.userAdminFlag" disabled>
+                            <mat-icon>{{element.userAdminFlag}}</mat-icon>
+                        </mat-checkbox>
+                    </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="action" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'actionColumn'">
+                        Action
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'actionIcons'">
+                        <span class="icon-edit" (click)="editUser(element.userId)"></span>
+                    </td>
+                </ng-container> -->
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef  [ngClass]="'cursor-auto actionColumn mat-header-column-'+columns[7].field">
+                        <span >{{ columns[7].name }} </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" [ngClass]="'actionIcons'">
+                        <span (click)="goFor(element, 'view')" matRipple matTooltip="View"
+                            [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                            [matRippleCentered]="true" [matRippleRadius]="false">
+                            <mat-icon>remove_red_eye</mat-icon>
+                        </span>
+                        <span (click)="goFor(element.userId, 'edit')" matRipple matTooltip="Edit"
+                            [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                            [matRippleCentered]="true" [matRippleRadius]="false">
+                            <mat-icon>edit</mat-icon>
+                        </span>
+
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+            <ng-container *ngIf="listProgress">
+                <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+            </ng-container>
+
+            <ng-container *ngIf="
+                        !dataSource.data.length && !listProgress
+                    ">
+                <div [ngClass]="'noDataFound'"><small>{{userTableMessage}}</small></div>
+            </ng-container>
+        </div>
+        <mat-paginator (page)="commonService.setPaginationSize($event)" showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+        </mat-paginator>
+        <!-- </div> -->
+    </div>
+    <div [fxShow]="searchEnable" [ngClass]="searchEnable ? 'searchRight top-68' : ''">
+        <mat-sidenav class="rightSideNav" opened mode="side" position="end" [disableClose]="true">
+            <app-search-bar fxLayout="row" (searchComponentToggle)="getSearchToggle($event)"></app-search-bar>
+        </mat-sidenav>
+    </div>
+</div>

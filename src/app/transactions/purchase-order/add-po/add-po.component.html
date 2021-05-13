@@ -1,0 +1,750 @@
+<div fxFlex="100" class="contentBorder marginT15">
+    <div [ngClass]="'formHeader'" fxLayout="row">
+        <div fxFlex fxLayoutAlign="start">
+            <span class="formHeaderTitle"><app-breadcrumb></app-breadcrumb></span>
+        </div>
+         
+    </div>
+
+    <div fxLayout="row">
+        <mat-divider fxFlex="100"></mat-divider>
+    </div>
+
+    <div class="formContainer" fxLayout="column">
+        <form #poForm="ngForm"  id="ngForm" [formGroup]="PurchaseOrderForm" autocomplete="off" (ngSubmit)="onSubmit($event, poForm)">
+            <div class="container" fxLayout="column">
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <div fxFlex="34" fxLayoutGap="20px">
+                        <mat-form-field class="materailFieldSize" fxFlex="50">
+                            <input matInput placeholder="PO Number" formControlName="poNumber"  />
+                        </mat-form-field>
+                        <mat-form-field class="materailFieldSize" fxFlex="50">
+                            <mat-select formControlName="poOuId" [disabled]="true" placeholder="OU" required (blur)="poLogValidationErrors()"  [ngClass]="'pointerEventnone selectArrowHide'">
+                                <mat-option *ngFor="let element of ouCodeList" [value]="element.value"
+                                    (onSelectionChange)="ouSelectionChanged($event,element.value, element.currency)">
+                                    {{element.label}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="poFormErrors.poOuId">{{poFormErrors.poOuId}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <mat-form-field class="materailFieldSize" fxFlex="32">
+                        <input matInput placeholder="Description" formControlName="poDescription" />
+                    </mat-form-field>
+                    <div fxFlex="34" fxLayoutGap="20px">
+                        <mat-form-field class="materailFieldSize" fxFlex="50">
+                            <mat-select formControlName="poType" placeholder="Type" required (blur)="poLogValidationErrors()" [disabled]="true"
+                            [ngClass]="'pointerEventnone selectArrowHide'">
+                                <mat-option *ngFor="let element of poTypesList" [value]="element.value"
+                                (onSelectionChange)="poTypeSelectionChanged($event, element.value)">
+                                    {{ element.label }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="poFormErrors.poType">{{poFormErrors.poType}}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="materailFieldSize" fxFlex="50">
+                            <mat-select formControlName="poStatus" placeholder="Status" required (blur)="poLogValidationErrors()" [disabled]="isStatus"
+                            [ngClass]="isStatus ? 'pointerEventnone selectArrowHide' : ''">
+                                <mat-option *ngFor="let element of poStatusList" [value]="element.value">
+                                    {{ element.label }}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="poFormErrors.poStatus">{{poFormErrors.poStatus}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayoutGap="20px">
+                    <div fxFlex="34" fxLayoutGap="20px">
+                        <div *ngIf="inlineSearchLoader === 'hide'" fxFlex="50">
+
+                            <mat-form-field class="materailFieldSize" *ngIf="showLov === 'show'" fxFlex="80" autofocus>
+                                <mat-select formControlName="poSupplierId" [ngClass]="''"
+                                placeholder="Supplier" (blur)="poLogValidationErrors()"   required >
+                                    <mat-option *ngFor="let element of supplierList" [value]="element.value"
+                                    (onSelectionChange)="supplierSelectionChanged($event,element.value)" >
+                                        {{ element.label }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="poFormErrors.poSupplierId">{{poFormErrors.poSupplierId}}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="materailFieldSize" *ngIf="showLov === 'hide'"  fxFlex="80">
+                                <input matInput 
+                                (keydown)="fetchNewSearchListForSupplier($event, null, false)" (blur)="poLogValidationErrors()"   required
+                                (blur)="fetchNewSearchListForSupplier($event, null, false)"
+                                placeholder="Search Supplier" formControlName="searchValue"  autocomplete="off" />
+                            </mat-form-field>
+
+                            <div [ngClass]="'pt-15'" fxFlex="20" >
+                                <div  class="icon-search" style="width: 0px;
+                                padding-left: 5px;" matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                                (click)="fetchNewSearchListForSupplier($event, null, true)" >
+                                </div>
+                            </div>
+
+                        </div>
+                        <div *ngIf="inlineSearchLoader === 'show'" fxFlex="50" style="padding-top: 15px; padding-left: 60px;">
+                            <div fxFlex="100">Searching...</div>
+                        </div>
+                        <mat-form-field class="materailFieldSize" fxFlex="50">
+                            <mat-select formControlName="poSupplierSiteId" placeholder="Supplier Site" required (blur)="poLogValidationErrors()">
+                                <mat-option *ngFor="let element of supplierSiteList" [value]="element.value"
+                                    >
+                                    {{ element.label }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="poFormErrors.poSupplierSiteId">{{poFormErrors.poSupplierSiteId}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                        <input matInput placeholder="Note to Supplier" formControlName="poNoteToSupplier" />
+                    </mat-form-field>
+
+                    <div fxFlex="34" fxLayoutGap="20px">
+                        <mat-form-field class="materailFieldSize" fxFlex="50">
+                            <mat-select formControlName="poCurrencyCode" placeholder="Currency" required>
+                                <mat-option *ngFor="let element of currencyList" [value]="element.value"
+                                (onSelectionChange)="currencySelectionChanged($event, element)">
+                                    {{ element.label }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="poFormErrors.poCurrencyCode">{{poFormErrors.poCurrencyCode}}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="materailFieldSize" fxFlex="50">
+                            <input   matInput placeholder="Amount" formControlName="poAmount"
+                                (blur)="poLogValidationErrors()" />
+                                <mat-error *ngIf="poFormErrors.poAmount">{{poFormErrors.poAmount}}</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+        <div class="marginT15" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">Purchase Order Lines : </span>
+            </div>
+           
+        </div>
+        <div [id]="'customTable'" [ngClass]="'customTable ellipsisTable'" [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+            <table #poLineTable mat-table [dataSource]="poLineDataSource"  matSort class="resize-table" style="min-width: 1950px;"
+            matSortDisableClear  (matSortChange)= "sortChanged($event)">
+               
+                <ng-container matColumnDef="poLineNumber">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[0].field" (mousedown)="commonService.onResizeColumn($event, 0, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[0].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[0].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass width60'">
+                                <input matInput disabled [(ngModel)]="element.poLineNumber" (keypress)="commonService.isDecimal($event)" autocomplete="off">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">{{element.poLineNumber}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poIuId"   >
+                    <th mat-header-cell *matHeaderCellDef  [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[1].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[1].name }} <sup class="requiredMark">*</sup></span>
+                    </th>
+                    <td mat-cell *matCellDef="let element: let i = index"  >
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'" >
+                                <mat-select #iufield [(ngModel)]="element.poIuId" 
+                                name="poIuId" [disabled]="element.poLineReceiptQty || element.poLineId" 
+                                [ngClass]="element.poLineReceiptQty ? 'pointerEventnone selectArrowHide':''"  
+                                (selectionChange)="onIUChanged($event, element, paginator.pageSize * paginator.pageIndex + i)" >
+                                    <mat-option *ngFor="let iu of iuCodeList" [value]="iu.value">
+                                        {{iu.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    <div *ngIf="!element.editing">
+                        <span [ngClass]="'nonEditiableField'">
+                            <mat-select [(ngModel)]="element.poIuId" [ngClass]="'pointerEventnone selectArrowHide'">
+                            <mat-option *ngFor="let iu of iuCodeList" [value]="iu.value">
+                                {{iu.name}}
+                            </mat-option>
+                            </mat-select>
+                        </span>
+                    </div>
+                    </td>
+                </ng-container>
+                
+             
+                <ng-container matColumnDef="poItemId">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[2].field" (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[2].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[2].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" >
+                        <div *ngIf="element.editing">
+                            <div fxLayout="row"  *ngIf="element.inlineSearchLoader === 'hide'">
+                                    <div fxFlex="90">
+                                    
+                                        <mat-form-field >
+                                            <input matInput placeholder="Search Item" [(ngModel)]="element.searchValue" 
+                                            [disabled]='element.shipmentCreated === "Y"'
+                                            (blur)="searchItem($event, paginator.pageSize * paginator.pageIndex + i, element.searchValue, itemListDialog)"  
+                                            (focus)='itemFieldFocus()' autocomplete="off" required/>
+                                        
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div fxFlex="10"  >
+                                        <div [ngClass]="'pt-15'" >
+                                            <button  class="searchBtn icon-search" matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                                            [disabled]='element.shipmentCreated === "Y"'
+                                            (click)="searchItem($event, paginator.pageSize * paginator.pageIndex + i, element.searchValue, itemListDialog)" >
+                                            </button>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div  fxLayout="row"  *ngIf="element.inlineSearchLoader === 'show'">
+                                <div fxFlex="100">Searching...</div>
+                            </div>
+
+
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'" style="pointer-events: none; " class="maxWidthSelect setWidth">
+
+                                    <span >{{element.itemName}}</span>
+
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poItemRevision">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[3].field" (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[3].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[3].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass '">
+                                <mat-select [(ngModel)]="element.poItemRevision" [disabled]="element.poLineReceiptQty" 
+                                [ngClass]="element.poLineReceiptQty ? 'pointerEventnone selectArrowHide':''">
+                                    <mat-option *ngFor="let itemRevision of element.poItemRevisionList" [value]="itemRevision.value">
+                                        {{itemRevision.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                                    <span >{{element.poItemRevision ? element.poItemRevision : '-'}}</span>
+                            </span>
+                        </div>
+                </ng-container>
+                <ng-container matColumnDef="poUomCode">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[4].field" (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[4].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[4].name }} <sup class="requiredMark">*</sup></span>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass'">
+                                <mat-select [(ngModel)]="element.poUomCode" name="poUomCode" required
+                                [disabled]="element.poLineReceiptQty" [ngClass]="element.poLineReceiptQty ? 'pointerEventnone selectArrowHide':''">
+                                    <mat-option *ngFor="let uom of element.UOMList" [value]="uom.value">
+                                        {{uom.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                                <mat-select [(ngModel)]="element.poUomCode" name="poUomCode" [ngClass]="'pointerEventnone selectArrowHide'">
+                                    <mat-option *ngFor="let uom of element.UOMList" [value]="uom.value">
+                                        {{uom.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poQuantity">
+                    <th mat-header-cell *matHeaderCellDef  [ngClass]="'mat-header-column-'+columns[5].field" (mousedown)="commonService.onResizeColumn($event, 5, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[5].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[5].name }} <sup class="requiredMark">*</sup></span>
+                    </th>
+                    <td mat-cell *matCellDef="let element;let i=index" >
+                    <div *ngIf="element.editing">
+                        <mat-form-field [ngClass]="'inputMarginClass'">
+                            <input matInput id="row{{paginator.pageSize * paginator.pageIndex + i}}" [(ngModel)]="element.poQuantity" (change)="poLineAmount(i)" (keypress)="commonService.isDecimal($event)" autocomplete="off" required>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="!element.editing">
+                        <span [ngClass]="'nonEditiableField'">{{element.poQuantity}}</span>
+                    </div>
+                    </td>
+                </ng-container>
+               
+             
+                <ng-container matColumnDef="poPrice">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[6].field" (mousedown)="commonService.onResizeColumn($event, 6, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[6].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[6].name }} <sup class="requiredMark">*</sup></span>
+                    </th>
+                    <td mat-cell *matCellDef="let element;let i=index" >
+                    <div *ngIf="element.editing">
+                        <mat-form-field [ngClass]="'inputMarginClass'">
+                            <input matInput [(ngModel)]="element.poPrice" (change)="poLineAmount(i)" (keypress)="commonService.isDecimal($event)" autocomplete="off" required
+                            [disabled]="element.poLineReceiptQty">
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="!element.editing">
+                        <span [ngClass]="'nonEditiableField'">{{element.poPrice}}</span>
+                    </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poReceiptRouting">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[7].field" (mousedown)="commonService.onResizeColumn($event, 7, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[7].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[7].name }} <sup class="requiredMark">*</sup></span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                    <div *ngIf="element.editing">
+                        <mat-form-field [ngClass]="'inputMarginClass'">
+                            <mat-select [(ngModel)]="element.poReceiptRouting" name="poReceiptRouting" required
+                            [disabled]="element.poLineReceiptQty" [ngClass]="element.poLineReceiptQty ? 'pointerEventnone selectArrowHide':''">
+                                <mat-option *ngFor="let receiptRouting of receiptRoutingList" [value]="receiptRouting.value">
+                                    {{receiptRouting.label}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="!element.editing">
+                        <span [ngClass]="'nonEditiableField'">
+                            <mat-select [(ngModel)]="element.poReceiptRouting" [ngClass]="'pointerEventnone selectArrowHide'">
+                                <mat-option *ngFor="let receiptRouting of receiptRoutingList" [value]="receiptRouting.value">
+                                    {{receiptRouting.label}}
+                                </mat-option>
+                            </mat-select>
+                        </span>
+                    </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poCurrencyCode">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[8].field" class="customWidth80" (mousedown)="commonService.onResizeColumn($event,8, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[8].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[8].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass customWidth80'">
+                                <mat-select [(ngModel)]="element.poCurrencyCode" [ngClass]="'pointerEventnone selectArrowHide'" disabled>
+                                    <mat-option *ngFor="let currency of currencyList" [value]="currency.value">
+                                        {{currency.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">
+                                <mat-select [(ngModel)]="element.poCurrencyCode" [ngClass]="'pointerEventnone selectArrowHide'">
+                                    <mat-option *ngFor="let currency of currencyList" [value]="currency.value">
+                                        {{currency.label}}
+                                    </mat-option>
+                                </mat-select>
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poPlannedReceiptDate">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[9].field" (mousedown)="commonService.onResizeColumn($event, 9, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[9].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[9].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <div *ngIf="element.editing">
+                            <mat-form-field floatLabel="never" [hideRequiredMarker]="true" [ngClass]="'customWidth125 inputMarginClass dateField'">
+                                <input matInput [matDatepicker]="picker" autocomplete="off" (click)="this.commonService.disableInput($event)"  on-focus="this.commonService.disableInput($event)"
+                                    [(ngModel)]="element.poPlannedReceiptDate" [min]="currentDate" autocomplete="off" [disabled]="element.poLineReceiptQty" />
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing">
+                            <span [ngClass]="'nonEditiableField'">{{element.poPlannedReceiptDate | date}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poLineReceiptQty">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[10].field" class="customWidth100" (mousedown)="commonService.onResizeColumn($event, 10, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[10].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[10].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass customWidth100'">
+                                <input class="readonly" disabled matInput [(ngModel)]="element.poLineReceiptQty" (keypress)="commonService.isDecimal($event)" autocomplete="off" readonly>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing" class="customWidth100">
+                            <span [ngClass]="'nonEditiableField'">{{element.poLineReceiptQty ? element.poLineReceiptQty : '-'}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="poLineAmount">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[11].field " class="customWidth100" (mousedown)="commonService.onResizeColumn($event, 11, columns, matTableRef)">
+                        <span [mat-sort-header]="(isAdd || isEditRoles) ? null : columns[11].field" [disabled]="(isAdd || isEditRoles)? true : false">{{ columns[11].name }}</span>
+                    </th>
+                    <td mat-cell *matCellDef="let element" >
+                        <div *ngIf="element.editing">
+                            <mat-form-field [ngClass]="'inputMarginClass customWidth100'">
+                                <input matInput [(ngModel)]="element.poLineAmount" autocomplete="off" disabled>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!element.editing" class="customWidth100">
+                            <span [ngClass]="'nonEditiableField'">{{element.poLineAmount ? element.poLineAmount : '-'}}</span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="action" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef  [ngClass]="'cursor-auto actionColumn mat-header-column-'+columns[12].field">
+                        {{ columns[12].name }}
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'">
+                        <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+                            <span  *ngIf="element.editing"  class="icon-cross" 
+                            matRipple matTooltip="cross dock"
+                            [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                            [matRippleRadius]="false"
+                            (click)="openCrossDockPopup($event, paginator.pageSize * paginator.pageIndex + i, element, crossDockListDialog)">
+                        </span>
+                            <span *ngIf="!element.addNewRecord && element.isDefault" class="icon-edit"
+                                (click)="beginEdit(element, $event,paginator.pageSize * paginator.pageIndex + i)" matRipple matTooltip="Edit"
+                                [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                [matRippleRadius]="false"></span>
+                            <span *ngIf="!element.addNewRecord && element.editing" [ngClass]="'padding0'">
+                                <span class="icon-clear" (click)="disableEdit(element, paginator.pageSize * paginator.pageIndex + i)" matRipple
+                                    matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                    [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                    [matRippleRadius]="false"></span>
+                            </span>
+                         
+                            <span *ngIf="element.addNewRecord && !element.isDefault && !disableCrossIcon" [ngClass]="'padding0'">
+                                <span class="icon-clear" (click)="deleteRow(element, paginator.pageSize * paginator.pageIndex + i)" matRipple matTooltip="Cancel"
+                                    [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                    [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="poLineDisplayedColumns; sticky: true"></tr>
+                <tr mat-row [ngClass]="{'highlightRowError': selectedRowIndex == paginator.pageSize * paginator.pageIndex + i}" *matRowDef="let row; let i= index; columns: poLineDisplayedColumns;"></tr>
+            </table>
+        </div>
+        <div class="text-align-right">
+            <button [disabled]="disableCrossIcon" mat-stroke-button class="orangeButtonBorder border-radius-3 colorAttribute marginT5" color="primary"
+                (click)="addRow()" matTooltip="Add Row">
+                Add Row
+            </button>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div>
+
+                <button *ngIf="!isEdit" mat-flat-button [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10' : 'formButton saveButton mr10'" (click)="poForm.ngSubmit.emit()" form="ngForm">
+                    Save
+                </button>
+                <button *ngIf="isEdit" mat-flat-button [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10' : 'formButton saveButton mr10'" (click)="onSubmit($event, poForm)">
+                    Update
+                </button>
+                <button  mat-flat-button [ngClass]="'formButton saveButton mr10'"
+                 (click)="commonService.openConfirmationDialog('purchase order','purchaseorder')">
+                    Cancel
+                </button>
+            </div>
+            <mat-paginator (page)="commonService.setPaginationSize($event)" showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+            </mat-paginator>
+        </div>
+    </div>
+</div>
+
+
+
+<ng-template #itemListDialog>
+    <div mat-dialog-container>
+            <div fxLayout="row" fxLayoutGap="10px" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle class="messageHeaderTitle mat-dialog-title removePadding ">
+                <div fxFlex="96" fxLayoutGap="10px"  style="padding-top: 5px;"><span class="viewDialogTitle mt5">Item List</span></div>
+                <div fxFlex="4" fxLayoutGap="10px">
+                    <button mat-icon-button (click)='closeDialog()' >
+                        <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+        <div mat-dialog-content >
+            
+            <div class="container" fxLayout="column" >
+                <div fxLayout="column" >
+                    <div fxLayout="row"  fxLayoutGap="30px">
+                            <mat-form-field fxFlex="25">
+                                <input matInput placeholder="Enter Item" [(ngModel)]="searchItemName"  autocomplete="off"/>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="25">
+                                <input matInput placeholder="Enter Description" [(ngModel)]="searchDescription"  autocomplete="off"/>
+                            </mat-form-field>
+                      
+                            <button fxFlex="10"  mat-flat-button [ngClass]="'headerButton saveButton mr10'" (click)='updateDialogDatasourse()'>
+                                search
+                            </button>
+                    
+                            <button fxFlex="10" mat-flat-button [ngClass]="'headerButton saveButton mr10'" (click)='clearSearchFields()'>
+                                Clear
+                            </button>
+                            <div  fxFlex="29"></div>
+                    </div>
+                </div>
+                <div class="customTable" [ngClass]="!parameterDataSourceItemSearch.data.length || listProgressPopup ? 'setScroll' : 'setScroll'" 
+                style="max-height: 280px; ">
+                    <table mat-table [dataSource]="parameterDataSourceItemSearch" >
+                        <ng-container matColumnDef="No">
+                            <th mat-header-cell *matHeaderCellDef  >
+                                <span >#</span>
+                            </th>
+                            <td mat-cell *matCellDef="let element; let i = index;" >
+                                <div>
+                                    <span [ngClass]="'nonEditiableField'">
+                                        {{ paginatorSearchItem.pageSize * paginatorSearchItem.pageIndex + i + 1 }} </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="itemName">
+                            <th mat-header-cell *matHeaderCellDef  >Item</th>
+                            <td mat-cell *matCellDef="let element;   "  >
+                                <div>
+                                    <span [ngClass]="'nonEditiableField'"  >
+                                        {{ element.itemName ? element.itemName : '-' }}
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="itemDescription">
+                            <th mat-header-cell *matHeaderCellDef  >Description</th>
+                            <td mat-cell *matCellDef="let element;"  >
+                                <div>
+                                    <span [ngClass]="'nonEditiableField'"  >
+                                        {{(element.itemDescription.length > 80) ? ((element.itemDescription).slice(0, 70) + '...') : element.itemDescription}}
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                       
+                        <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsItemSearch" ></tr>
+                        <tr mat-row *matRowDef="let row; columns: parameterDisplayedColumnsItemSearch; let i = index;"
+                        (click)="getSelectedItemRecord(row,  paginator.pageSize * paginator.pageIndex + i)"
+                        (dblclick)='saveSelectedItem()'
+                        [ngClass]="{'highlightRowSelect': selectedRowIndex == paginator.pageSize * paginator.pageIndex + i}"></tr>
+                    </table>
+                    <ng-container *ngIf="listProgressPopup">
+                        <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                    </ng-container>
+
+                    <ng-container *ngIf="!parameterDataSourceItemSearch.data.length && !listProgressPopup ">
+                        <div [ngClass]="'positionRelative'" style="min-height:50px;">
+                            <div [ngClass]="'noDataFound'"><small>{{itemTableMessage}}</small></div>
+                        </div>
+                    </ng-container>
+               
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <div fxFlex='30'>
+                        <button  mat-flat-button [ngClass]="'formButton saveButton mr10'" [disabled]='selectedRowIndex === null ' (click)='saveSelectedItem()'>
+                            ok
+                        </button>
+                        <button  mat-flat-button [ngClass]="'formButton saveButton mr10'"
+                         (click)="closeDialog()">
+                            Cancel
+                        </button>
+                    </div>
+                    <mat-paginator fxFlex='70' (page)="commonService.setPaginationSize($event)" #paginatorSearchItem   showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+                    </mat-paginator>
+                </div>
+              
+               
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<!-- //crossdock dialog -->
+<ng-template #crossDockListDialog>
+    <div mat-dialog-container>
+            <div fxLayout="row" fxLayoutGap="10px" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle class="messageHeaderTitle mat-dialog-title removePadding " style='height:50px'>
+                <div fxFlex="95" fxLayoutGap="10px"><span class="viewDialogTitle mt5">Cross Dock List</span></div>
+                <div  fxLayoutGap="10px">
+                    <button mat-icon-button (click)='closeDialog()' style="vertical-align: auto;">
+                        <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+        <div mat-dialog-content >
+            <div fxLayoutAlign="end">                
+                <button mat-stroke-button class="orangeButtonBorder colorOperatingUnit" color="primary"
+                    (click)="addSoRow()" matTooltip="Add CrossDock">
+                    Add SO
+                </button>
+            </div>
+            <div class="container" fxLayout="column" >
+               
+                <div class="customTable" [ngClass]="!parameterDataSourceCrossDock.data.length || listProgressPopupCrossDock ? 'setScroll' : 'setScroll'" 
+                style="max-height: 280px; ">
+                    <table #crossDockTable mat-table [dataSource]="parameterDataSourceCrossDock" >
+                        <ng-container matColumnDef="No">
+                            <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+crossDockDialogColumns[0].field">
+                                {{ crossDockDialogColumns[0].name }} 
+                                
+                            </th>
+                            <td mat-cell *matCellDef="let element; let i = index;" >
+                                <div>
+                                    <span [ngClass]="'nonEditiableField'">
+                                        {{ paginatorCrossDock.pageSize * paginatorCrossDock.pageIndex + i + 1 }} </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="soNumber">
+                            <th mat-header-cell *matHeaderCellDef  [ngClass]="'mat-header-column-'+crossDockDialogColumns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                                {{ crossDockDialogColumns[1].name }} <sup class="requiredMark">*</sup></th>
+                            <td mat-cell *matCellDef="let element; let i=index" >
+                                <div *ngIf="element.editing">
+                                    <mat-form-field style="width: 80% !important;">
+                                        <mat-select *ngIf="element.addNewRecord" [(ngModel)]="element.soId" [ngClass]="'requiredField'"
+                                        (selectionChange)="soChanged($event,paginatorCrossDock.pageSize * paginatorCrossDock.pageIndex + i)"
+                                             required>
+                                            <mat-option 
+                                            *ngFor="let item of soList" [value]="item.value">
+                                                {{item.label}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-select *ngIf="!element.addNewRecord" [(ngModel)]="element.soId" [ngClass]="'requiredField'"
+                                        (selectionChange)="soChanged($event,paginatorCrossDock.pageSize * paginatorCrossDock.pageIndex + i)"
+                                             required>
+                                            <mat-option
+                                            *ngFor="let item of soList" [value]="item.value">
+                                                {{item.label}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="element.soId === ''">Please Select SO</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="!element.editing">
+                                    <span [ngClass]="'nonEditiableField'"  >
+                                        {{element.soNumber }}
+                                        </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="soLineNumber">
+                            <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+crossDockDialogColumns[2].field" (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                                {{ crossDockDialogColumns[2].name }} <sup class="requiredMark">*</sup></th>
+                            <td mat-cell *matCellDef="let element; let i=index"  >
+                                <div *ngIf="element.editing">
+                                    <mat-form-field style="width: 80% !important;">
+                                        <mat-select  [(ngModel)]="element.soLineId"  [ngClass]="'requiredField'" required>
+                                            <mat-option 
+                                            *ngFor="let item of element.soLineList" [value]="item.value"
+                                            (onSelectionChange)="soLineChanged($event,paginatorCrossDock.pageSize * paginatorCrossDock.pageIndex + i, element, item)">
+                                                {{item.label}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="element.soLineId === ''">Please Select SO Line</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="!element.editing">
+                                    <span [ngClass]="'nonEditiableField'" >
+                                        {{element.soLineNumber}}
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="soLineQty">
+                            <th mat-header-cell *matHeaderCellDef  [ngClass]="'mat-header-column-'+crossDockDialogColumns[3].field" (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                                {{ crossDockDialogColumns[3].name }} </th>
+                            <td mat-cell *matCellDef="let element; let i=index" >
+                                <div *ngIf="element.editing">
+                                    <mat-form-field style="width: 80% !important;">
+                                        <input matInput  [(ngModel)]="element.soLineQty" autocomplete="off" disabled >
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="!element.editing">
+                                    <span [ngClass]="'nonEditiableField'"  >
+                                        {{element.soLineQty ? element.soLineQty : '-'}}
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="remainingQty">
+                            <th mat-header-cell *matHeaderCellDef  [ngClass]="'mat-header-column-'+crossDockDialogColumns[4].field" (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                                {{ crossDockDialogColumns[4].name }} </th>
+                            <td mat-cell *matCellDef="let element; let i=index" >
+                                <div *ngIf="element.editing">
+                                    <mat-form-field >
+                                        <input matInput   [(ngModel)]="element.remainingQty" autocomplete="off" disabled>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="!element.editing">
+                                    <span [ngClass]="'nonEditiableField'"  >
+                                        {{element.remainingQty ? element.remainingQty : '-'}}
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="action" stickyEnd>
+                            <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto actionColumn mat-header-column-'+crossDockDialogColumns[5].field">
+                               {{ crossDockDialogColumns[5].name }}
+                            </th>
+                            <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'">
+                                <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center">
+                                    <span *ngIf="!element.addNewRecord" class="icon-edit" 
+                                    (click)="beginCrossDockEdit(element,$event, paginatorCrossDock.pageSize * paginatorCrossDock.pageIndex + i)"
+                                        matRipple matTooltip="Edit" [matTooltipPosition]="tooltipPosition"
+                                        [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                        [matRippleRadius]="false"></span>
+                                    <span *ngIf="!element.addNewRecord && element.editing" [ngClass]="'padding0'">
+                                        <span class="icon-clear"
+                                         (click)="disableCrossDockEdit(element, paginatorCrossDock.pageSize * paginatorCrossDock.pageIndex + i)" matRipple
+                                            matTooltip="Cancel" [matTooltipPosition]="tooltipPosition"
+                                            [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                                            [matRippleRadius]="false"></span>
+                                    </span>
+                                    <span *ngIf="element.addNewRecord" [ngClass]="'padding0'">
+                                        <span class="icon-clear" (click)="deleteCrossDockRow(element, i)" matRipple matTooltip="Cancel"
+                                            [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                                            [matRippleCentered]="true" [matRippleRadius]="false"></span>
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsCrossDock" ></tr>
+                        <tr mat-row  [ngClass]="{'highlightRowError': selectedRowIndex == paginatorCrossDock.pageSize * paginatorCrossDock.pageIndex + i}"
+                        *matRowDef="let row; columns: parameterDisplayedColumnsCrossDock; let i = index;"></tr>
+                    </table>
+                    <ng-container *ngIf="listProgressPopupCrossDock">
+                        <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                    </ng-container>
+
+                    <ng-container *ngIf="!parameterDataSourceCrossDock.data.length && !listProgressPopupCrossDock ">
+                        <div [ngClass]="'positionRelative'" style="min-height:50px;">
+                            <div [ngClass]="'noDataFound'"><small>{{crossDockTableMessage}}</small></div>
+                        </div>
+                    </ng-container>
+               
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <div fxFlex='30'>
+                        <button *ngIf="isAddCrossDock" mat-flat-button [ngClass]="'formButton saveButton mr10'" (click)="addSOList('save')">
+                            Save
+                        </button>
+                        <button *ngIf="isEditCrossDock" mat-flat-button [ngClass]="'formButton saveButton mr10'" (click)="addSOList('update')">
+                            Update
+                        </button>
+                        <button  mat-flat-button [ngClass]="'formButton saveButton mr10'"
+                         (click)="closeDialog()">
+                            Cancel
+                        </button>
+                    </div>
+                    <mat-paginator fxFlex='70' (page)="commonService.setPaginationSize($event)" #paginatorCrossDock   showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+                    </mat-paginator>
+                </div>
+              
+               
+            </div>
+        </div>
+        
+    </div>
+    
+</ng-template>

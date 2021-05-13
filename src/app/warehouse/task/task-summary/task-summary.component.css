@@ -1,0 +1,15 @@
+.formHeader {
+  padding: 10px 20px;
+  border-bottom: 1px solid #ccc;
+}
+.formHeaderTitle {
+  font-weight: 500;
+}
+.content-wrapper1 {
+  padding: 0px;
+  /* width:  76.5% ; */
+}
+.searchRight {
+  position: fixed;
+  right: 5px;
+}

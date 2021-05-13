@@ -1,0 +1,172 @@
+mat-card-avatar{
+    border-radius:50%; 
+    
+}
+mat-card{
+    color:#ffffff;
+    font-size: 25px;
+}
+
+mat-card-subtitle{
+    font-family: 'Poppins-Regular';
+    font-size: 13px;
+    color:#606060;
+    margin: 0px 0px;
+}
+.mat-card-header .mat-card-title{
+    font-family: 'Poppins-Bold';
+    margin-bottom: 0px;
+}
+.panelTitle{
+    /* font-family: 'Poppins-Bold';
+    font-size: 14px;
+    color:#003c54;
+    margin: 15px 0px 5px 0px; */
+    font-family: 'Poppins-Regular';
+    font-size: 20px;
+    color: #98a3a7;
+    margin: 15px 0px 5px 0px;
+}
+
+::ng-deep .highcharts-credits{
+    display: none;
+}
+
+.chartHeading{
+    font-family: 'Poppins-Bold';
+    font-size: 14px;
+    color:#606060;
+    background-color: white;
+    padding: 10px 10px 10px 10px;
+    border-bottom: 1px solid #ebebf3;
+    height: 20px;
+}
+
+
+::ng-deep .amcharts-amexport-item {
+    background-color: transparent !important;
+}
+
+::ng-deep .amcharts-amexport-menu ul li{
+    background-color: rgb(161, 175, 243) !important;
+}
+
+::ng-deep .trial{
+    display: none !important;
+}
+
+::ng-deep .amcharts-amexport-menu-root{
+    top: -38px !important;
+}
+
+
+
+.reportsBtn{
+    margin-right: 15px;
+    z-index: 9999;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+
+.icon{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end !important;
+    color: white;    
+    font-size: 16px;
+}
+
+.tabTitle{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start !important;
+    width: 100%;
+    color: white;
+    padding-top: 5px;
+    border-radius: 4%;
+
+}   
+
+.moduleTab{
+    /* box-shadow: 0px 0px 0px 2px #098CCD; */
+    height: 180px; 
+    width:180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #098CCD;   
+    border-radius: 4%;
+    position: relative;
+    background-color: #098CCD;
+}
+
+.moduleTab:hover{
+    border: 2px solid white;
+    cursor: pointer;
+}
+
+.homepageContent{
+    background-color: transparent;     
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+
+.setDimension{
+    width: 200px; 
+    height: 200px;
+    margin-right: 20px;
+}
+
+.setImg{
+    width: 80px; 
+    height: 80px;
+}
+
+.cover{
+    background-color: #59b1dd;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    opacity: 0.4;
+    z-index: -1;
+    border-radius: 4%;
+}
+
+.imgTabHeader{
+    width: 35px;
+    height: 25px;
+    padding-right: 2px;
+}
+
+
+
+::ng-deep .mat-tab-body-content{
+    overflow-y: hidden !important;
+}
+
+::ng-deep .mat-tab-label-active.mat-tab-label{
+    background-color: transparent;
+}
+
+::ng-deep .mat-tab-label-active .mat-tab-label-content{
+    color: rgba(0,0,0,.87);
+}
+
+::ng-deep .mat-tab-group.mat-primary .mat-in{
+    color: rgba(0,0,0,.87);
+}
+
+::ng-deep .mat-ink-bar{
+    height: 3px !important;
+}
+
+::ng-deep .mat-tab-label{
+    opacity: 1 !important;
+}
+
+
+
+

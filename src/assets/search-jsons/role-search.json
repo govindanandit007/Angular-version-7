@@ -1,0 +1,33 @@
+{
+  "type": "ROLE",
+  "searchType": "role",
+  "searchFor": "Search Roles",
+  "companyKey": "roleCompanyId",
+  "searchArray": [
+      {
+          "type": "LOV",
+          "lovType": "name",
+          "label": "Role Name",
+          "key": "roleId",
+          "value": "",
+          "list": [
+              {
+                  "label": " Please Select",
+                  "value": ""
+              }
+          ]
+      },
+      {
+          "type": "LOV",
+          "lovType": "enableFlag",
+          "label": "Enable Flag",
+          "key": "roleEnableFlag",
+          "value": "",
+          "list": [
+              { "label": "All", "value": "" },
+              { "label": "Enabled", "value": "Y" },
+              { "label": "Disabled", "value": "N" }
+          ]
+      }
+  ]
+}

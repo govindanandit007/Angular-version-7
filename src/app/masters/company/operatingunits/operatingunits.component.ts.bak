@@ -1,0 +1,659 @@
+import {
+    Component,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+    Input,
+    Output,
+    EventEmitter,
+    OnDestroy,
+    Inject,
+    Optional,
+    ElementRef,
+    HostListener,
+    Renderer2,
+    AfterViewInit
+} from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatTableDataSource, MatTable } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSort } from '@angular/material';
+import { OperatingUnitService } from 'src/app/_services/operating-unit.service';
+import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
+import { CommonService } from 'src/app/_services/common/common.service';
+import { CompanyComponent } from '../company.component';
+import { TooltipPosition } from '@angular/material/tooltip';
+import { Observable, Observer, BehaviorSubject } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CompanyService } from 'src/app/_services/company.service';
+import { ConfirmationDialogComponent } from 'src/app/_shared/confirmation-dialog/confirmation-dialog.component';
+interface NavItem {
+    displayName: string;
+    disabled?: boolean;
+    itemCode?: string;
+    children?: NavItem[];
+    id?: number;
+}
+export interface Country {
+    value: string;
+    viewValue: string;
+}
+@Component({
+    selector: 'app-operatingunits',
+    templateUrl: './operatingunits.component.html',
+    styleUrls: ['./operatingunits.component.css']
+})
+export class OperatingunitsComponent implements OnInit, AfterViewInit, OnDestroy {
+    tooltipPosition: TooltipPosition[] = ['below'];
+    OperatingUnitForm: FormGroup;
+    companyData: string;
+    companyTreeChildren: any[] = [];
+    showOUName: string;
+    isEdit: boolean;
+    countryList: any[] = [];
+    stateFilterList: any[] = [];
+    cityFilterList: any[] = [];
+    viewEnabledFlag: boolean;
+    ouMessage = '';
+    searchEnableFlag = false;
+    searchIconValue : any = '';
+
+    confirmationDialogRef: MatDialogRef<ConfirmationDialogComponent>;
+    // ouMessage = 'No operating unit defined.';
+    private searchInfoArrayunsubscribe: any;
+    private searchArrayunsubscribe: any;
+    navItems: NavItem[] = [
+        {
+            displayName: JSON.parse(localStorage.getItem('userDetails'))
+                .companyName,
+            children: this.companyTreeChildren
+        }
+    ];
+    showSearch = true;
+    dataForSearch: any = {
+        type: 'OU',
+        searchType: 'operatingUnit',
+        searchFor: 'Search Operating Units',
+        companyKey: 'ouCompanyId',
+        searchArray: [
+            {
+                type: 'LOV',
+                lovType: 'code',
+                label: 'Operating Unit Code',
+                key: 'ouId',
+                value: '',
+                list: [
+                    {
+                        label: ' Please Select',
+                        value: ''
+                    }
+                ]
+            },
+            {
+                type: 'LOV',
+                lovType: 'name',
+                label: 'Operating Unit Name',
+                key: 'ouId',
+                value: '',
+                list: [
+                    {
+                        label: ' Please Select',
+                        value: ''
+                    }
+                ]
+            },
+            {
+                type: 'LOV',
+                lovType: 'enableFlag',
+                label: 'Enable Flag',
+                key: 'ouEnabledFlag',
+                value: '',
+                list: [
+                    { label: 'All', value: '' },
+                    { label: 'Yes', value: 'Y' },
+                    { label: 'No', value: 'N' }
+                ]
+            }
+        ]
+    };
+    @Output() searchComponentToggle = new EventEmitter<boolean>();
+    @Input() showSearchComponent: BehaviorSubject<string>;
+
+    displayedColumns: string[] = [
+        'ouCode',
+        'ouName',
+        'ouAddr1',
+        'creationDate',
+        'ouEnabledFlag',
+        'action'
+    ];
+
+    columns: any =  [
+        {field: 'ouCode', name: 'Code', width: 75, baseWidth: 10 },
+        {field: 'ouName', name: 'Name', width: 150, baseWidth: 33 },
+        {field: 'ouAddr1', name: 'Address', width: 150, baseWidth: 25 },
+        {field: 'creationDate', name: 'Start Date', width: 100, baseWidth: 14 },
+        {field: 'ouEnabledFlag', name: 'Enabled', width: 100, baseWidth: 9 },
+        {field: 'action', name: 'Action', width: 75, baseWidth: 9 }
+    ]
+
+    operatingUnitDataSource = new MatTableDataSource([]);
+    operatingUnitList = true;
+    listProgress = false;
+    screenMaxHeight:any;
+
+    validationMessages = {
+        ouCode: {
+            required: 'Operating Unit Code is required.'
+        },
+        ouName: {
+            required: 'Operating Unit Name is required.'
+        },
+        ouOuId: {
+            required: 'Company Code is required.'
+        },
+        ouAddr1: {
+            required: 'Address1 is required.'
+        },
+        ouCountry: {
+            required: 'Country is required.'
+        },
+        ouStateCounty: {
+            required: 'State/County is required.'
+        },
+        ouCity: {
+            required: 'City is required.'
+        },
+        ouPincode: {
+            required: 'Postal Code is required.',
+            pattern: 'Please Enter Numeric value.',
+            maxlength: 'Maximum 10 character allowed'
+        },
+        ouPhone: {
+            required: 'Phone Number is required.',
+            pattern: 'Please Enter Numeric value.',
+            maxlength: 'Maximum 15 character allowed'
+
+        },
+        ouPersonName: {
+            required: 'Person Name is required.'
+        },
+        ouPersonPhoneNum: {
+            required: 'Phone Number is required.',
+            pattern: 'Please Enter Numeric value.',
+            maxlength: 'Maximum 15 character allowed'
+
+        },
+        ouPersonEmail: {
+            required: 'Email is required.',
+            pattern: 'Please enter a valid email address.'
+        }
+    };
+
+    formErrors = {
+        ouCode: '',
+        ouName: '',
+        ouOuId: '',
+        ouAddr1: '',
+        ouCountry: '',
+        ouStateCounty: '',
+        ouCity: '',
+        ouPincode: '',
+        ouPhone: '',
+        ouPersonName: '',
+        ouPersonPhoneNum: '',
+        ouPersonEmail: ''
+    };
+
+    constructor(
+        private fb: FormBuilder,
+        public router: Router,
+        public commonService: CommonService,
+        private dialog: MatDialog,
+        private operatingUnitService: OperatingUnitService,
+        private companycomponent: CompanyComponent,
+        private snackBar: MatSnackBar,
+        private companyService: CompanyService,
+        private renderer: Renderer2
+    ) {
+        this.operatingUnitFeedForm();
+    }
+    @ViewChild('myDialog', { static: true }) myDialog: TemplateRef<any>;
+    @ViewChild(MatTable, {read: ElementRef, static: false} ) matTableRef: ElementRef;
+    @ViewChild(MatSort, {static: false}) sort: MatSort;
+    openDialog() {
+        this.dialog.open(this.myDialog, { disableClose: true });
+    }
+
+    ngOnInit() {
+        this.isEdit = false;
+        this.showSearch = true;
+        this.searchOperatingUnit();
+        this.searhForOU();
+        this.getCountryList();
+        this.commonService.getScreenSize(-25);
+        this.searchIconValue = this.companyService.searchIconValue.subscribe((searchEnableFlag: any) => {
+            this.searchEnableFlag = searchEnableFlag;
+        });
+    }
+
+    logValidationErrors(group: FormGroup = this.OperatingUnitForm): void {
+        Object.keys(group.controls).forEach((key: string) => {
+            const abstractControl = group.get(key);
+            if (abstractControl instanceof FormGroup) {
+                this.logValidationErrors(abstractControl);
+            } else {
+                this.formErrors[key] = '';
+                if (
+                    abstractControl &&
+                    !abstractControl.valid &&
+                    (abstractControl.touched || abstractControl.dirty)
+                ) {
+                    const messages = this.validationMessages[key];
+                    for (const errorKey in abstractControl.errors) {
+                        if (errorKey) {
+                            this.formErrors[key] += messages[errorKey] + ' ';
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    getCountryList() {
+        this.commonService.getCountryLov().subscribe((data: any) => {
+            this.countryList = [];
+            for (const items of data.countries) {
+                this.countryList.push({
+                    value: items.name,
+                    id: items.id,
+                    label: items.name
+                });
+            }
+        });
+    }
+
+    // handle on change events
+    lookupSelectionChanged(event: any, lovType: string, Id: number, element:any) {
+        this.cityFilterList = [];
+        if (lovType === 'State' && event.source.selected) {
+            this.resetCountryValues(element);
+            this.stateFilterList = [];
+            this.commonService.getStateList().subscribe((stateData: any) => {
+                const stateList = stateData.states;
+                stateList.filter(item => {
+                    if (item.country_id === String(Id)) {
+                        this.stateFilterList.push(item);
+                    }
+                });
+            });
+        }
+        if (lovType === 'City' && event.source.selected) {
+            this.commonService.getCityList().subscribe((cityData: any) => {
+                const cityList = cityData.cities;
+                cityList.filter(item => {
+                    if (item.state_id === String(Id)) {
+                        this.cityFilterList.push(item);
+                    }
+                });
+            });
+        }
+    }
+
+    resetCountryValues(element: any){
+      if( this.OperatingUnitForm.value.ouCountry !== ''
+          && this.OperatingUnitForm.value.ouCountry !== element.value){
+        this.OperatingUnitForm.patchValue({
+          ouStateCounty: ''
+        });
+        this.OperatingUnitForm.patchValue({
+          ouCity: ''
+        });
+      }
+    }
+
+
+    searhForOU() {
+        this.searchArrayunsubscribe = this.companycomponent.showSearchFlag.subscribe((data: any) => {
+            if (data === 'operatingunits') {
+                this.commonService.searhForMasters(this.dataForSearch);
+                // this.searchComponentToggle.emit(this.showSearch);
+
+                this.companyService.displaySearchComponent(this.showSearch);
+            }
+        });
+    }
+    searchComponentOpen() {
+        this.companyService.displaySearchComponent(this.showSearch);
+        this.searchEnableFlag = true;
+    }
+    searchOperatingUnit() {
+        this.searchInfoArrayunsubscribe = this.commonService.searchInfoArray.subscribe((ouSearchInfo: any) => {
+            // This code is used for not loading the search result when module loads 
+            if(ouSearchInfo.fromSearchBtnClick === true){
+                // ouSearchInfo.fromSearchBtnClick = false;
+                // this.commonService.getsearhForMasters(ouSearchInfo);
+                this.operatingUnitDataSource = new MatTableDataSource([]);
+                this.operatingUnitDataSource.sort = this.sort;
+                this.operatingUnitList = true;
+                if (ouSearchInfo.searchType === 'operatingUnit') {
+                    this.listProgress = true;
+                    this.operatingUnitService
+                        .getOperatingUnitSearch(ouSearchInfo.searchArray)
+                        .subscribe(
+                            (data: any) => {
+                                this.listProgress = false;
+                                if (data.status === 200) {
+                                    if (!data.message) {
+                                        for (const rowData of data.result) {
+                                            if (rowData.ouEnabledFlag === 'N') {
+                                                rowData.ouEnabledFlag = false;
+                                            } else {
+                                                rowData.ouEnabledFlag = true;
+                                            }
+                                        }
+                                        this.operatingUnitDataSource = new MatTableDataSource<any>(data.result);
+                                        this.operatingUnitDataSource.sort = this.sort;
+                                    } else {
+                                        this.ouMessage = data.message;
+                                    }
+                                } else {
+                                    // alert(data.message);
+                                    this.openSnackBar(data.message, '', 'error-snackbar');
+    
+                                }
+                            },
+                            (error: any) => {
+                                this.listProgress = false;
+                                // alert(error.error.message);
+                                this.openSnackBar(error.error.message, '', 'error-snackbar');
+                            }
+                        );
+                }
+            }else{
+                return;
+            }
+           
+        });
+    }
+
+    getOperatingUnitDetails(id: number, name: string, type?: string) {
+        type === 'view'
+            ? this.addOperatingUnit('view')
+            : this.addOperatingUnit('add');
+        this.isEdit = true;
+
+        this.operatingUnitService.getOperatingUnitById(id).subscribe(
+            (result: any) => {
+                if (result.status === 200) {
+                    if (type === 'view') {
+                        const dataResult = result.result[0];
+                        dataResult.ouEnabledFlag =
+                            dataResult.ouEnabledFlag === 'Y' ? true : false;
+                        dataResult.companyCode = JSON.parse(
+                            localStorage.getItem('userDetails')
+                        ).companyCode;
+                        // tslint:disable-next-line: no-use-before-declare
+                        const dialogRef = this.dialog.open(
+                            OperatingUnitsViewDialogComponent,
+                            {
+                                width: '70vw',
+                                data: dataResult
+                            }
+                        );
+
+                        dialogRef.afterClosed().subscribe(response => {
+                            console.log('The dialog was closed');
+                            if (response !== undefined) {
+                                this.getOperatingUnitDetails(response, '');
+                            }
+                        });
+                    } else {
+                        this.showOUName = 'Edit Operating Unit : ' + name;
+                        if (result.result.length) {
+                            const data = result.result[0];
+                            this.OperatingUnitForm.patchValue(data);
+                            this.OperatingUnitForm.controls.ouEnabledFlag.patchValue(
+                                data.ouEnabledFlag === 'Y' ? true : false
+                            );
+                            this.OperatingUnitForm.patchValue({
+                                ouCompanyId: JSON.parse(
+                                    localStorage.getItem('userDetails')
+                                ).companyCode
+                            });
+                        }
+                    }
+                }
+            },
+            (error: any) => {
+                console.log(error.error.message);
+            }
+        );
+    }
+    getDetailView(id: number) {
+        this.operatingUnitService.getOperatingUnitById(id).subscribe(
+            (result: any) => {
+                if (result.status === 200) {
+                    if (result.result.length) {
+                        const data = result.result[0];
+                        this.OperatingUnitForm.patchValue(data);
+                        this.OperatingUnitForm.controls.ouEnabledFlag.patchValue(
+                            data.ouEnabledFlag === 'Y' ? true : false
+                        );
+                        this.OperatingUnitForm.patchValue({
+                            ouCompanyId: JSON.parse(
+                                localStorage.getItem('userDetails')
+                            ).companyCode
+                        });
+                    }
+                }
+            },
+            (error: any) => {
+                console.log(error.error.message);
+            }
+        );
+    }
+
+    // Form Group
+    operatingUnitFeedForm() {
+        this.OperatingUnitForm = this.fb.group({
+            ouId: [''],
+            ouCode: ['', Validators.required],
+            ouName: ['', Validators.required],
+            ouEnabledFlag: [true],
+            ouAddr1: ['', Validators.required],
+            ouAddr2: [''],
+            ouAddr3: [''],
+            ouCity: ['', Validators.required],
+            ouStateCounty: ['', Validators.required],
+            ouCountry: ['', Validators.required],
+            ouPincode: [
+                '',
+                [Validators.required, Validators.pattern('[0-9]*'), Validators.maxLength(10)]
+            ],
+            ouPhone: [
+                '',
+                [Validators.required, Validators.pattern('^[0-9-+()s]*$'), Validators.maxLength(15)]
+            ],
+            ouCompanyId: [
+                JSON.parse(localStorage.getItem('userDetails')).companyCode,
+                Validators.required
+            ],
+            ouPersonName: ['', Validators.required],
+            ouPersonPhoneNum: [
+                '',
+                [Validators.required, Validators.pattern('^[0-9-+()s]*$'), Validators.maxLength(15)]
+            ],
+            ouPersonEmail: ['', [Validators.required,
+                // tslint:disable-next-line: max-line-length
+                Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
+            createdBy: [JSON.parse(localStorage.getItem('userDetails')).userId],
+            creationDate: [this.companycomponent.dateFormat(new Date())],
+            updatedBy: [JSON.parse(localStorage.getItem('userDetails')).userId],
+            updatedDate: [this.companycomponent.dateFormat(new Date())]
+        });
+    }
+
+    get credentials() {
+        return this.OperatingUnitForm.controls;
+    }
+
+    // add operatig Unit form reset
+    addOperatingUnit(type: string) {
+        this.stateFilterList = [];
+        this.cityFilterList = [];
+        if (type !== 'view') {
+            this.operatingUnitList = !this.operatingUnitList;
+            // this.searchComponentToggle.emit(false);
+            this.companyService.displaySearchComponent(false);
+        }
+        this.isEdit = false;
+        this.OperatingUnitForm.patchValue({
+            ouCompanyId: JSON.parse(localStorage.getItem('userDetails'))
+                .companyCode
+        });
+        if (type === 'add') {
+            this.operatingUnitFeedForm();
+        } else {
+            if (type !== 'view') {
+                this.searchOperatingUnit();
+                this.searhForOU();
+            }
+        }
+    }
+
+    // form submit function for add and update
+    onSubmit() {
+        if (this.OperatingUnitForm.value.ouEnabledFlag === true) {
+            this.OperatingUnitForm.value.ouEnabledFlag = 'Y';
+        } else {
+            this.OperatingUnitForm.value.ouEnabledFlag = 'N';
+        }
+
+        this.OperatingUnitForm.value.ouCompanyId = JSON.parse(
+            localStorage.getItem('userDetails')
+        ).companyId;
+        if (this.isEdit) {
+            this.OperatingUnitForm.value.updatedDate = this.companycomponent.dateFormat(
+                new Date()
+            );
+            this.OperatingUnitForm.value.updatedBy = JSON.parse(
+                localStorage.getItem('userDetails')
+            ).userId;
+            if (this.OperatingUnitForm.valid) {
+                this.operatingUnitService
+                    .updateOperatingUnit(
+                        this.OperatingUnitForm.value.ouId,
+                        this.OperatingUnitForm.value
+                    )
+                    .subscribe(
+                        data => {
+                            if (data.status === 200) {
+                                // this.companycomponent.openDialog(
+                                //     'Success',
+                                //     data.message
+                                // );
+                                this.openSnackBar(data.message, '', 'success-snackbar');
+                                this.operatingUnitList = true;
+                                this.searhForOU();
+                                this.searchOperatingUnit();
+                            }
+                        },
+                        (error: any) => {
+                            // alert(error.error.message);
+                            this.openSnackBar(error.error.message, '', 'error-snackbar');
+                        }
+                    );
+            }
+        } else {
+            if (this.OperatingUnitForm.valid) {
+                this.operatingUnitService
+                    .createOperatingUnit(this.OperatingUnitForm.value)
+                    .subscribe(
+                        data => {
+                            if (data.status === 200) {
+                                // this.companycomponent.openDialog(
+                                //     'Success',
+                                //     data.message
+                                // );
+                                this.openSnackBar(data.message, '', 'success-snackbar');
+                                this.operatingUnitFeedForm();
+                                this.operatingUnitList = true;
+                                this.searhForOU();
+                                this.operatingUnitDataSource = new MatTableDataSource([]);
+                                this.operatingUnitDataSource.sort = this.sort;
+                            }
+                        },
+                        (error: any) => {
+                            // alert(error.error.message);
+                            this.openSnackBar(error.error.message, '', 'error-snackbar');
+
+                        }
+                    );
+            }
+        }
+    }
+
+    openConfirmationDialog(pageName: string, url: any) {
+
+        const  confirmationDialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                pageName: pageName,
+                url: url
+            },
+            width: '30vw'
+        });
+        confirmationDialogRef.afterClosed().subscribe(response => {
+
+            if (response !== undefined && response.url === 'operatingUnitCancel') {
+                this.addOperatingUnit('back');
+                // reset table width
+                setTimeout(() => {
+                    this.commonService.setTableResize(this.matTableRef.nativeElement.clientWidth, this.columns);
+                }, 500);
+            }
+        });
+    }
+
+    openSnackBar(message: string, action: string, typeClass: string) {
+        this.snackBar.open(message, action, {
+             duration: 3500,
+            panelClass: [typeClass]
+        });
+    }
+    ngOnDestroy() {
+        this.searchInfoArrayunsubscribe ? this.searchInfoArrayunsubscribe.unsubscribe() : '';
+        this.searchArrayunsubscribe ? this.searchArrayunsubscribe.unsubscribe() : '';
+        this.searchIconValue ? this.searchIconValue.unsubscribe() : '';
+        this.commonService.getsearhForMasters([]);
+    }
+
+    ngAfterViewInit() {
+        this.operatingUnitDataSource.sort = this.sort;
+        setTimeout(() => {
+            this.commonService.setTableResize(this.matTableRef.nativeElement.clientWidth, this.columns);
+        }, 500);
+      }
+
+      @HostListener('window:resize', ['$event'])
+      onResize(event) {
+        this.commonService.setTableResize(this.matTableRef.nativeElement.clientWidth, this.columns);
+        this.commonService.getScreenSize(-25);
+      }
+}
+// View Dialog Component
+@Component({
+    selector: 'app-operatingunits-view-dialog',
+    templateUrl: './operatingunits-view-dialog.html'
+})
+export class OperatingUnitsViewDialogComponent {
+    constructor(
+        public dialogRef: MatDialogRef<OperatingUnitsViewDialogComponent>,
+        @Optional() @Inject(MAT_DIALOG_DATA) public data: any
+    ) { }
+
+    onCloseClick(): void {
+        this.dialogRef.close();
+    }
+}

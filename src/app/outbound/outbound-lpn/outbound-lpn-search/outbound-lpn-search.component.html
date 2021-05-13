@@ -1,0 +1,152 @@
+<div fxLayout="column" fxLayoutAlign="space-between stretch" fxFlex="100" >
+    <div fxLayout="column" style="padding-bottom: 70px;">
+        <div class="search-header" fxLayout="row">
+            <div class="search-title" fxLayout="column" fxFlex="5 0 0">
+                {{ searchLabel }}
+            </div>
+            <div class="search-header-right" (click)="hideSearchContainer()">
+                <span class="searchBarIcon icon-close"></span>
+            </div>
+        </div>
+      
+        <div *ngFor="let fieldsInfo of searchFieldData">
+
+                <div *ngIf="fieldsInfo.lovType === 'iuId'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container >
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="iuCodeValue">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                    [value]="listItem.value" autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </ng-container>
+                </div>  
+                
+                <div *ngIf="fieldsInfo.lovType === 'lpnStatus'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container >
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <mat-select *ngIf="fieldsInfo.type == 'LOV'" [(ngModel)]="lpnStatusValue">
+                                <mat-option ngDefaultControl *ngFor="let listItem of fieldsInfo.list"
+                                    [value]="listItem.value" autocomplete="off">
+                                    {{ listItem.label }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </ng-container>
+                </div>  
+
+                
+                <div *ngIf="fieldsInfo.lovType === 'lpnNumber'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container>
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                          <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="lpnNumValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+
+                <div *ngIf="fieldsInfo.lovType === 'soNumber'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container>
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                          <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="soNumValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+
+                <div *ngIf="fieldsInfo.lovType === 'shipmentNumber'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container>
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                          <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="shipmentNumValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+                
+
+                <div *ngIf="fieldsInfo.lovType === 'waveNumber'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container>
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                          <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="waveNumValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+
+                <div *ngIf="fieldsInfo.lovType === 'itemName'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container>
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                          <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="itemValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+
+                <div *ngIf="fieldsInfo.lovType === 'palletNumber'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container>
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                          <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="palletNumValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+
+                <div *ngIf="fieldsInfo.lovType === 'batchNumber'" fxLayout="column" class="search-content" fxFlex="1 0 0">
+                    <ng-container>
+                        <mat-form-field class="materailFieldSize" fxFlex="100">
+                          <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <input type="text" matInput (keyup.enter)="getSearhInfo()" [(ngModel)]="batchNumValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+        </div>
+
+        <div fxLayout="row wrap" class="onhandDivs">
+            <div *ngFor="let fieldsInfo of searchFieldData; let i = index" [ngStyle]="{'display': (i < 10) ? 'none' : ''}" fxFlex="50">
+                <div  class="search-content">
+                    <!-- For ONHAND Serial From -->
+                    <ng-container *ngIf="fieldsInfo.lovType === 'SerialFrom'">
+                        <div class="onHandTitle">Serial Number :</div>
+                        <mat-form-field class="materailFieldSize">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                           <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="serialFromValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+                    
+                    <!-- For ONHAND Serial To -->
+                    <ng-container *ngIf="fieldsInfo.lovType === 'SerialTo'">
+                        <mat-form-field class="materailFieldSize marginT18">
+                            <mat-label>{{ fieldsInfo.label }}</mat-label>
+                            <input type="text" (keyup.enter)="getSearhInfo()" matInput [(ngModel)]="serialToValue" autocomplete="off">
+                        </mat-form-field>
+                    </ng-container>
+
+              
+                </div>
+            </div>
+        </div>
+
+    
+        
+        <div fxLayout="row">
+          
+        </div>
+
+    </div>
+
+
+  
+    <div class="search-footer" style="position: fixed; bottom: 30px; width: 100%;">
+        <button mat-flat-button [ngClass]="'formButton saveButton'" (click)="getSearhInfo()">
+            Search
+        </button>
+        <button mat-flat-button [ngClass]="'formButton cancelButton ml-15'" (click)="clearSearchFields()">
+            Clear
+        </button>
+    </div>
+
+
+
+</div>

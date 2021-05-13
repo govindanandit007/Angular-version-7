@@ -1,0 +1,57 @@
+{
+    "type": "TP",
+    "searchType": "tpSupp",
+    "searchFor": "Search Supplier",
+    "companyKey": "tpCompanyId",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "code",
+            "label": "Supplier Code",
+            "key": "tpId",
+            "value": "",
+            "tpType": "SUPP",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "name",
+            "label": "Supplier Name",
+            "key": "tpId",
+            "tpType": "SUPP",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "tpEnabledFlag",
+            "value": "",
+            "list": [
+                {
+                    "label": "All",
+                    "value": ""
+                },
+                {
+                    "label": "Enabled",
+                    "value": "Y"
+                },
+                {
+                    "label": "Disabled",
+                    "value": "N"
+                }
+            ]
+        }
+    ]
+}

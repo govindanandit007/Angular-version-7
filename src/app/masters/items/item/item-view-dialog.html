@@ -1,0 +1,353 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle"> Item View</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'">
+    <div class="container" fxLayout="row" fxLayoutGap="20px" *ngIf="showItemDetails">
+        <div fxFlex="80" fxLayout="column">
+            <div fxLayout="row" fxLayoutGap="20px" [ngClass]="'mb10'">
+                <div fxLayout="column" fxFlex="23.33">
+                    <span [ngClass]="'viewDialogDataTitle'">Item Name</span>
+                    <span [ngClass]="'viwDialogData'">{{
+                        data[0].itemName
+                    }}</span>
+                </div>
+                <div fxLayout="column" fxFlex="50">
+                    <span [ngClass]="'viewDialogDataTitle'"
+                        >Item Description</span
+                    >
+                    <span [ngClass]="'viwDialogData'">
+                         {{data[0].itemDescription ? data[0].itemDescription : '-'}}</span>
+                </div>
+                <div fxLayout="column" fxFlex="23">
+                    <span [ngClass]="'viwDialogData'">
+                        <mat-checkbox
+                            class="materailFieldSize viewDialogDataTitle"
+                            disabled="true"
+                            [ngModel]="data[0].itemEnabledFlag === 'Y' ? true : false"
+                        >
+                            Enabled Flag</mat-checkbox
+                        >
+                    </span>
+                </div>
+            </div>
+            <div fxLayout="row" fxLayoutGap="20px" [ngClass]="'mb10'">
+                <div fxLayout="column" fxFlex="25">
+                    <span [ngClass]="'viewDialogDataTitle'">Item BarCode</span>
+                    <span [ngClass]="'viwDialogData ellipsis-text'">{{
+                        data[0].itemBarcode ? data[0].itemBarcode :'-'
+                    }}</span>
+                </div>
+                <div fxLayout="column" fxFlex="25">
+                    <span [ngClass]="'viewDialogDataTitle'"
+                        >Item Primary UOM</span
+                    >
+                    <span [ngClass]="'viwDialogData'">{{
+                        data[0].itemPrimaryUomDesc
+                    }}</span>
+                </div>
+                <div fxLayout="column" fxFlex="25">
+                    <span [ngClass]="'viewDialogDataTitle'"
+                        >Item Secondary UOM</span
+                    >
+                    <span [ngClass]="'viwDialogData'">{{
+                        data[0].itemSecondaryUomDesc ? data[0].itemSecondaryUomDesc : '-'
+                    }}</span>
+                </div>
+                <div fxLayout="column" fxFlex="25">
+                    <span [ngClass]="'viewDialogDataTitle'"
+                        >Item Category Name</span
+                    >
+                    <span [ngClass]="'viwDialogData'">{{
+                        data[0].ctgryName1
+                    }}</span>
+                </div>
+            </div>
+            <div fxLayout="row" fxLayoutGap="20px" [ngClass]="'mb10'">
+                <div fxLayout="column" fxFlex="25">
+                    <span [ngClass]="'viewDialogDataTitle'">Weight UOM</span>
+                    <span [ngClass]="'viwDialogData ellipsis-text'">
+                        {{data[0].itemWeightUomValue ? data[0].itemWeightUomValue : '-'}}
+                        <!-- {{
+                        data[0].weightUomDescription ? data[0].itemWeightUom :'-'
+                    }} -->
+                </span>
+                </div>
+                <div fxLayout="column" fxFlex="25">
+                    <span [ngClass]="'viewDialogDataTitle'"
+                        >Volume UOM</span
+                    >
+                    <span [ngClass]="'viwDialogData'">
+                        {{
+                            data[0].itemVolumeUomValue ?    data[0].itemVolumeUomValue : '-'
+                        }}
+                        <!-- {{
+                        data[0].volumUomDescription ?    data[0].itemVolumeUom : '-'
+                    }} -->
+                </span>
+                </div>
+                <div fxLayout="column" fxFlex="25">
+
+                </div>
+                <div fxLayout="column" fxFlex="25">
+
+                </div>
+            </div>
+
+            <div fxLayout="row" fxLayoutGap="20px" class="mt30">
+                <div fxFlex="17">
+                    <div class=" divBorder1">
+                        <h1>Revisions</h1>
+                        <div fxLayout="row" fxLayoutGap="15px" class="pa10 mt10">
+                            <div fxLayout="column" fxFlex="20">
+                                <span [ngClass]="'viwDialogData'">
+                                    <mat-checkbox  class="materailFieldSize viewDialogDataTitle"
+                                        disabled="true"
+                                        [(ngModel)]="itemRevFlag" >  </mat-checkbox>
+                                </span>
+                            </div>
+                            <div fxLayout="column" fxFlex="80">
+                                <span [ngClass]="'viewDialogDataTitle'">Revision Number</span>
+                                <span [ngClass]="'viwDialogData'"> {{ data[0].itemRevisionNum ? data[0].itemRevisionNum :'-' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div fxFlex="17">
+                    <div class=" divBorder1">
+                        <h1>Shelf Life</h1>
+                        <div fxLayout="row" fxLayoutGap="15px" class="pa10 mt10">
+                            <div fxLayout="column" fxFlex="20">
+                                <span [ngClass]="'viwDialogData'">
+                                    <mat-checkbox class="materailFieldSize viewDialogDataTitle" disabled="true"
+                                        [(ngModel)]="itemShelfFlag" ></mat-checkbox>
+                                </span>
+                            </div>
+                            <div fxLayout="column" fxFlex="80">
+                                <span [ngClass]="'viewDialogDataTitle'" >Shelf Life Days</span>
+                            <span [ngClass]="'viwDialogData'">{{data[0].itemShelfLifeDays ? data[0].itemShelfLifeDays :'-'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div fxFlex="31">
+                    <div class=" divBorder1">
+                        <h1>Batch</h1>
+                        <div fxLayout="row" fxLayoutGap="15px" class="pa10 mt10">
+                            <div fxLayout="column" fxFlex="10">
+                                <span [ngClass]="'viwDialogData'">
+                                    <mat-checkbox class="materailFieldSize viewDialogDataTitle"  disabled="true"
+                                        [(ngModel)]="itemLotEnabledFlag" ></mat-checkbox >
+                                </span>
+                            </div>
+                            <div fxLayout="column" fxFlex="30">
+                                <span [ngClass]="'viewDialogDataTitle'">Prefix</span>
+                                <span [ngClass]="'viwDialogData'">{{
+                                    data[0].itemLotPrefix ? data[0].itemLotPrefix : '-'
+                                }}</span>
+                            </div>
+                            <div fxLayout="column" fxFlex="30">
+                                <span [ngClass]="'viewDialogDataTitle'">Length</span>
+                                <span [ngClass]="'viwDialogData'">{{
+                                    data[0].itemLotLength ? data[0].itemLotLength : '-'
+                                }}</span>
+                            </div>
+                            <div fxLayout="column" fxFlex="30">
+                                <span [ngClass]="'viewDialogDataTitle'"
+                                    >Starting No</span
+                                >
+                                <span [ngClass]="'viwDialogData'">{{
+                                    data[0].itemLotStartingNum ? data[0].itemLotStartingNum : '-'
+                                }}</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div fxFlex="31">
+                    <div class=" divBorder1">
+                        <h1>Serial</h1>
+                        <div fxLayout="row" fxLayoutGap="15px" class="pa10 mt10">
+                                <div fxLayout="column" fxFlex="10">
+                                    <span [ngClass]="'viwDialogData'">
+                                        <mat-checkbox class="materailFieldSize viewDialogDataTitle"  disabled="true"
+                                            [(ngModel)]="itemSerialEnabledFlag" ></mat-checkbox >
+                                    </span>
+                                </div>
+                                <div fxLayout="column" fxFlex="30">
+                                    <span [ngClass]="'viewDialogDataTitle'">Prefix</span>
+                                    <span [ngClass]="'viwDialogData'">{{
+                                        data[0].itemSerialPrefix ? data[0].itemSerialPrefix : '-'
+                                    }}</span>
+                                </div>
+                                <div fxLayout="column" fxFlex="30">
+                                    <span [ngClass]="'viewDialogDataTitle'">Length</span>
+                                    <span [ngClass]="'viwDialogData'">{{
+                                        data[0].itemSerialLength ? data[0].itemSerialLength : '-'
+                                    }}</span>
+                                </div>
+                                <div fxLayout="column" fxFlex="30">
+                                    <span [ngClass]="'viewDialogDataTitle'"
+                                        >Starting No</span
+                                    >
+                                    <span [ngClass]="'viwDialogData'">{{
+                                        data[0].itemSerialStartingNum ? data[0].itemSerialStartingNum : '-'
+                                    }}</span>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+        <div fxFlex="20" fxLayout="column">
+            <div class="item-head mb10">Item Image</div>
+            <span [ngClass] = "'thumb150'" fxLayoutAlign="center center" *ngIf="itemImgURL">
+              <div [ngClass] = "'showFullImageOption'">
+                <mat-icon [ngClass]="'editImageIcon'" (click)="showFullImage()">zoom_in</mat-icon>
+              </div>
+              <img [src]="itemImgURL" alt="item" *ngIf="itemImgURL"/>
+            </span>
+
+            <span class="icon-box-3 item-default-box" *ngIf="!itemImgURL"></span>
+        </div>
+    </div>
+    <div fxLayout="row"  fxLayoutGap="20px" class="mt30" *ngIf="showItemDetails">
+        <div fxFlex="28.7">
+            <div class=" divBorder1">
+                <h1>Dimensions</h1>
+                <div fxLayout="row" fxLayoutGap="15px" class="pa10 mt10">
+                    <div fxLayout="column" fxFlex="33">
+                        <span [ngClass]="'viewDialogDataTitle'">Item Length</span>
+                        <span [ngClass]="'viwDialogData'">{{
+                            data[0].itemLength ? data[0].itemLength : '-'
+                        }}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="33">
+                        <span [ngClass]="'viewDialogDataTitle'">Item Width</span>
+                        <span [ngClass]="'viwDialogData'">{{
+                            data[0].itemWidth ? data[0].itemWidth : '-'
+                        }}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="34">
+                        <span [ngClass]="'viewDialogDataTitle'">Item Height</span>
+                        <span [ngClass]="'viwDialogData'">{{
+                            data[0].itemHeight ? data[0].itemHeight : '-'
+                        }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div fxFlex="24.9">
+            <div class=" divBorder1">
+                <h1>Weight/Volume</h1>
+                <div fxLayout="row" fxLayoutGap="15px" class="pa10 mt10">
+                    <div fxLayout="column" fxFlex="33">
+                        <span [ngClass]="'viewDialogDataTitle'">Net Weight</span>
+                        <span [ngClass]="'viwDialogData'">{{
+                            data[0].itemNetWt ? data[0].itemNetWt : '-'
+                        }}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="33">
+                        <span [ngClass]="'viewDialogDataTitle'">Gross Weight</span>
+                        <span [ngClass]="'viwDialogData'">{{
+                            data[0].itemGrossWt ? data[0].itemGrossWt : '-'
+                        }}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="34">
+                        <span [ngClass]="'viewDialogDataTitle'">Volume</span>
+                        <span [ngClass]="'viwDialogData'">{{
+                            data[0].itemVolume ? data[0].itemVolume : '-'
+                        }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div fxFlex="44">
+            <div class=" divBorder1">
+                <h1>Container</h1>
+                <div fxLayout="row" fxLayoutGap="15px" class="pa10 mt10">
+                    <div fxLayout="column" fxFlex="10">
+                        <span [ngClass]="'viwDialogData'">
+                            <mat-checkbox class="materailFieldSize viewDialogDataTitle"  disabled="true"
+                                [(ngModel)]="itemContainerFlag" ></mat-checkbox >
+                        </span>
+                    </div>
+                    <div fxLayout="column" fxFlex="18">
+                        <span [ngClass]="'viewDialogDataTitle'">Container Type</span>
+                        <span [ngClass]="'viwDialogData'">{{
+                            data[0].itemContainerType ? data[0].itemContainerType : '-'
+                        }}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="24">
+                        <span [ngClass]="'viewDialogDataTitle'">Load Weight (Max)</span>
+                        <span [ngClass]="'viwDialogData'">{{
+                            data[0].itemContainerMaxLoad ? data[0].itemContainerMaxLoad : '-'
+                        }}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'"
+                            >Volume (Inner)</span
+                        >
+                        <span [ngClass]="'viwDialogData'">{{
+                            data[0].itemContainerMaxVolume ? data[0].itemContainerMaxVolume : '-'
+                        }}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="18">
+                        <span [ngClass]="'viewDialogDataTitle'"
+                            >Fill % (Min)</span
+                        >
+                        <span [ngClass]="'viwDialogData'">{{
+                            data[0].itemContainerFillPercent ? data[0].itemContainerFillPercent : '-'
+                        }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  -->
+    <div class="container" fxLayout="row" *ngIf="!showItemDetails" style="justify-content: center;">
+      <img [src]="itemImgURL" alt="item" style="max-width: 100%;">
+    </div>
+</div>
+<div mat-dialog-actions [ngClass]="'viewActionFooter'">
+    <button
+        mat-flat-button
+        [ngClass]="'formButton saveButton'"
+        color="primary"
+        [mat-dialog-close]="data[0]"
+        cdkFocusInitial
+        *ngIf="(showItemDetails && itemWithNoTransaction)">
+        Edit
+    </button>
+    <button
+        mat-flat-button
+        [ngClass]="'formButton saveButton'"
+        color="primary"
+        (click)="onCloseClick()"
+        cdkFocusInitial
+        *ngIf="(!showItemDetails || !itemWithNoTransaction)"
+        >
+        Back
+    </button>
+    <button
+        mat-flat-button
+        [ngClass]="'formButton saveButton'"
+        color="primary"
+        [mat-dialog-close]="data[0]"
+        cdkFocusInitial
+        *ngIf="!showItemDetails"
+        (click)="hideFullImage()"
+        >
+        Back
+    </button>
+</div>

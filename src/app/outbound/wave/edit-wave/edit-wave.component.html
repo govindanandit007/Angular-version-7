@@ -1,0 +1,247 @@
+<div fxFlex="100" class="contentBorder marginT15">
+    <div [ngClass]="'formHeader'" fxLayout="row">
+        <div fxFlex fxLayoutAlign="start">
+            <span class="formHeaderTitle"><app-breadcrumb></app-breadcrumb> </span>
+        </div>
+    </div>
+    <div fxLayout="row">
+        <mat-divider fxFlex="100"></mat-divider>
+    </div>
+
+    <div>
+        <div class="roleSearchBox" fxLayout="column">
+            <form #asnForm="ngForm" id="ngForm" [formGroup]="WaveCriteriaForm" autocomplete="off"
+                (ngSubmit)="onSubmit($event, asnForm)">
+                <div class="container" fxLayout="column">
+                    <div fxLayout="row" fxLayoutGap="20px">
+                        <mat-form-field class="materailFieldSize" fxFlex="12">
+                            <input matInput placeholder="Wave Number" formControlName="waveNumber"/>
+                        </mat-form-field>
+                        <mat-form-field class="materailFieldSize" fxFlex="12" autofocus>
+                            <mat-select formControlName="waveStatusCode" placeholder="Status" disabled 
+                            [ngClass]="'pointerEventnone selectArrowHide '">
+                                <mat-option *ngFor="let element of waveStatusList" [value]="element.value">
+                                    {{ element.label }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field class="materailFieldSize" fxFlex="12" autofocus>
+                            <mat-select formControlName="iuId" placeholder="IU" disabled [ngClass]="'pointerEventnone selectArrowHide'">
+                                <mat-option *ngFor="let element of iuCodeList" [value]="element.value"
+                                (onSelectionChange)="iuSelectionChanged($event,element.value)" >
+                                    {{ element.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field   [ngClass]="WaveCriteriaForm.value.waveStatusCode !== 'PNDNG' ? 'materailFieldSize colorBlack' : ''" fxFlex="12" autofocus>
+                            <mat-select formControlName="wavePolicy" placeholder="Select Policy" [disabled]="WaveCriteriaForm.value.waveStatusCode !== 'PNDNG'"
+                            [ngClass]="WaveCriteriaForm.value.waveStatusCode !== 'PNDNG' ? 'pointerEventnone selectArrowHide' : ''">
+                                <mat-option *ngFor="let element of wavePolicyList" [value]="element.value">
+                                    {{ element.label }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field [ngClass]="WaveCriteriaForm.value.waveStatusCode !== 'PNDNG' ? 'materailFieldSize colorBlack' : ''" fxFlex="12" autofocus>
+                            <mat-select formControlName="wavePickSlipGroup" placeholder="Pick Slip Group" [disabled]="WaveCriteriaForm.value.waveStatusCode !== 'PNDNG'"
+                            [ngClass]="WaveCriteriaForm.value.waveStatusCode !== 'PNDNG' ? 'pointerEventnone selectArrowHide' : ''"
+                            [required]="WaveCriteriaForm.value.waveStatusCode === 'PNDNG'">
+                                <mat-option *ngFor="let element of pickSlipList" [value]="element.value"
+                                (onSelectionChange)="checkDefaultDropLpn($event,element.value)" >
+                                    {{ element.label }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+
+
+
+                        <div *ngIf="inlineSearchLoader === 'hide'" fxFlex="20" >
+
+                            <mat-form-field [ngClass]="WaveCriteriaForm.value.waveStatusCode !== 'PNDNG' ? 'materailFieldSize colorBlack' : ''" *ngIf="showLov === 'show'" fxFlex="80" autofocus >
+                                <mat-select formControlName="waveStagingLocatorId" [ngClass]="''"
+                                [disabled]="WaveCriteriaForm.value.waveStatusCode !== 'PNDNG'"
+                                placeholder="Staging Locator">
+                                    <mat-option *ngFor="let element of stagingLocactorList" [value]="element.value"
+                                    (onSelectionChange)="locatorSelectionChanged($event,element.value)" >
+                                        {{ element.label }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field [ngClass]="WaveCriteriaForm.value.waveStatusCode !== 'PNDNG' ? 'materailFieldSize colorBlack' : ''" *ngIf="showLov === 'hide'"  fxFlex="80">
+                                <input matInput
+                                (keydown)="fetchNewSearchListForLocator($event, null, false)"
+                                (blur)="fetchNewSearchListForLocator($event, null, false)"
+                                placeholder="Search Staging Locator" formControlName="searchValue"  autocomplete="off" />
+                            </mat-form-field>
+
+                            <div [ngClass]="'pt-15'" fxFlex="20" *ngIf="WaveCriteriaForm.value.waveStatusCode === 'PNDNG'">
+                                <div  class="icon-search" style="width: 0px;
+                                padding-left: 10px;" matTooltip="Search" [matTooltipPosition]="tooltipPosition"
+                                (click)="fetchNewSearchListForLocator($event, null, true)" >
+                                </div>
+                            </div>
+
+                        </div>
+                        <div *ngIf="inlineSearchLoader === 'show'" fxFlex="20" style="padding-top: 15px; padding-left: 60px;">
+                            <div fxFlex="100">Searching...</div>
+                        </div>
+
+
+                        <div fxFlex="20" [style.margin-top]="'10px'" fxLayout="column">
+                            <div>
+                                <mat-checkbox formControlName="waveCreateShipment" [disabled]="WaveCriteriaForm.value.waveStatusCode !== 'PNDNG'">Create Shipment</mat-checkbox>
+                                <!-- <mat-checkbox class="ml15" formControlName="pullReplenishmentFlag" [disabled]="WaveCriteriaForm.value.waveStatusCode !== 'PNDNG'">Pull Replenishment</mat-checkbox> -->
+                            </div>
+                            <div>
+                                <!-- <span>{{WaveCriteriaForm.value.waveStatusCode !== 'PNDNG' && WaveCriteriaForm.value.wavePickSlipGroup ==='BULK_PICK_SHIPMENT'}}</span> -->
+                                <mat-checkbox formControlName="defaultDropLpn" [disabled]="WaveCriteriaForm.value.waveStatusCode !== 'PNDNG' || ( WaveCriteriaForm.value.waveStatusCode === 'PNDNG' && WaveCriteriaForm.value.wavePickSlipGroup ==='BULK_PICK_SHIPMENT')">Generate Default Drop LPN</mat-checkbox>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div [id]="'customTable'" [ngClass]="'customTable ellipsisTable mb15'" [ngStyle]="{'max-width': '100%','max-height': commonService.screenMaxHeight }">
+        <table mat-table [dataSource]="waveLineDataSource" matSort class="resize-table">
+            <ng-container matColumnDef="rowSelect">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[0].field">
+                    <mat-checkbox [(ngModel)]="selectAllRow" (change)="selectAll()" [disabled]="(WaveCriteriaForm.value.waveStatusCode !== 'RLSD' && WaveCriteriaForm.value.waveStatusCode !== 'PARTIAL')">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let element; let j = index">
+                    <mat-checkbox [(ngModel)]="element.rowSelect" [ngClass]="'searchBoxLabel'" [disabled]="element.isChecked === false"
+                    (change)="rowSelectionChange(element)">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="No">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'cursor-auto mat-header-column-'+columns[1].field">
+                    {{ columns[1].name }}
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index;">
+                    {{i + 1}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="soNumber">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[2].field"
+                    (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[2].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element ; let i=index">
+                    <span>{{element.soNumber}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="soLineNumber">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[3].field"
+                    (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[3].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element; let i=index">
+                    <span>{{element.soLineNumber}}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="itemName">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[4].field"
+                    (mousedown)="commonService.onResizeColumn($event, 4, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[4].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span>{{element.itemName}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="revsnNumber">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[5].field"
+                    (mousedown)="commonService.onResizeColumn($event, 5, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[5].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span>{{element.revsnNumber !== null ? element.revsnNumber : '-'}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="allocatedQty">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[6].field"
+                    (mousedown)="commonService.onResizeColumn($event, 6, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[6].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span>{{element.allocatedQty !== null ? element.allocatedQty : '-' }}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="waveQuantity">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[7].field"
+                    (mousedown)="commonService.onResizeColumn($event, 7, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[7].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span>{{element.waveQuantity}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="waveQuantityUomCode">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[8].field"
+                    (mousedown)="commonService.onResizeColumn($event, 8, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[8].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span>{{element.uomname}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="taskNumber">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[9].field"
+                    (mousedown)="commonService.onResizeColumn($event, 9, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[9].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span>{{element.taskNumber? element.taskNumber: '-'}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="waveLineStatusName">
+                <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+columns[10].field"
+                    (mousedown)="commonService.onResizeColumn($event, 10, columns, matTableRef)">
+                    <span mat-sort-header>{{ columns[10].name }}</span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <span>{{element.waveLineStatusName}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="action" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef
+                    [ngClass]="'cursor-auto actionColumn mat-header-column-'+columns[11].field">
+                    {{ columns[11].name }}
+                </th>
+                <td mat-cell *matCellDef="let element; let i=index" [ngClass]="'actionIcons'">
+                    <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center">
+                        <span *ngIf="element.waveLineStatusName !== 'Pending' " matRipple matTooltip="View Allocation" (click)="viewAllAllocations($event, element.waveLineId)"
+                            [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'"
+                            [matRippleCentered]="true" [matRippleRadius]="false">
+                            <mat-icon>remove_red_eye</mat-icon>
+                        </span>
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="waveLineDisplayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: waveLineDisplayedColumns;"></tr>
+        </table>
+    </div>
+    <div fxLayout="row" class="mb10 ml15" fxLayoutAlign="space-between center">
+        <div>
+            <button [disabled]="!enableReleaseBtn" mat-flat-button 
+            [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton  mr10': 'formButton saveButton  mr10'"
+            (click)="releaseWave($event)">
+                Release Wave
+            </button>
+            <button [disabled]="!isChecked" mat-flat-button [ngClass]="'formButton saveButton mr10'"
+            (click)="undoWave($event)" >
+                Undo Wave
+            </button>
+            <button [disabled]="(WaveCriteriaForm.value.waveStatusCode !== 'RLSD' &&  WaveCriteriaForm.value.waveStatusCode !== 'PARTIAL') && !isChecked"
+            mat-flat-button [ngClass]="'formButton saveButton mr10'" (click)="viewAllAllocations($event)">
+                View All Allocations
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+.formHeader {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+.content-wrapper1 {
+    padding: 0px;
+     /* width:  76.5% ; */
+}
+.searchRight {
+    position: fixed;
+    right: 5px;
+}
+
+::ng-deep .mat-checkbox-layout .mat-checkbox-label {
+    width: 0px !important;
+}
+
+.customTable {
+    overflow-x:scroll;
+}
+

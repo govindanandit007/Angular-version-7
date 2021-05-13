@@ -1,0 +1,30 @@
+
+ <div fxLayoutGap="15px" >
+    <div *ngIf='reportList === true' fxLayout="row" style="padding: 40px;"  fxLayout="row wrap" fxLayoutAlign="start flex-start"   class="homepageContent">
+        <div  class="setDimension" *ngFor="let screenModule of reportArray">
+            <div fxLayout="column" [ngClass]="'moduleTab'" (click)="loadReport(screenModule)">
+                <div class="cover"></div>
+                <div fxFlex="60"  class="thumb35 icon" style="padding-top: 20px;" fxLayoutAlign="center center">
+                    <img src="assets/images/icons/ReportViewer.svg" class="setImg" >
+                </div>
+                <div fxFlex="40" fxLayoutAlign="center center" class='tabTitle'>
+                        {{screenModule }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [viewMode]="'PRINT_PREVIEW'" -->
+    <div *ngIf='reportList !== true' style="width: 100%; height: 100vh;">
+        <button mat-stroke-button class="orangeButtonBorder colorAttribute reportsBtn" (click)="backToReports()" color="primary" >Back</button>
+        <tr-viewer #viewer1 
+        [containerStyle]="viewerContainerStyle"
+        [serviceUrl]="'http://150.136.110.79:8084/api/reports/'"
+        [viewMode]="'INTERACTIVE'"
+        [scaleMode]="'SPECIFIC'"
+        [scale]="1.0"
+        [ready]="ready"
+        [viewerToolTipOpening]="viewerToolTipOpening"
+        [enableAccessibility]="false">
+        </tr-viewer>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+<div fxLayout="column" fxLayoutAlign="space-between stretch" fxFlex="100" >
+    <div fxLayout="column"  >
+        <div class="search-header" fxLayout="row">
+            <div class="search-title" fxLayout="column" fxFlex="5 0 0">
+                {{ searchLabel }}
+            </div>
+            <div class="search-header-right" (click)="hideSearchContainer()">
+                <span class="searchBarIcon icon-close"></span>
+            </div>
+        </div>
+      
+        <div fxLayout="" >
+             <div  class="search-content"  >
+                  <!-- for From Date -->
+                  <div class="onHandTitle" fxLayout="row">Start Date and Time :</div>
+                  <div fxLayout="row" fxLayoutGap="20px">
+                        <mat-form-field fxFlex="40">
+                            <input matInput [matDatepicker]="picker" placeholder="Date" 
+                            (ngModelChange)="onStartDateChanged()" autocomplete="off" [(ngModel)]="firstDate" >
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                 
+                        <mat-form-field class="materailFieldSize" fxFlex="36">
+                            <input matInput placeholder="Time" type="time" autocomplete="off" [(ngModel)]="firstTime"   />
+                        </mat-form-field>
+                    </div>
+
+                    <div class="onHandTitle" fxLayout="row" style="margin-top: 20px;">Finish Date and Time :</div>
+                    <div fxLayout="row" fxLayoutGap="20px">
+                            <mat-form-field fxFlex="40">
+                                <input matInput [matDatepicker]="picker1" placeholder="Date"
+                                [min]="firstDate" autocomplete="off" [(ngModel)]="secondDate" >
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                            </mat-form-field>
+                    
+                            <mat-form-field class="materailFieldSize" fxFlex="36">
+                                <input matInput placeholder="Time" type="time" autocomplete="off" [(ngModel)]="secondTime"   />
+                            </mat-form-field>
+                        </div>
+                    
+                </div>
+            
+        </div>
+
+      
+        <div fxLayout="row">
+              
+        </div>
+
+    </div>
+
+
+  
+    <div class="search-footer" style="position: fixed; bottom: 0px; width: 100%;">
+        <button mat-flat-button [ngClass]="'formButton saveButton'" (click)="getSearhInfo()">
+            Search
+        </button>
+        <button mat-flat-button [ngClass]="'formButton cancelButton ml-15'" (click)="clearSearchFields()">
+            Clear
+        </button>
+    </div>
+
+
+
+</div>

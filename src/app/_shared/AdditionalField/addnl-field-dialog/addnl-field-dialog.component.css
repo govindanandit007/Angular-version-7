@@ -1,0 +1,5 @@
+
+
+::ng-deep .setMandatoryColor .mat-form-field-label-wrapper .mat-form-field-label span{
+    color: red !important;
+}

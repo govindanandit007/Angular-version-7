@@ -1,0 +1,49 @@
+{
+        "type": "CATEGORY",
+        "searchType": "category",
+        "searchFor": "Search Category",
+        "searchArray": [
+        {
+                "type": "LOV",
+                "lovType": "code",
+                "label": "Category Code",
+                "key": "categoryId",
+                "value": "",
+                "list": [
+                {
+                        "label": " Please Select",
+                        "value": ""
+                }
+            ]
+        },
+        {
+                "type": "LOV",
+                "lovType": "name",
+                "label": "Cagegory Name",
+                "key": "categoryId",
+                "value": "",
+                "list": [
+                {
+                        "label": " Please Select",
+                        "value": ""
+                }
+            ]
+        },
+        {
+                "type": "LOV",
+                "lovType": "enableFlag",
+                "label": "Enable Flag",
+                "key": "categoryEnabledFlag",
+                "value": "",
+                "list": [
+                { "label": "All", "value": ""
+                },
+                { "label": "Yes", "value": "Y"
+                },
+                { "label": "No", "value": "N"
+                }
+            ]
+        }
+        ]
+
+}

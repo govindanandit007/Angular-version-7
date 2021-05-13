@@ -1,0 +1,155 @@
+.customTable{
+    overflow: auto;
+}
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff !important;
+}
+.roleSearchBox{
+    background-color:#f2f2f4;
+    padding:10px 10px 10px 20px;
+    position: relative;
+}
+.searchBoxLabel{
+    font-size: 13px;
+    color: black;
+}
+.searchInput{
+    /* border: 1px solid #ccc; */
+    padding: 0px 10px;
+    margin: 0 10px;
+    /* background: #fff; */
+    color: black;
+    width: 250px;
+    font-size: 14px;
+    min-height: 25px;
+    /* border-radius: 3px; */
+}
+.searchInput:disabled{
+    background:transparent;
+}
+.roleSearchBox .mat-flat-button.formButton{
+    height:28px;
+    line-height: 28px;
+}
+.roleSearchBox .mat-error{
+    display: inline-block;
+    font-size:12px;
+}
+::ng-deep .searchInput .mat-select-trigger {
+    height: 25px;
+}
+
+::ng-deep .searchInput .mat-select-trigger .mat-select-value{
+    padding: 5px 0px;
+    height: 25px;
+    box-sizing: border-box;
+}
+
+.mat-expansion-panel-header{
+    padding: 0px;
+}
+::ng-deep .mat-expansion-panel-content .mat-expansion-panel-body {
+    padding: 0px;
+}
+
+.expandableBackground{
+    color: #098ccd
+}
+
+.headerColor{
+    color:  #098ccd;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.headerColor.colorBlack{
+    color: black;
+}
+.optionHeading{
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Poppins-Regular', sans-serif !important;
+    cursor: pointer;
+}
+.optionSection{
+    font-size: 14px;
+    font-family: 'Poppins-Regular', sans-serif !important;
+}
+
+.searchInput{
+    /* border: 1px solid #d9d9d9; */
+    /* border-radius: 4px; */
+    padding: 5px 5px 5px 5px;
+    font-size: 14px;
+    font-family: 'Poppins-Regular', sans-serif !important;
+    width: 55%;
+    margin-left: 15px;
+}
+
+.searchInput.width{
+    width: 50px;
+    height: 15px;
+    vertical-align: middle;
+}
+
+.searchInput.widthSmall{
+    width: 30px;
+    height: 15px;
+    vertical-align: middle;
+}
+
+.dateField{
+      width: 180px;
+      padding-left: 5px;
+  }
+  .setLeftBorder{
+    padding-left: 20px;
+    border-left: 2px solid #d9d9d9;
+  }
+::ng-deep  .setCircle .mat-radio-outer-circle{
+    width: 15px;
+    height: 15px;
+    border-color: #1a71b1;
+}
+
+::ng-deep .setCircle .mat-radio-label-content{
+    padding-bottom: 5px;
+}
+
+
+::ng-deep  .setCircle .mat-radio-inner-circle{
+    width: 15px;
+    height: 15px;
+    border-color: #1a71b1 !important;
+}
+
+::ng-deep .setCircle .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle{
+    border-color: #1a71b1 !important;
+}
+
+::ng-deep .setCircle .mat-radio-button.mat-accent .mat-radio-inner-circle{
+    border-color: #1a71b1 !important;
+    background-color: #1a71b1 !important;
+}
+.mat-expansion-panel.mat-expanded > .mat-expansion-panel-header {
+    height:48px !important;
+}
+.customTable {
+    overflow: auto;
+}
+.scrollHide {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+.item-head, .mat-option.addWaveOption{
+    color: #098ccd !important;
+}
+.waveLabel{
+    font-size: 13px;
+    color: black;
+    display: contents !important;
+}
+.mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after, .mat-input-element:disabled {
+    color: rgba(0,0,0,.87) !important;
+}
+

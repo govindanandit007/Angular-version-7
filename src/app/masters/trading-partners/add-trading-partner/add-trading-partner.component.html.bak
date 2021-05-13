@@ -1,0 +1,378 @@
+<mat-horizontal-stepper class="tradingPartnerStepper'" [linear]="true" #stepper
+    (selectionChange)="selectionChanged($event)">
+    <mat-step>
+        <ng-template matStepLabel>Trading Partner</ng-template>
+        <div class="stepperContent">
+            <div class="contentBorder">
+                <div [ngClass]="'formHeader'" fxLayout="row">
+                    <div fxFlex fxLayoutAlign="start">
+                        <span class="formHeaderTitle">{{
+                                isEdit ? showTPName : 'Define Trading Partner :'
+                              }}</span>
+                    </div>
+                    <div fxLayoutAlign="end">
+                        <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                            Add Attribute
+                        </button>
+                    </div>
+                </div>
+
+                <div fxLayout="row">
+                    <mat-divider fxFlex="100"></mat-divider>
+                </div>
+
+                <!-- Add Trading Partner Form -->
+                <div class="container" class="formContainer">
+                    <form [formGroup]="tradingPartnerForm">
+                        <div class="container" fxLayout="column">
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="25">
+                                    <mat-label placeholder="Trading Partner Type">Trading Partner Type</mat-label>
+                                    <mat-select [disabled]="isEdit" formControlName="tpType" required
+                                        (blur)="tpLogValidationErrors()">
+                                        <mat-option *ngFor="let TPType of TradingPartnerTypes"
+                                            [value]="TPType.lookupValue">
+                                            {{ TPType.lookupValueDesc }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="tpFormErrors.tpType">{{tpFormErrors.tpType}}</mat-error>
+                                </mat-form-field>
+                                <!-- <div fxFlex="50" fxLayoutGap="20px"> -->
+                                <mat-form-field class="materailFieldSize" fxFlex="25">
+                                    <input matInput placeholder="Trading Partner Name" formControlName="tpName" required
+                                        (blur)="tpLogValidationErrors()">
+                                    <mat-error *ngIf="tpFormErrors.tpName">{{tpFormErrors.tpName}}</mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" fxFlex="25">
+                                    <input matInput placeholder="Trading Partner Code" formControlName="tpCode"
+                                        [readonly]="isEdit" required maxlength="5" (blur)="tpLogValidationErrors()">
+                                    <mat-error *ngIf="tpFormErrors.tpCode">{{tpFormErrors.tpCode}}</mat-error>
+                                </mat-form-field>
+                                <mat-checkbox class="materailFieldSize" [style.margin-top]="'10px'" fxFlex="50"
+                                    formControlName="tpEnabledFlag" style="margin-top: 10px">Enabled Flag
+                                </mat-checkbox>
+                                <!-- </div> -->
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="50">
+                                    <input matInput placeholder="Trading Partner Description"
+                                        formControlName="tpDescription" required>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" fxFlex="50">
+                                    <input matInput placeholder="Trading Partner Address 1" formControlName="tpAddress1"
+                                        required (blur)="tpLogValidationErrors()">
+                                    <mat-error *ngIf="tpFormErrors.tpAddress1">{{tpFormErrors.tpAddress1}}</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="50">
+                                    <input matInput placeholder="Trading Partner Address 2"
+                                        formControlName="tpAddress2">
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" fxFlex="50">
+                                    <input matInput placeholder="Trading Partner Address 3"
+                                        formControlName="tpAddress3">
+                                </mat-form-field>
+                            </div>
+
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <div fxFlex="50" fxLayoutGap="20px">
+                                    <!-- <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <input matInput placeholder="Country"
+                                        formControlName="tpCountry" required>
+                                    </mat-form-field> -->
+                                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <mat-select formControlName="tpCountry" placeholder="Country" required
+                                            (blur)="tpLogValidationErrors()">
+                                            <mat-option *ngFor="let element of countryList" [value]="element.value"
+                                                (onSelectionChange)="LOVSelectionChanged($event,'State',element.id, element)">
+                                                {{ element.label }}</mat-option>
+
+                                        </mat-select>
+                                        <mat-error *ngIf="tpFormErrors.tpCountry">{{tpFormErrors.tpCountry}}</mat-error>
+                                    </mat-form-field>
+                                    <!-- <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <input matInput placeholder="State/County" formControlName="tpStateCounty"
+                                            required>
+                                    </mat-form-field> -->
+                                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <mat-select formControlName="tpStateCounty" placeholder="State/County" required
+                                            (blur)="tpLogValidationErrors()">
+                                            <mat-option *ngFor="let element of stateFilterList" [value]="element.name"
+                                                (onSelectionChange)="LOVSelectionChanged($event,'City',element.id, element)">
+                                                {{ element.name }}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="tpFormErrors.tpStateCounty">{{tpFormErrors.tpStateCounty}}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div fxFlex="50" fxLayoutGap="20px">
+
+                                    <!-- <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <input matInput placeholder="City" formControlName="tpCity" required>
+                                    </mat-form-field> -->
+                                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <mat-select formControlName="tpCity" placeholder="City" required
+                                            (blur)="tpLogValidationErrors()">
+                                            <mat-option *ngFor="let element of cityFilterList" [value]="element.name">
+                                                {{ element.name }}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="tpFormErrors.tpCity">{{tpFormErrors.tpCity}}</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <input matInput placeholder="Postal Code" formControlName="tpPincode" required
+                                            (blur)="tpLogValidationErrors()"  maxlength="10">
+                                        <mat-error *ngIf="tpFormErrors.tpPincode">{{tpFormErrors.tpPincode}}</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="50">
+                                    <input matInput placeholder="Phone Number" formControlName="tpPhone" required
+                                        (blur)="tpLogValidationErrors()" maxlength="15" (keypress)="commonService.isWholeNumber($event)">
+                                    <mat-error *ngIf="tpFormErrors.tpPhone">{{tpFormErrors.tpPhone}}</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="5px" style="margin-top:20px;">
+                                <div fxFlex="100">
+                                    <mat-label>Contact Person:</mat-label>
+                                </div>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="100">
+                                    <input matInput placeholder="Person Name" formControlName="tpPersonName" required
+                                        (blur)="tpLogValidationErrors()">
+                                    <mat-error *ngIf="tpFormErrors.tpPersonName">{{tpFormErrors.tpPersonName}}
+                                    </mat-error>
+                                </mat-form-field>
+                                <div fxFlex="50" fxLayoutGap="20px">
+                                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <input matInput placeholder="Phone Number" formControlName="tpPersonPhoneNum"
+                                            required (blur)="tpLogValidationErrors()" maxlength="15" (keypress)="commonService.isWholeNumber($event)">
+                                        <mat-error *ngIf="tpFormErrors.tpPersonPhoneNum">
+                                            {{tpFormErrors.tpPersonPhoneNum}}
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <input oninput="this.value = this.value.toLowerCase()" matInput placeholder="Email Address" formControlName="tpPersonEmail"
+                                            required (blur)="tpLogValidationErrors()">
+                                        <mat-error *ngIf="tpFormErrors.tpPersonEmail">{{tpFormErrors.tpPersonEmail}}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div fxLayout="row wrap"
+                            fxFlex="2 0 0"
+                            fxLayoutGap="15px"
+                            class="marginT15">
+                                    <button mat-flat-button [ngClass]="'formButton saveButton'"
+                                        (click)="onSubmit()" color="primary">
+                                        Save
+                                    </button>
+                                    <button mat-flat-button [ngClass]="'formButton saveButton'" 
+                                    (click)="commonService.openConfirmationDialog('trading partner','tradingpartners/'+ tpTypeforTab)"
+                                        color="primary">
+                                        Cancel
+                                    </button>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>Trading Partner Site</ng-template>
+        <div class="stepperContent">
+            <!-- <app-trading-partner-sites></app-trading-partner-sites> -->
+            <div class="contentBorder">
+                <div [ngClass]="'formHeader'" fxLayout="row">
+                    <div fxFlex fxLayoutAlign="start">
+                        <span class="formHeaderTitle">{{
+                                tpSiteIsEdit ? showTPSiteName : 'Define Trading Partner Site :'
+                              }}</span>
+                    </div>
+                    <div fxLayoutAlign="end">
+                        <button mat-stroke-button class="orangeButtonBorder colorAttribute" color="primary">
+                            Add Attribute
+                        </button>
+                    </div>
+                </div>
+
+                <div fxLayout="row">
+                    <mat-divider fxFlex="100"></mat-divider>
+                </div>
+
+                <!-- TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT -->
+                <div class="container" class="formContainer">
+                    <form [formGroup]="tradingPartnerSiteForm">
+                        <div class="container" fxLayout="column">
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="25">
+                                    <input maxlength="5" matInput placeholder="Trading Partner Site Code"
+                                        formControlName="tpSiteCode" [readonly]="tpSiteIsEdit" required
+                                        (blur)="tpSiteLogValidationErrors()">
+                                    <mat-error *ngIf="tpFormErrors.tpSiteCode">{{tpFormErrors.tpSiteCode}}</mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" fxFlex="25">
+                                    <input matInput placeholder="Trading Partner Site Name" formControlName="tpSiteName"
+                                        required (blur)="tpSiteLogValidationErrors()">
+                                    <mat-error *ngIf="tpFormErrors.tpSiteName">{{tpFormErrors.tpSiteName}}</mat-error>
+                                </mat-form-field>
+                                <!-- <mat-form-field class="materailFieldSize" fxFlex="25">
+                                    <input matInput placeholder="Trading Partner Name" formControlName="tpName"
+                                        required>
+                                </mat-form-field> -->
+                                <mat-form-field class="materailFieldSize" fxFlex="25">
+                                    <mat-label placeholder="Trading Partner Code">Trading Partner Code</mat-label>
+                                    <mat-select *ngIf="tpSiteIsEdit" [disabled]="tpCodeDisabled" formControlName="tpId" required
+                                        (blur)="tpSiteLogValidationErrors()">
+                                        <mat-option *ngFor="let TPName of TradingPartnerName" [value]="TPName.id">
+                                            {{ TPName.code }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-select *ngIf="!tpSiteIsEdit"[disabled]="tpCodeDisabled" formControlName="tpId" required
+                                        (blur)="tpSiteLogValidationErrors()">
+                                        <mat-option *ngFor="let TPName of EnabledTradingPartnerName" [value]="TPName.id">
+                                            {{ TPName.code }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="tpFormErrors.tpId">{{tpFormErrors.tpId}}</mat-error>
+                                </mat-form-field>
+                                <mat-checkbox class="materailFieldSize" [style.margin-top]="'10px'" fxFlex="50"
+                                    formControlName="tpSiteEnabledFlag" style="margin-top: 10px">Enabled Flag
+                                </mat-checkbox>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="50">
+                                    <input matInput placeholder="Trading Partner Site Description"
+                                        formControlName="tpSiteDescription" required>
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" fxFlex="50">
+                                    <input matInput placeholder="Trading Partner Site Address 1"
+                                        formControlName="tpSiteAddress1" required (blur)="tpSiteLogValidationErrors()">
+                                    <mat-error *ngIf="tpFormErrors.tpSiteAddress1">{{tpFormErrors.tpSiteAddress1}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="50">
+                                    <input matInput placeholder="Trading Partner Site Address 2"
+                                        formControlName="tpSiteAddress2">
+                                </mat-form-field>
+                                <mat-form-field class="materailFieldSize" fxFlex="50">
+                                    <input matInput placeholder="Trading Partner Site Address 3"
+                                        formControlName="tpSiteAddress3">
+                                </mat-form-field>
+                            </div>
+
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <div fxFlex="50" fxLayoutGap="20px">
+
+                                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <mat-select formControlName="tpSiteCountry" placeholder="Country" required
+                                            (blur)="tpSiteLogValidationErrors()">
+                                            <mat-option *ngFor="let element of countryList" [value]="element.value"
+                                                (onSelectionChange)="LOVSelectionChanged($event,'State',element.id, element)">
+                                                {{ element.label }}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="tpFormErrors.tpSiteCountry">{{tpFormErrors.tpSiteCountry}}
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <mat-select formControlName="tpSiteStateCounty" placeholder="State/County"
+                                            required (blur)="tpSiteLogValidationErrors()">
+                                            <mat-option *ngFor="let element of stateFilterList" [value]="element.name"
+                                                (onSelectionChange)="LOVSelectionChanged($event,'City',element.id, element)">
+                                                {{ element.name }}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="tpFormErrors.tpSiteStateCounty">
+                                            {{tpFormErrors.tpSiteStateCounty}}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div fxFlex="50" fxLayoutGap="20px">
+
+                                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <mat-select formControlName="tpSiteCity" placeholder="City" required
+                                            (blur)="tpSiteLogValidationErrors()">
+                                            <mat-option *ngFor="let element of cityFilterList" [value]="element.name">
+                                                {{ element.name }}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="tpFormErrors.tpSiteCity">{{tpFormErrors.tpSiteCity}}
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <input matInput placeholder="Postal Code" formControlName="tpSitePincode"
+                                            required (blur)="tpSiteLogValidationErrors()" maxlength="10">
+                                        <mat-error *ngIf="tpFormErrors.tpSitePincode">{{tpFormErrors.tpSitePincode}}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="50">
+                                    <input matInput placeholder="Phone Number" formControlName="tpSitePhone" required
+                                        (blur)="tpSiteLogValidationErrors()" maxlength="15" (keypress)="commonService.isWholeNumber($event)">
+                                    <mat-error *ngIf="tpFormErrors.tpSitePhone">{{tpFormErrors.tpSitePhone}}</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="5px" style="margin-top:20px;">
+                                <div fxFlex="100">
+                                    <mat-label>Contact Person:</mat-label>
+                                </div>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="20px">
+                                <mat-form-field class="materailFieldSize" fxFlex="100">
+                                    <input matInput placeholder="Person Name" formControlName="tpSitePersonName"
+                                        required (blur)="tpSiteLogValidationErrors()">
+                                    <mat-error *ngIf="tpFormErrors.tpSitePersonName">{{tpFormErrors.tpSitePersonName}}
+                                    </mat-error>
+                                </mat-form-field>
+                                <div fxFlex="50" fxLayoutGap="20px">
+                                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <input matInput placeholder="Phone Number"
+                                            formControlName="tpSitePersonPhoneNum" required
+                                            (blur)="tpSiteLogValidationErrors()" maxlength="15" (keypress)="commonService.isWholeNumber($event)">
+                                        <mat-error *ngIf="tpFormErrors.tpSitePersonPhoneNum">
+                                            {{tpFormErrors.tpSitePersonPhoneNum}}
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="materailFieldSize" fxFlex="50">
+                                        <input oninput="this.value = this.value.toLowerCase()" matInput placeholder="Email Address" formControlName="tpSitePersonEmail"
+                                            required (blur)="tpSiteLogValidationErrors()">
+                                        <mat-error *ngIf="tpFormErrors.tpSitePersonEmail">
+                                            {{tpFormErrors.tpSitePersonEmail}}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div  
+                                fxLayout="row wrap"
+                                fxFlex="2 0 0"
+                                fxLayoutGap="15px"
+                                class="marginT15">
+                                    <button mat-flat-button [ngClass]="'formButton saveButton'"
+                                        (click)="onTradingSiteSubmit()" color="primary">
+                                        Save
+                                    </button>
+                                    <button mat-flat-button [ngClass]="'formButton saveButton'" (click)="commonService.openConfirmationDialog('trading partner','tradingpartners/'+ tpTypeforTab)"
+                                        color="primary">
+                                        Cancel
+                                    </button>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </mat-step>
+</mat-horizontal-stepper>

@@ -1,0 +1,139 @@
+<div class="content-wrapper">
+    <!-- <app-breadcrumb></app-breadcrumb>    -->
+    <div class="contentBorder marginT15">
+        <div [ngClass]="'formHeader'" fxLayout="row">
+            <div fxFlex fxLayoutAlign="start">
+                <span class="formHeaderTitle">Additional Field Setup : </span>
+            </div>
+            <div fxLayoutAlign="end">
+            
+            </div>
+        </div>
+        <div class="padding15" fxLayout="column">
+            <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+                <form  [formGroup]="addlFieldSetup" autocomplete="off">
+                    <div fxLayout="column" fxFlex="50">
+                        <mat-form-field class="materailFieldSize" style="width: 200px;">
+                            <mat-select formControlName="screenId" placeholder="Screen Name" (blur)="addlFieldSetupLogValidationErrors()" required>
+                                <mat-option *ngFor="let element of screenNameList" [value]="element.value" (onSelectionChange)="screenNameChanged($event,element)">
+                                    {{element.label}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="addlFieldSetupFormErrors.screenId">{{addlFieldSetupFormErrors.screenId}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="column" fxFlex="5"></div>
+                    <div fxLayout="column" fxFlex="45">
+                        <mat-form-field class="materailFieldSize" style="width: 200px; visibility: hidden;" *ngIf='isIuRequired'>
+                            <mat-select formControlName="iuId" placeholder="Inventory Unit"  (blur)="addlFieldSetupLogValidationErrors()" required class="text-black-disabled" disabled> 
+                                <mat-option *ngFor="let element of iuList" [value]="element.value">
+                                    {{element.label}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="addlFieldSetupFormErrors.iuId">{{addlFieldSetupFormErrors.iuId}}</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+
+        <div class="container" fxLayout="column">
+            <div #customTable [ngClass]="!parameterDataSource.data.length || listProgress ? 'customTable ellipsisTable scrollHide' : 'customTable ellipsisTable'"
+                [ngStyle]="{'max-height': commonService.screenMaxHeight }">
+                <table mat-table matTableExporter [hiddenColumns]='[12]' #exporter="matTableExporter" [dataSource]="parameterDataSource"  matSort class="resize-table">
+                    <ng-container matColumnDef="addtlFieldNo">
+                        <th mat-header-cell *matHeaderCellDef  [ngClass]="'cursor-auto mat-header-column-'+columns[0].field" >
+                            <span >{{ columns[0].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i = index;" >
+                            <div>
+                                <span [ngClass]="'nonEditiableField'">
+                                    {{ i + 1 }} </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="labelName">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[1].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i = index;" class="word-break">
+                            <div>
+                                <mat-form-field [ngClass]="'inputMarginClass'" >
+                                    <input autocomplete="off" matInput [(ngModel)]="element.labelName"
+                                        >
+                                </mat-form-field>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="enabledFlag">
+                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"
+                        [ngClass]="'mat-header-column-'+columns[2].field" (mousedown)="commonService.onResizeColumn($event, 2, columns, matTableRef)">
+                           <span> {{ columns[2].name}}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="text-center">
+                            <span matTooltip="Enable Flag" [matTooltipPosition]="tooltipPosition" [ngClass]="'padding0'">
+                                <mat-checkbox fxLayout="row" fxLayoutAlign="center center"
+                                    [(ngModel)]="element.enabledFlag" >
+                                </mat-checkbox>
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="mandatoryFlag">
+                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"
+                         [ngClass]="'mat-header-column-'+columns[3].field" (mousedown)="commonService.onResizeColumn($event, 3, columns, matTableRef)">
+                           <span> {{ columns[3].name}}</span>
+                        </th>
+                        <td mat-cell *matCellDef="let element" >
+                            <span matTooltip="Mandatory Flag" [matTooltipPosition]="tooltipPosition" [ngClass]="'padding0'">
+                                <mat-checkbox fxLayout="row" fxLayoutAlign="center center"
+                                    [(ngModel)]="element.mandatoryFlag" >
+                                </mat-checkbox>
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="addlField">
+                        <th mat-header-cell *matHeaderCellDef   [ngClass]="'mat-header-column-'+columns[1].field" (mousedown)="commonService.onResizeColumn($event, 1, columns, matTableRef)">
+                            <span mat-sort-header>{{ columns[1].name }} </span>
+                        </th>
+                        <td mat-cell *matCellDef="let element; let i = index;" class="word-break">
+                            <div>
+                                <mat-form-field [ngClass]="'inputMarginClass'" >
+                                    <input autocomplete="off" matInput [(ngModel)]="element.addlField"
+                                     [disabled]='true' >
+                                </mat-form-field>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                  
+                    <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumns; sticky: true"></tr>
+                    <tr mat-row [ngClass]="{'highlightRowError': selectedRowIndex == i}" *matRowDef="let row; let i= index; columns: parameterDisplayedColumns;"></tr>
+                </table>
+                <ng-container *ngIf="listProgress">
+                    <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                </ng-container>
+                <ng-container *ngIf="!parameterDataSource.data.length && !listProgress">
+                    <div [ngClass]="'noDataFound'">
+                        <small>{{serialTableMessage}}</small>
+                    </div>
+                </ng-container>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <div [ngClass]="'formContainer'">
+                    <button *ngIf="parameterDataSource.data.length" mat-flat-button [ngClass]="saveInprogress ? 'saveInprogress formButton saveButton mr10': 'formButton saveButton mr10'" color="primary"
+                      (click)='submit($event)'>
+                        Save
+                    </button>
+                    <button  mat-flat-button [ngClass]="'formButton saveButton mr10'" *ngIf="parameterDataSource.data.length"
+                    (click)="cancelAddtnlField($event)"  >
+                       Cancel
+                   </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>

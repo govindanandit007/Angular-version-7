@@ -1,0 +1,46 @@
+    <!-- <h1 class="viewDialogHeader" mat-dialog-title>
+        <div fxLayout="row" fxLayoutGap="10px">
+            <div fxFlex="90" fxLayoutGap="10px"><span class="viewDialogTitle">{{messageHeader}}</span></div>
+            <div fxFlex="10" fxLayoutGap="10px">
+                <button mat-icon-button matDialogClose >
+                    <mat-icon class="viewDialogCloseIcon" mat-list-icon></mat-icon>
+                </button>
+            </div>
+        </div>
+    </h1>
+    <div mat-dialog-content [ngClass]="'pb-24'">
+       
+       <div fxLayout="row" fxLayoutGap="10px" style='margin-bottom: 20px;'>
+            <div fxFlex="5" fxLayoutGap="10px"></div>
+            <div fxFlex="95" fxLayoutGap="10px">
+                <span style="font-size: 14px;">{{messageBody}}</span>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutGap="10px" style='margin-bottom: 20px;'>
+            <div fxFlex="35" fxLayoutGap="10px"></div>
+            <div fxFlex="15" fxLayoutGap="10px">
+                <button mat-stroke-button class="orangeButtonBorder border-radius-3 colorAttribute"
+                color="primary" (click)="navigate()">
+                    Yes
+                </button>
+            </div>
+            <div fxFlex="15" fxLayoutGap="10px">
+                <button mat-stroke-button class="orangeButtonBorder border-radius-3 colorAttribute"
+                color="primary" (click)="close()">
+                    No
+                </button>
+            </div>
+            <div fxFlex="35" fxLayoutGap="10px"></div>
+        </div>
+    </div>   -->
+
+    <div mat-dialog-container>
+        <h2 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle class="messageHeaderTitle mat-dialog-title">{{messageHeader}}</h2>
+        <div mat-dialog-content>
+            <p class="pl-20">{{messageBody}}</p>
+        </div>
+        <div mat-dialog-actions class="padding10">
+            <button mat-flat-button color="primary"  class="formButton saveButton mr10" (click)="navigate()">Yes</button>
+            <button mat-flat-button  color="accent" class="formButton cancelButton" (click)="close()">No</button>
+        </div>
+    </div>

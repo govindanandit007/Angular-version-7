@@ -1,0 +1,132 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle"> User View</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24 roleviewContent'">
+    <div class="container" fxLayout="column">
+        <div [ngClass]="'mb10'" fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex="75">
+                <div fxLayout="row" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex>
+                        <span [ngClass]="'viewDialogDataTitle'">User Name</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].userName}}</span>
+                    </div>
+                </div>
+                <div fxLayout="row" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex>
+                        <span [ngClass]="'viewDialogDataTitle'">User Description</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].userDescription ? data[0].userDescription : '-'}}</span>
+                    </div>
+                </div>
+                <div fxLayout="row" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex="50">
+                        <span [ngClass]="'viewDialogDataTitle'">User Email</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].userEmail}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="50">
+                        <span [ngClass]="'viewDialogDataTitle'">Password Validity</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].userPswdValidityDays ? data[0].userPswdValidityDays : '-'}}</span>
+                    </div>
+                </div>
+                <div fxLayout="row" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex="50">
+                        <span [ngClass]="'viewDialogDataTitle'">Start Date</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].userStartDate | date}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="50">
+                        <span [ngClass]="'viewDialogDataTitle'">End Date</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].userEndDate ? (data[0].userEndDate | date) : '-'}}</span>
+                    </div>
+                </div>
+                <div fxLayout="row" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex="50">
+                        <span [ngClass]="'viwDialogData'">
+                            <mat-checkbox class="materailFieldSize" disabled='true'
+                                [(ngModel)]="data[0].userEnabledFlag">
+                                Enabled Flag</mat-checkbox>
+                        </span>
+                    </div>
+                    <div fxLayout="column" fxFlex="50">
+                        <span [ngClass]="'viwDialogData'">
+                            <mat-checkbox class="materailFieldSize" disabled='true' [(ngModel)]="data[0].userAdminFlag">
+                                Admin Flag</mat-checkbox>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <span class="thumb150" fxLayoutAlign="center center"><img [src]="userImgURL" alt="user"></span>
+            </div>
+        </div>
+        <div [ngClass]="'marginT15'" fxLayout="row" fxLayoutGap="5px">
+            <div fxFlex="100" [ngClass]="'viewDialogLabelBar'">
+                <mat-label [ngClass]="'viewDialogLabel'">Roles :</mat-label>
+            </div>
+        </div>
+        <div [ngClass]="'customTable'" [ngStyle]="{ 'min-width': 'auto', 'max-height': '240px' }">
+            <table mat-table [dataSource]="parameterDataSource">
+                <ng-container matColumnDef="userRoleId">
+                    <th mat-header-cell *matHeaderCellDef>#</th>
+                    <td mat-cell *matCellDef="let element; let i=index">
+                        <span>{{i+1}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="userRoleName">
+                    <th mat-header-cell *matHeaderCellDef>Role Name</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.userRoleName
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="userRoleStartDate">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'">
+                        Start Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                                element.userRoleStartDate | date
+                            }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="userRoleEndDate">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'">
+                        End Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">
+                            {{ element.userRoleEndDate ? ( element.userRoleEndDate | date ) : '-' }}
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="userRoleEnabledFlag">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'width80'">
+                        Enable Flag
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">
+                            <mat-checkbox fxLayout="row" fxLayoutAlign="center center"
+                                [(ngModel)]="element.userRoleEnabledFlag" disabled='true'>
+                            </mat-checkbox>
+                        </span>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="userRoleViewdColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: userRoleViewdColumns"></tr>
+            </table>
+            <ng-container *ngIf="
+                    !parameterDataSource.data.length">
+                <div [ngClass]="'noDataFound'"><small>No Role Defined</small></div>
+            </ng-container>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions [ngClass]="'viewActionFooter'">
+    <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data[0].userId"
+        cdkFocusInitial>Edit</button>
+</div>

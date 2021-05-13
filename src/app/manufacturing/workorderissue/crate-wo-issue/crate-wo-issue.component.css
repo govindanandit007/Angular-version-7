@@ -1,0 +1,320 @@
+.formHeader{
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc
+}
+.formHeaderTitle{
+    font-weight: 500;
+}
+.roleSearchBox{
+    background-color:#f2f2f4;
+    padding:10px 10px 10px 20px;
+    position: relative;
+}
+.searchBoxLabel{
+    font-size:14px;
+    margin-left: 0px;
+}
+.searchInput{
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    margin: 0 10px;
+    background: #fff;
+     width: 45%;
+    font-size: 14px;
+}
+.roleSearchBox .mat-flat-button.formButton{
+    height:28px;
+    line-height: 28px;
+}
+.roleSearchBox .mat-error{
+    display: inline-block;
+    font-size:12px;
+}
+.actionColumn {
+    min-width: 60px;
+}
+.transact-date {
+    width: 120px !important;
+}
+th.mat-header-cell, td.mat-cell{
+    padding-right:20px;
+}
+.first-td{
+    padding-left:14px !important;
+}
+th.mat-header-cell:last-child{
+    padding-right:0;
+}
+/* .mat-column-action{
+    border-left:1px solid red;
+} */
+.dateField{
+    max-width: fit-content;
+    display: contents;
+}
+.percent2{
+    width: 2%;
+}
+.percent3{
+    width: 3%;
+}
+.percent5{
+    width: 5%;
+}
+.percent7{
+    width: 7%;
+}
+.percent8{
+    width: 8%;
+}
+.percent10{
+    width: 10%;
+}
+.percent12{
+    width: 12%;
+}
+.percent13{
+    width: 13%;
+}
+
+.percent14{
+    width: 14%;
+}
+.percent15{
+    width: 15%;
+}
+.percent17{
+    width: 17%;
+}
+.percent18{
+    width: 18%;
+}
+.percent20{
+    width: 20%;
+}
+.percent30{
+    width: 24%;
+}
+.deleteDialog .mat-dialog-content{
+  padding: 0px 14px 10px 14px;
+  font-size: 14px;
+}
+.mat-dialog-title {
+    margin: 0 0 0px;
+    display: block;
+}
+/* 
+.viewDialogHeader.mat-dialog-title{
+  padding: 2px 0 0px 10px;
+  margin: 0px;
+}
+
+.mat-dialog-content{
+  padding: 0px 0px 10px 0px;
+  min-height: 60px;
+} */
+
+.mandatory {
+    margin-left: 5px;
+    margin-right: 5px;
+    color: #f80707;
+    font-size: 14px;
+}
+
+.mat-form-field1 {
+    width: 100px !important;
+    margin-right: 10px;
+}
+.mat-form-field3 {
+    width: 50px !important;
+    margin-right: 10px;
+}
+.mat-form-field2 {
+    width: 45% !important;
+    margin-right: 0px;
+    margin-left: 0px;
+   
+}
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: rgb(242 242 244) !important;
+}
+.width100 {
+    min-width: 200px !important;
+
+}
+
+::ng-deep .setCircle .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle{
+    border-color: #1a71b1 !important;
+}
+::ng-deep .mat-primary .mat-pseudo-checkbox-checked, .mat-primary .mat-pseudo-checkbox-indeterminate {
+    background: #1a71b1!important;
+}
+::ng-deep .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+    color: #1a71b1!important;
+} 
+::ng-deep .setCircle .mat-radio-button.mat-accent .mat-radio-inner-circle{
+    border-color: #1a71b1 !important;
+    background-color: #1a71b1 !important;
+  }
+  .errorblock {
+    display: block;
+    position: absolute;
+    top: 60px;
+    left: 30px;
+  }
+.example-additional-selection {
+    opacity: 0.75;
+    font-size: 0.75em;
+  }
+.mat-form-field-type-mat-native-select.mat-form-field-disabled
+.mat-form-field-infix::after,
+.mat-input-element:disabled,::ng-deep .mat-select-disabled .mat-select-value, .inputDisable {
+color: #000000 !important;
+}
+.mr5 {
+    margin-right: 5px;
+}
+.mt10 {
+    margin-top:10px ;
+}
+.mat-toolbar{
+    background: none;
+}
+
+
+.dialogSubtitle{
+    background-color: rgb(221, 221, 221);
+    height: 40px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .setBorder{
+    border-radius: 5px;
+    box-shadow: 0 0 0 1px #ebebeb;
+  }
+
+  .dialogBoxHeader{
+    margin-right: 0px !important;
+    background-color:#ebebeb;
+    border-radius: 5px 5px 0px 0px;
+    height: 40px;
+    align-items: center;
+    display: flex;
+    justify-items: right;
+    padding-left: 10px;
+    z-index: 1;
+    margin-top: -2px;
+  }
+
+  .dialogBoxHeader.right{
+    color: black;
+    justify-content: center;
+  }
+
+  .dialogBoxHeader.left{
+    background-color: #098ccd;
+    color: white;
+    justify-content: center;
+  }
+
+  .dialogBoxHeader.rightRadius{
+    border-radius: 0px 5px 0px 0px;
+  }
+
+  .dialogBoxHeader.leftRadius{
+    border-radius: 5px 0px 0px 0px;
+  }
+
+  .setAlignment{
+    font-size: 14px;
+    padding-top: 10px;
+    font-weight: 600;
+  }
+
+  .setBorderBtm{
+    border-bottom: 1px solid #ebebeb;
+    padding-bottom: 8px;
+  }
+
+  .setEllipsis{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 5px;
+  }
+
+  .wrap{
+    padding-right: 5px;
+    word-wrap: break-word;
+  }
+  .inputWidthClass {
+      width:70% !important;
+  }
+  .center{
+      align-items: center;
+  }
+  .ml5 {
+      margin-left: 5px;
+  }
+  /* .highlightRowError td.mat-cell:first-child {
+    border-left: 1px solid red;
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-left-color: red;
+}
+.highlightRowError td.mat-cell  {
+    border-bottom: 1px solid red;
+    border-top: 1px solid red;
+}
+.highlightRowError td.mat-cell:last-child {
+    border-right: 1px solid red;
+} */
+
+ .mat-option.mat-option-disabled{
+    color: rgba(0,0,0,.87) !important;
+}
+.mat-label{
+    color: rgba(0,0,0,.87) !important;
+
+}
+.text-black-disabled.mat-select-disabled .mat-select-value {
+    color: rgba(0,0,0,.87) !important;
+}
+.mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after, .mat-input-element:disabled {
+    color: rgba(0,0,0,.87) !important;
+}
+
+.badge1{
+    padding: 4px 8px;
+    background-color: #dddddd;
+    border-radius: 50%;
+    color: #1a71b1;
+    font-size: 10px;
+    box-sizing: border-box;
+    width: 23px;
+    height: 23px;
+    display: inline-block;
+    text-align: center;
+    min-width: auto;
+    user-select: none;
+}
+
+.badge1:hover, .badge2:hover{
+    background-color: #1a71b1;
+    color: white;
+    cursor: pointer;
+}
+
+.badge2{
+    background-color: #dddddd;
+    padding: 3px 6px;
+    border-radius: 13px;
+    color: #1a71b1;
+    font-size: 10px;
+    min-width: auto;
+    user-select: none;
+}
+[mat-dialog-title] {    
+    cursor: move;
+  }

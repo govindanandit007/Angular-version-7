@@ -1,0 +1,146 @@
+.formHeader {
+    padding: 7px 10px;
+    border-bottom: 1px solid #ccc;
+}
+.top-688  {
+    top: 68px !important;
+}
+
+.screenTitle, .content .contentTitle{
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom:10px;
+}
+.content-wrapper1 {
+    padding: 0px;
+    /* width:  76.5% ; */
+}
+.searchRight {
+    position: fixed;
+    right: 5px;
+}
+.content{
+    border:1px solid #ccc;
+    border-radius: 3px;
+    padding:10px;
+}
+.content .mat-checkbox{
+    margin-bottom:10px;
+}
+.searchBoxLabel{
+    font-size:13px;
+}
+.no-screen-found{
+    font-size:11px;
+    padding-bottom:10px;
+}
+.viewActionFooter{
+    padding: 5px 15px !important;
+    border-top: 1px solid #ccc;
+}
+.pb-24{
+    padding-bottom: 24px !important;
+}
+
+.customTable {
+    overflow-y: auto;
+}
+.customWidth100 {
+    min-width: 110px;
+}
+.minimumWidth{
+    min-width: 40px;
+}
+.customWidth80{
+    min-width: 80px;
+}
+.scrollHide {
+    overflow: hidden;
+}
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff !important;
+}
+.roleSearchBox{
+    background-color:#f2f2f4;
+    padding:10px 10px 10px 20px;
+    position: relative;
+}
+.searchBoxLabel{
+    font-size: 13px;
+    color: #4F4F4E;
+}
+.searchInput{
+    border: 1px solid #ccc;
+    padding: 0px 10px;
+    margin: 0 10px;
+    background: #fff;
+    width: 250px;
+    font-size: 14px;
+    min-height: 25px;
+    border-radius: 3px;
+}
+.searchInput:disabled{
+    background:transparent;
+}
+.roleSearchBox .mat-flat-button.formButton{
+    height:28px;
+    line-height: 28px;
+}
+.roleSearchBox .mat-error{
+    display: inline-block;
+    font-size:12px;
+}
+::ng-deep .searchInput .mat-select-trigger {
+    height: 25px;
+}
+
+::ng-deep .searchInput .mat-select-trigger .mat-select-value{
+    padding: 5px 0px;
+    height: 25px;
+    box-sizing: border-box;
+}
+
+.actionIcons1 span {
+  width: 30px;
+  height: 30px;
+  padding: 8px 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin: 0px 0px !important;
+  box-sizing: border-box;
+  font-size: 18px;
+  padding: 0px 4px;
+  color: #9e9797;
+  user-select: none;
+}
+.actionIcons1 span:hover,
+.editIconEnable {
+    color: #52abda !important;
+    cursor: pointer;
+}
+.actionIcons1 span .material-icons {
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.actionIcons1 span {
+  font-size: 16px;
+  padding: 0px 4px;
+  color: #9e9797;
+}
+
+.actionIcons1 {
+    min-width: 80px !important;
+    padding-left: 5px !important;
+    /* text-align: center !important; */
+    padding-right: 0px !important;
+}
+
+.actionColumn1{
+  min-width: 80px !important;
+  padding-left: 10px !important;
+  padding-right: 0px !important;
+}

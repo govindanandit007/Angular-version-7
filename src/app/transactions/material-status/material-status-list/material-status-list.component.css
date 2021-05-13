@@ -1,0 +1,107 @@
+.formHeader {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+
+.customTable {
+    overflow-x: auto;
+}
+.content-wrapper1 {
+    padding: 0px;
+    /* width:  76.5% ; */
+}
+.searchRight {
+    position: fixed;
+    right: 5px;
+}
+
+.customDescriptionField {
+    margin-right: 10px;
+    /* min-width: 250px; */
+}
+
+.nonEditiableDesField {
+    display: inline-block;
+    width: 160px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+    padding-top: 7px;
+    color: #5b5b5b;
+}
+
+.inputWidthClass {
+    margin-right: 10px;
+    /* max-width: 95px; */
+}
+.locCodeField {
+    margin-right: 10px;
+    /* max-width: 120px; */
+}
+
+.checkFieldWidthClass {
+    /* min-width: 80px; */
+}
+
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+}
+
+.scrollHide {
+    overflow-x: auto;
+}
+
+
+.dateField {
+    margin-right: 10px;
+}
+.inputMarginClass {
+    margin-right: 10px;
+    /* max-width: 90px; */
+}
+.dateFieldWidth{
+    /* min-width: 120px; */
+    /* max-width: 120px; */
+}
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff;
+}
+.mat-column-action {
+    /* border-left: 1px solid #ccc; */
+}
+
+::ng-deep .selectArrowHide.mat-select.mat-select-disabled .mat-select-arrow {
+    color: #fff;
+}
+
+th.mat-header-cell, td.mat-cell{
+    padding-right:10px;
+}
+th.mat-header-cell:last-child{
+    padding-right:0;
+}
+
+::ng-deep .mat-select-disabled .mat-select-value {
+    color: black !important;
+}
+.mat-form-field-type-mat-native-select.mat-form-field-disabled
+    .mat-form-field-infix::after,
+.mat-input-element:disabled {
+    color: #000000;
+}
+::ng-deep .nonEditiableField{
+    color: black !important;
+}
+/* .ellipsisTable td{
+    overflow: auto !important;
+}
+.actionIcons{
+    width: 80px !important;
+} */

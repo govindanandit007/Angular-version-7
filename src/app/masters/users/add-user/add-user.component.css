@@ -1,0 +1,206 @@
+.stepperContent {
+    background-color: #fff;
+    /* padding:0 0px 20px; */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+.formHeader {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+.custom-file-input {
+    font-weight: normal;
+    font-family: inherit;
+    background: #f2f2f4;
+    position: relative;
+    min-height: 135px;
+    border: dashed 2px #d9d9d9;
+    color: transparent;
+    width: 100%;
+}
+.custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+    padding-left: 30px;
+    font-weight: 500;
+    color: rgb(88, 88, 88);
+}
+.custom-file-input::before,
+.custom-file-input::after {
+    display: block;
+    color: #676666;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: -15px;
+    bottom: 0;
+    height: 25px;
+}
+.custom-file-input::before {
+    font-family: 'icomoon';
+    content: '\e928';
+    font-size: 20px;
+}
+
+.custom-file-input::after {
+    content: 'Choose on image or drag it here.';
+    top: 25px;
+}
+
+.custom-file-input:hover::before {
+    border-color: rgb(168, 163, 163);
+}
+.custom-file-input:active {
+    outline: 0;
+}
+.custom-file-input:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+/* --------------------------------------- */
+
+.formHeader {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+}
+.formHeaderTitle {
+    font-weight: 500;
+}
+.customTable {
+    min-width: 1000px;
+    overflow-x: hidden;    
+}
+.customWidthClass {
+    min-width: 135px;
+}
+.lookupSearchBox {
+    background-color: #f2f2f4;
+    padding: 10px 10px 10px 20px;
+}
+.searchBoxLabel {
+    font-size: 14px;
+}
+.searchInput {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    margin: 0 10px;
+}
+.lookupSearchBox .mat-flat-button.formButton {
+    height: 28px;
+    line-height: 28px;
+}
+.actionColumn {
+    min-width: 60px;
+}
+.actionIcons span {
+    min-width: 25px;
+    padding: 8px 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0px 0px !important;
+    box-sizing: border-box;
+}
+.inputMarginClass {
+    display: block;
+}
+.mat-column-lookupId {
+    width: 60px;
+}
+/* .mat-column-lookupValue, .mat-column-lookupValueDesc{
+    width:15%;
+} */
+.mat-column-lookupName,
+.mat-column-lookupMainDesc {
+    width: 35%;
+}
+.mat-column-lookupValueEnabledFlag,
+.mat-column-effectiveFrom,
+.mat-column-effectiveTo {
+    width: 100px;
+}
+.mat-column-parentValue {
+    width: 120px;
+}
+.mat-column-parentValue,
+.mat-column-parentCode {
+    width: 90px;
+}
+
+::ng-deep .maxWidth .mat-form-field,
+::ng-deep .maxWidthSelect .mat-select {
+    max-width: 90%;
+}
+::ng-deep .selectArrowHide.mat-select .mat-select-arrow {
+    color: #fff;
+}
+
+::ng-deep .mat-input-element{
+    color: rgba(0,0,0,.87) !important;
+}
+
+.setWidth {
+    min-width: 90%;
+}
+.stickyColumn {
+    width: 50px;
+    padding-left: 0px !important;
+}
+.stickyColumn2 {
+    width: 480px;
+}
+.passwordIcon{
+    cursor: pointer;
+    font-size: 10px;
+}
+
+.marginforLogo {
+  margin-left: 10px;
+  border: dashed 2px #d9d9d9;;
+  padding: 5px;
+  position: relative;
+}
+
+.editImageIcon {
+padding: 5px;
+background-color: #fff;
+border-radius: 50%;
+position: absolute;
+left: 50%;
+top: 50%;
+transform: translate(-50%, -50%);
+}
+
+.enableImageChangeOption {
+  display: none;
+  background-color: rgba(0, 0, 0, 0.62);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.marginforLogo:hover{
+  color: #676666;
+  cursor: pointer;
+}
+
+.marginforLogo:hover .enableImageChangeOption{
+  display: block;
+}
+
+.full-container-img {
+  width: 100%;
+  height: 100%;
+}
+
+.minWidth{
+    min-width: 100px;
+}

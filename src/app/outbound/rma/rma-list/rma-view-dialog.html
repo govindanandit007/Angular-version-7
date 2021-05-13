@@ -1,0 +1,218 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle">RMA Details</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" tabindex="0" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'">
+    <div class="container" fxLayout="column" *ngIf="!dataProgress">
+        <div [ngClass]="'mb10'" fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex>
+                <div fxLayout="row" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viewDialogDataTitle'">SO Number</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].soNumber ? data[0].soNumber : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viewDialogDataTitle'">RMA</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].rmaNumber ? data[0].rmaNumber : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viewDialogDataTitle'">OU</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].ouCode ? data[0].ouCode : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Type</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].soTypeName ? data[0].soTypeName : 'Return Material Authorization'}}</span>
+                    
+                    </div>
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viewDialogDataTitle'">RMA Status</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].rmaStatusName ? data[0].rmaStatusName : '-' }}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viewDialogDataTitle'">SO Status</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].statusName ? data[0].statusName : '-' }}</span>
+                    </div>
+                </div>
+                
+                <div fxLayout="row" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viewDialogDataTitle'">Date</span>
+                        <span [ngClass]="'viwDialogData'">{{rmaDate ? (rmaDate | date) : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viewDialogDataTitle'">Priority</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].priorityName ? (data[0].priorityName) : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="15">
+                        <span [ngClass]="'viewDialogDataTitle'">Customer</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].customerName ? data[0].customerName : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Customer Site</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].customerSiteName ? data[0].customerSiteName : '-'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+       <div [ngClass]="'marginT15'" fxLayout="row" fxLayoutGap="5px">
+            <div fxFlex="100" [ngClass]="'viewDialogLabelBar'">
+                <mat-label [ngClass]="'viewDialogLabel'">RMA Lines :</mat-label>
+            </div>
+        </div>
+        <div [ngClass]="'customTable rmaDialogTable'" [ngStyle]="{ 'min-width': 'auto', 'max-height': '240px' }">
+            <table mat-table [dataSource]="parameterDataSource" style="min-width: 1600px;">
+                <ng-container matColumnDef="soLineNumber">
+                    <th mat-header-cell *matHeaderCellDef>RMA Line #</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soLineNumber ? element.soLineNumber : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="rmaSoLineNum">
+                    <th mat-header-cell *matHeaderCellDef>SO Line #</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.rmaSoLineNum ? element.rmaSoLineNum : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soItemId">
+                    <th mat-header-cell *matHeaderCellDef>Item</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.itemName ? element.itemName : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soItemRevisionId">
+                    <th mat-header-cell *matHeaderCellDef>Item Revision</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.revsnNumber ? element.revsnNumber : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soQtyUomCode">
+                    <th mat-header-cell *matHeaderCellDef>UOM</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.UOM !== null ? element.UOM : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soRemainingQty">
+                    <th mat-header-cell *matHeaderCellDef>SO Rem. Qty</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soRemainingQty ? element.soRemainingQty : '0'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soLineQuantity">
+                    <th mat-header-cell *matHeaderCellDef>RMA Qty</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soLineQuantity ? element.soLineQuantity : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="rmaSoLineQty">
+                    <th mat-header-cell *matHeaderCellDef>Shipped Qty</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.rmaSoLineQty ? element.rmaSoLineQty : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="crossDockEnabled">
+                    <th mat-header-cell *matHeaderCellDef class="text-center">Cross Dock Enabled</th>
+                    <td mat-cell *matCellDef="let element"  class="text-center">
+                        <mat-checkbox [(ngModel)]="element.crossDockEnabled" value="element.crossDockEnabled" [disabled]="true">
+                            <mat-icon>{{element.crossDockEnabled}}</mat-icon>
+                        </mat-checkbox>
+                         
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soUomCode">
+                    <th mat-header-cell *matHeaderCellDef>UOM</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.UOM ? element.UOM : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+               
+                <ng-container matColumnDef="soLineReceiptQty">
+                    <th mat-header-cell *matHeaderCellDef>Received Qty</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soLineReceiptQty !==null ? element.soLineReceiptQty : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="soShippedQuantity">
+                    <th mat-header-cell *matHeaderCellDef>Shipped Qty</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soShippedQuantity !==null ? element.soShippedQuantity : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soReservedQuantity">
+                    <th mat-header-cell *matHeaderCellDef>Received Qty</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soLineReceiptQty !==null ? element.soLineReceiptQty : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soRmaRoutingType">
+                    <th mat-header-cell *matHeaderCellDef>Receipt routing</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soRmaRoutingType !==null ? element.soRmaRoutingType : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="soLineStatus">
+                    <th mat-header-cell *matHeaderCellDef>Status</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.soLineStatus ? (element.soLineStatusName | titlecase) : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="returnableDate">
+                    <th mat-header-cell *matHeaderCellDef>Returnable Date</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.returnableDate ? (element.returnableDate) : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                
+                <tr mat-header-row *matHeaderRowDef="soViewdColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: soViewdColumns"></tr>
+            </table>
+        </div>
+    </div>
+    <div class="container" fxLayout="column" *ngIf="dataProgress">
+        <ng-container>
+            <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+        </ng-container>
+    </div>
+</div>
+<div mat-dialog-actions [ngClass]="'viewActionFooter'" *ngIf="soHostId === null">
+    <button *ngIf="addRMA" mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data[0]"
+        cdkFocusInitial>Add RMA</button>
+    <button *ngIf="editRMA" mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data[0]"
+        cdkFocusInitial>Edit RMA</button>
+</div>

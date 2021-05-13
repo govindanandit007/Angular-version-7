@@ -1,0 +1,130 @@
+{
+    "type": "ONHAND",
+    "searchType": "onhand",
+    "searchFor": "Search Onhand",
+    "companyKey": "",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "onhandType",
+            "label": "Stock location",
+            "key": "stockLocation",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "itemCode",
+            "label": "Item Name",
+            "key": "itemName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "locatorGroupCode",
+            "label": "Location Group",
+            "key": "lgCode",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "onhandStockLocator",
+            "label": "Stock Locator",
+            "key": "locatorCode",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "onhandLPN",
+            "label": "LPN",
+            "key": "lpnNum",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "BatchFrom",
+            "label": "Batch Number",
+            "key": "batchNumber",
+            "value": "",
+            "formType": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "SerialFrom",
+            "label": "From",
+            "key": "serialNumber",
+            "value": "",
+            "formType": "ONHAND",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "SerialTo",
+            "label": "To",
+            "key": "serialNumber",
+            "enable": true,
+            "value": "",
+            "formType": "ONHAND",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "IuCode",
+            "label": "IU",
+            "key": "iuId",
+            "isOnhand": "onhandIU",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

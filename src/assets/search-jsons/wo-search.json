@@ -1,0 +1,152 @@
+{
+    "type": "WO",
+    "searchType": "workorderNo",
+    "searchFor": "Search Work Orders",
+    "companyKey": "",
+    "searchArray": [
+      
+        {
+            "type": "LOV",
+            "lovType": "woNumber",
+            "label": "Work Order Number",
+            "key": "woNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "assemblyItem",
+            "label": "Assembly Item",
+            "key": "woAssmItemId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "woCustomerName",
+            "label": "Customer Name",
+            "key": "customer",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "soNumber",
+            "label": "Sales Order Number",
+            "key": "soNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "type",
+            "label": "Type",
+            "key": "woType",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "activityType",
+            "label": " Sub Type",
+            "key": "woSubType",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }                
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "woPriorityName",
+            "label": "Priority",
+            "key": "woPriority",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "woStatus",
+            "label": "Status",
+            "key": "woStatus",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "startDate",
+            "label": "Start date",
+            "key": "startDate",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "completionDate",
+            "label": "Completion date",
+            "key": "completionDate",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "IuCode",
+            "label": "IU",
+            "key": "woIuId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

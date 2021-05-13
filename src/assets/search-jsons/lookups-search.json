@@ -1,0 +1,47 @@
+{
+    "type": "LOOKUP",
+    "searchType": "lookup",
+    "searchFor": "Search Lookups",
+    "companyKey": "lookupCompanyId",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "code",
+            "label": "Lookup Name",
+            "key": "lookupName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "name",
+            "label": "Lookup Description",
+            "key": "lookupMainDesc",
+            "lookupType": "lookupDes",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "lookupEnabledFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": "" },
+                { "label": "Enabled", "value": "Y" },
+                { "label": "Disabled", "value": "N" }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,309 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle">Purchase Order</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" tabindex="0" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+</h1>
+<div mat-dialog-content [ngClass]="'pb-24'">
+    <div class="container" fxLayout="column">
+        <div [ngClass]="'mb10'" fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex>
+                <div fxLayout="row" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">PO Number</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].poNumber ? data[0].poNumber : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">OU</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].ouCode ? data[0].ouCode : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Description</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].poDescription ? data[0].poDescription : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Type</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].poTypeName ? data[0].poTypeName : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Status</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].lookupValueDesc ? data[0].lookupValueDesc : '-'}}</span>
+                    </div>
+                   
+                </div>
+                <div fxLayout="row" [ngClass]="'mb10'">
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Supplier</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].supplierName ? data[0].supplierName : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Supplier Site</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].supplierSiteName ? data[0].supplierSiteName : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Note to Supplier</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].poNoteToSupplier ? data[0].poNoteToSupplier : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Currency</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].poCurrencyCodeValue ? data[0].poCurrencyCodeValue : '-'}}</span>
+                    </div>
+                    <div fxLayout="column" fxFlex="20">
+                        <span [ngClass]="'viewDialogDataTitle'">Amount</span>
+                        <span [ngClass]="'viwDialogData'">{{data[0].poAmount !== '' ? data[0].poAmount : '-'}}</span>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+       <div [ngClass]="'marginT15'" fxLayout="row" fxLayoutGap="5px">
+            <div fxFlex="100" [ngClass]="'viewDialogLabelBar'">
+                <mat-label [ngClass]="'viewDialogLabel'">Purchase Order Lines :</mat-label>
+            </div>
+        </div>
+        <div [ngClass]="'customTable'" [ngStyle]="{ 'min-width': 'auto','min-height': '100px', 'max-height': '240px' }">
+            <table #poViewTable mat-table [dataSource]="parameterDataSource" style="min-width: 1500px;">
+                <ng-container matColumnDef="poLineNumber">
+                    <th mat-header-cell *matHeaderCellDef>#</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.poLineNumber ? element.poLineNumber : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poIuId">
+                    <th mat-header-cell *matHeaderCellDef>IU</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.iuName ? element.iuName : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="poItemId">
+                    <th mat-header-cell *matHeaderCellDef>Item</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.itemName ? element.itemName : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poItemRevision">
+                    <th mat-header-cell *matHeaderCellDef>Item Revision</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.poItemRevision ? element.poItemRevision : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poUomCode">
+                    <th mat-header-cell *matHeaderCellDef>UOM</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">
+                            <mat-select [(ngModel)]="element.poUomCode" [ngClass]="'pointerEventnone selectArrowHide'">
+                            <mat-option *ngFor="let uom of element.UOMList" [value]="uom.value">
+                                {{uom.label}}
+                            </mat-option>
+                            </mat-select>
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poQuantity">
+                    <th mat-header-cell *matHeaderCellDef>Quantity</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.poQuantity ? element.poQuantity : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poPrice">
+                    <th mat-header-cell *matHeaderCellDef>Price</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.poPrice ? element.poPrice : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poCurrencyCodeValue">
+                    <th mat-header-cell *matHeaderCellDef>Currency</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.poCurrencyCodeValue ? element.poCurrencyCodeValue : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poPlannedReceiptDate">
+                    <th mat-header-cell *matHeaderCellDef>Planned Receipt Date</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                             element.poPlannedReceiptDate ? (element.poPlannedReceiptDate | date) : '-'
+
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poLineReceiptQty">
+                    <th mat-header-cell *matHeaderCellDef>Receipt Quantity</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.poLineReceiptQty ? element.poLineReceiptQty : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poReceiptRouting">
+                    <th mat-header-cell *matHeaderCellDef>Receipt Routing</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{ element.poReceiptRouting | titlecase }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="poLineAmount">
+                    <th mat-header-cell *matHeaderCellDef>Line Amount</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">{{
+                            element.poLineAmount ? element.poLineAmount : '-'
+                        }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                   <th mat-header-cell *matHeaderCellDef style="width: 80px !important;">Cross Dock</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span  class="icon-cross" 
+                            matRipple matTooltip="cross dock"
+                            [matTooltipPosition]="tooltipPosition" [matRippleColor]="'#098ccd3b'" [matRippleCentered]="true"
+                            [matRippleRadius]="false"
+                            (click)="openCrossDockPopup($event, null, element, crossDockListDialog)">
+                        </span>
+                    </td>  
+                </ng-container>
+                
+                <tr mat-header-row *matHeaderRowDef="poViewdColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: poViewdColumns"></tr>
+            </table>
+            <ng-container *ngIf="
+                    !parameterDataSource.data.length">
+                <div [ngClass]="'noDataFound'"><small>No Purchase Order Lines Defined</small></div>
+            </ng-container>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions [ngClass]="'viewActionFooter'" *ngIf="data[0].poHostId === null">
+    <div fxFlex='30'>  <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data[0].poId"
+        cdkFocusInitial>Edit</button>
+        </div>
+        <mat-paginator fxFlex='70' [pageSize]="pageSize" (page)="setPaginationSize($event)" #paginatorView   showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+    </mat-paginator>
+</div>
+
+<ng-template #crossDockListDialog>
+    <div mat-dialog-container>
+            <div fxLayout="row" fxLayoutGap="10px" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle class="messageHeaderTitle mat-dialog-title removePadding " style='height:50px'>
+                <div fxFlex="95" fxLayoutGap="10px"><span class="viewDialogTitle mt5">Cross Dock List</span></div>
+                <div  fxLayoutGap="10px">
+                    <button mat-icon-button (click)='closeDialog()' style="vertical-align: auto;">
+                        <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+        <div mat-dialog-content >
+            
+            <div class="container" fxLayout="column" >
+               
+                <div class="customTable" [ngClass]="!parameterDataSourceCrossDock.data.length || listProgressPopupCrossDock ? 'setScroll' : 'setScroll'" 
+                style="max-height: 280px; ">
+                    <table #crossDockTable mat-table [dataSource]="parameterDataSourceCrossDock" >
+                        <ng-container matColumnDef="No">
+                            <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+crossDockDialogColumns[0].field">
+                                {{ crossDockDialogColumns[0].name }} 
+                                
+                            </th>
+                            <td mat-cell *matCellDef="let element; let i = index;" >
+                                <div>
+                                    <span [ngClass]="'nonEditiableField'">
+                                        {{ paginatorCrossDock.pageSize * paginatorCrossDock.pageIndex + i + 1 }} </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="soNumber">
+                            <th mat-header-cell *matHeaderCellDef  [ngClass]="'mat-header-column-'+crossDockDialogColumns[1].field"  >
+                                {{ crossDockDialogColumns[1].name }}</th>
+                            <td mat-cell *matCellDef="let element; let i=index" >
+                               
+                                <div  >
+                                    <span [ngClass]="'nonEditiableField'"  >
+                                        {{element.soNumber }}
+                                        </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="soLineNumber">
+                            <th mat-header-cell *matHeaderCellDef [ngClass]="'mat-header-column-'+crossDockDialogColumns[2].field"  >
+                                {{ crossDockDialogColumns[2].name }} </th>
+                            <td mat-cell *matCellDef="let element; let i=index"  >
+                                 
+                                <div >
+                                    <span [ngClass]="'nonEditiableField'" >
+                                        {{element.soLineNumber}}
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="soLineQty">
+                            <th mat-header-cell *matHeaderCellDef  [ngClass]="'mat-header-column-'+crossDockDialogColumns[3].field"  >
+                                {{ crossDockDialogColumns[3].name }} </th>
+                            <td mat-cell *matCellDef="let element; let i=index" >
+                                
+                                <div>
+                                    <span [ngClass]="'nonEditiableField'"  >
+                                        {{element.soLineQty ? element.soLineQty : '-'}}
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="remainingQty">
+                            <th mat-header-cell *matHeaderCellDef  [ngClass]="'mat-header-column-'+crossDockDialogColumns[4].field"  >
+                                {{ crossDockDialogColumns[4].name }} </th>
+                            <td mat-cell *matCellDef="let element; let i=index" >
+                                 
+                                <div >
+                                    <span [ngClass]="'nonEditiableField'"  >
+                                        {{element.remainingQty ? element.remainingQty : '-'}}
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        
+                        <tr mat-header-row *matHeaderRowDef="parameterDisplayedColumnsCrossDock" ></tr>
+                        <tr mat-row  *matRowDef="let row; columns: parameterDisplayedColumnsCrossDock; let i = index;"></tr>
+                    </table>
+                    <ng-container *ngIf="listProgressPopupCrossDock">
+                        <mat-spinner [diameter]="40" [ngClass]="'loaderSpinner'"></mat-spinner>
+                    </ng-container>
+
+                    <ng-container *ngIf="!parameterDataSourceCrossDock.data.length && !listProgressPopupCrossDock ">
+                        <div [ngClass]="'positionRelative'" style="min-height:50px;">
+                            <div [ngClass]="'noDataFound'"><small>{{crossDockTableMessage}}</small></div>
+                        </div>
+                    </ng-container>
+               
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <div fxFlex='30'>                         
+                        <button  mat-flat-button [ngClass]="'formButton saveButton mr10'"
+                         (click)="closeDialog()">
+                           Back
+                        </button>
+                    </div>
+                    <mat-paginator fxFlex='70' [pageSize]="pageSize" (page)="setPaginationSize($event)" #paginatorCrossDock   showFirstLastButtons [ngClass]="'mat-paginator-sticky'">
+                    </mat-paginator>
+                </div>
+              
+               
+            </div>
+        </div>
+        
+    </div>
+    
+</ng-template>

@@ -1,0 +1,17 @@
+h1{
+    color:#ffa000;
+    font-size:1.8rem;
+}
+.text-grey{
+    color:#999;
+}
+.text-grey a{
+    text-decoration: none;
+    color: #098ccd;
+}
+.text-grey a:hover {
+    color: #606060;
+}
+.padding-top-10pc{
+    padding-top: 10%;
+}

@@ -1,0 +1,121 @@
+<h1 class="viewDialogHeader" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <mat-toolbar role="toolbar" class="task-header">
+        <span class="viewDialogTitle"> Lookup View</span>
+        <span class="fx-spacer"></span>
+        <button mat-icon-button (click)="onCloseClick()">
+            <mat-icon class="viewDialogCloseIcon" mat-list-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+
+</h1>
+<div mat-dialog-content>
+    <div class="container" fxLayout="column">
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxFlex="25">
+                <span [ngClass]="'viewDialogDataTitle'">Lookup Name</span>
+                <span [ngClass]="'viwDialogData'">{{data[0].lookupName}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="50">
+                <span [ngClass]="'viewDialogDataTitle'">Lookup Description</span>
+                <span [ngClass]="'viwDialogData'">{{data[0].lookupMainDesc}}</span>
+            </div>
+            <div fxLayout="column" fxFlex="25">
+                <mat-checkbox class="materailFieldSize" fxFlex="25" style="margin-top: 10px" disabled='true'
+                    [(ngModel)]="data[0].lookupEnabledFlag">
+                    Enabled Flag</mat-checkbox>
+            </div>
+        </div>
+
+        <div [ngClass]="'mb15'" fxLayout="row" fxLayoutGap="5px">
+            <div fxFlex="100" [ngClass]="'viewDialogLabelBar'">
+                <mat-label [ngClass]="'viewDialogLabel'">Lookup Values :</mat-label>
+            </div>
+        </div>
+        <div [ngClass]="'customTable'" [ngStyle]="{ 'min-width': 'auto', 'max-height': '240px' }">
+            <table mat-table [dataSource]="data" style="min-width: 1500px;">
+                <ng-container matColumnDef="lookupId">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'width110'">Code</th>
+                    <td mat-cell *matCellDef="let element">
+                        <div>
+                            <span [ngClass]="'nonEditiableField'">{{
+                                element.lookupId
+                            }}</span>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="lookupValue">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'width170'">Name</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">
+                            {{
+                                element.lookupValue
+                            }}
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="lookupValueDesc">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'width170'">Description</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">
+                            {{
+                                element.lookupValueDesc
+                            }}
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="parentValue">
+                    <th mat-header-cell *matHeaderCellDef>Parent Value</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">
+                            {{ element.parentValue ?  element.parentValue : '-'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="parentCode">
+                    <th mat-header-cell *matHeaderCellDef>Parent Lookup</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">
+                            {{ element.parentCode ? element.parentCode : '-' }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="effectiveFrom">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'customWidth80'">
+                        Effective From
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'nonEditiableField'">
+                            {{ element.effectiveFrom | date }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="effectiveTo">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'width150'">
+                        Effective To
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span *ngIf="element.effectiveTo" [ngClass]="'nonEditiableField'">
+                            {{ element.effectiveTo | date }}
+                        </span>
+                        <span *ngIf="!element.effectiveTo">-</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="lookupEnabledFlag">
+                    <th mat-header-cell *matHeaderCellDef [ngClass]="'width80 text-center'">
+                        Enable Flag
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span [ngClass]="'padding0'">
+                            <mat-checkbox fxLayout="row" fxLayoutAlign="center center"
+                                [(ngModel)]="element.lookupValueEnabledFlag" disabled='true'>
+                            </mat-checkbox>
+                        </span>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="lookupViewdColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: lookupViewdColumns"></tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-flat-button [ngClass]="'formButton saveButton'" color="primary" [mat-dialog-close]="data[0]"
+        cdkFocusInitial>Edit</button>
+</div>

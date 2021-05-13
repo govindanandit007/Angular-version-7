@@ -1,0 +1,103 @@
+{
+    "type": "SERIALNO",
+    "searchType": "serialNo",
+    "searchFor": "Search Serial Number",
+    "companyKey": "",
+    "searchArray": [
+       
+      
+        {
+            "type": "LOV",
+            "lovType": "itemCode",
+            "label": "Item Name",
+            "key": "itemName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "serialNum",
+            "label": "Serial Number",
+            "key": "serialNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "serialStatus",
+            "label": "Serial Status",
+            "key": "serialStatusId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "serialMaterialStatus",
+            "label": "Material Status",
+            "key": "materialStatusId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "SerialFrom",
+            "label": "From",
+            "key": "fromSerial",
+            "value": "",
+            "formType": "SERIAL",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "SerialTo",
+            "label": "To",
+            "key": "toSerial",
+            "value": "",
+            "formType": "SERIAL",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "IuCode",
+            "label": "IU",
+            "key": "serialIuId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

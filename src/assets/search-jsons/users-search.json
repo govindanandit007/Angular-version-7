@@ -1,0 +1,45 @@
+{
+    "type": "USER",
+    "searchType": "user",
+    "searchFor": "Search Users",
+    "companyKey": "userCompanyId",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "name",
+            "label": "User Name",
+            "key": "userId",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "userEnabledFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": "" },
+                { "label": "Yes", "value": "Y" },
+                { "label": "No", "value": "N" }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag2",
+            "label": "Admin Flag",
+            "key": "userAdminFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": "" },
+                { "label": "Yes", "value": "Y" },
+                { "label": "No", "value": "N" }
+            ]
+        }
+    ]
+}

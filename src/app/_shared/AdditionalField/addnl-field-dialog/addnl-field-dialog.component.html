@@ -1,0 +1,28 @@
+<div mat-dialog-container>
+    <div fxLayout="row" fxLayoutGap="10px" mat-dialog-title class="messageHeaderTitle mat-dialog-title">
+        <div fxFlex="96" style="align-items: center; display: flex;"><span class="viewDialogTitle ">Add Additional Fields</span></div>
+        <div fxFlex="4" >
+            <button mat-icon-button  (click)='close()'>
+                <mat-icon class="viewDialogCloseIcon" mat-list-icon >close</mat-icon>
+            </button>
+        </div>
+    </div>
+
+<div mat-dialog-content >
+    <div class="formContainer">
+        <form [formGroup]="addtnlFieldForm" autocomplete="off" fxLayout="row wrap">
+            <div *ngFor="let item of addtnlFieldArray; let i=index;"  style=" width:200px; margin-right:20px; display: block; " >
+                <mat-form-field class="materailFieldSize" [ngClass]=" item.mandatoryFlag === 'Y' && location === 'validation' ? 'setMandatoryColor' : ''" >
+                    <input matInput [placeholder]="item.labelName" [formControlName]="i" (blur)='addtnlFieldErrors()' 
+                    [required]='item.mandatoryFlag === "Y"'  autocomplete="off"
+                    />
+                    <mat-error *ngIf="formErrors[i]">{{formErrors[i]}}</mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+        <button mat-flat-button [ngClass]="'formButton saveButton'" style="margin-top: 20px;" color="primary"
+        (click)="save($event)" >Save</button>
+    </div>
+</div>
+
+</div>

@@ -1,0 +1,58 @@
+{
+    "type": "ITEMXREF",
+    "searchType": "itemCrossRef",
+    "searchFor": "Search Item Cross Reference",
+    "searchArray": [
+        {
+            "type": "LOV",
+            "lovType": "code",
+            "label": "Item Name",
+            "key": "itemName",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "xrefItemBarcode",
+            "label": "Item Barcode",
+            "key": "xrefItemBarcode",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "revsnNumber",
+            "label": "Item Reference",
+            "key": "revsnNumber",
+            "value": "",
+            "list": [
+                {
+                    "label": " Please Select",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "type": "LOV",
+            "lovType": "enableFlag",
+            "label": "Enable Flag",
+            "key": "xrefEnabledFlag",
+            "value": "",
+            "list": [
+                { "label": "All", "value": "" },
+                { "label": "Yes", "value": "Y" },
+                { "label": "No", "value": "N" }
+            ]
+        }
+    ]
+}
