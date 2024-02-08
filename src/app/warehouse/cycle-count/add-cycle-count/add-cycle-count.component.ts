@@ -697,7 +697,8 @@ export class AddCycleCountComponent implements OnInit {
       for (const [i,rowData] of this.ClassList.entries()) {
         for (const rowData1 of classArray) {
           if(rowData1 === rowData.id){
-            this.ClassList[i].select = true;
+            this.ClassList[i].select = true
+            
           }
         }
       }
