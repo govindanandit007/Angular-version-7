@@ -25,7 +25,7 @@
     "@angular/platform-browser-dynamic": "~8.2.3",
     "@angular/router": "~8.2.3",
     "@progress/telerik-angular-report-viewer": "10.20.618",
-    "@syncfusion/ej2-angular-inputs": "^17.2.47",
+    "@syncfusion/ej2-angular-inputs": "^17.4.55",
     "ag-grid-angular": "^21.2.2",
     "ag-grid-community": "^21.2.2",
     "angular-user-idle": "^2.2.1",
